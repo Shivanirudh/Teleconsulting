@@ -6,15 +6,18 @@ import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.mappers.PatientMapperImpl;
 import com.team25.telehealth.repo.PatientRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class PatientService {
     private final PatientRepo patientRepo;
+    private final PasswordEncoder passwordEncoder;
     private final PatientMapper patientMapper = new PatientMapperImpl();
 
     public PatientDTO addPatient(Patient patient) {
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientMapper.toDTO(patientRepo.save(patient));
     }
 

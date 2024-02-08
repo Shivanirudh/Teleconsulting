@@ -6,16 +6,19 @@ import com.team25.telehealth.mappers.AdminMapper;
 import com.team25.telehealth.mappers.AdminMapperImpl;
 import com.team25.telehealth.repo.AdminRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class AdminService {
-    public final AdminRepo adminRepo;
-    public final AdminMapper adminMapper = new AdminMapperImpl();
-    public final DoctorService doctorService;
+    private final AdminRepo adminRepo;
+    private final DoctorService doctorService;
+    private final PasswordEncoder passwordEncoder;
+    private final AdminMapper adminMapper = new AdminMapperImpl();
 
     public AdminDTO addAdmin(Admin admin) {
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         return adminMapper.toDTO(adminRepo.save(admin));
     }
 
