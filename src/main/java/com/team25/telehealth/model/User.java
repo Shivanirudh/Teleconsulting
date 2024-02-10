@@ -3,6 +3,8 @@ package com.team25.telehealth.model;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Patient;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,31 +19,36 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
-    private Integer id;
+    private String id;
     private String email;
     private Long phoneNo;
     private String password;
-//    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(Admin user) {
-        this.id = user.getId();
+        this.id = user.getAdminId();
         this.email = user.getEmail();
         this.phoneNo = user.getPhoneNo();
         this.password = user.getPassword();
+        this.role = user.getRole();
     }
 
     public User(Patient user) {
-        this.id = user.getId();
+        this.id = user.getPatientId();
         this.email = user.getEmail();
         this.phoneNo = user.getPhoneNo();
         this.password = user.getPassword();
+        this.role = user.getRole();
     }
 
     public User(Doctor user) {
-        this.id = user.getId();
+        this.id = user.getDoctorId();
         this.email = user.getEmail();
         this.phoneNo = user.getPhoneNo();
         this.password = user.getPassword();
+        this.role = user.getRole();
     }
 
     @Override
@@ -51,7 +58,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.team25.telehealth.entity;
 
+import com.team25.telehealth.model.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,9 @@ public class Doctor {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Column(name = "doctor_id", unique = true)
+    private String doctorId;
+
     @NotNull
     @Column(name = "first_name")
     private String firstName;
@@ -44,6 +48,9 @@ public class Doctor {
     @NotNull
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -25,7 +25,7 @@ public class TeleHealthApplication {
 //        return  args -> {
 //            adminService.addAdmin(Admin.builder()
 //                            .firstName("admin")
-//                            .lastName("admin")
+//                            .lastName("")
 //                            .phoneNo(9711877902L)
 //                            .password("admin")
 //                            .email("admin@gmail.com")

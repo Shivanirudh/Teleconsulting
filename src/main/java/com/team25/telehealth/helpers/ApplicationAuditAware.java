@@ -1,5 +1,6 @@
 package com.team25.telehealth.helpers;
 
+import com.team25.telehealth.model.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,14 +12,13 @@ public class ApplicationAuditAware implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication == null
-//                || !authentication.isAuthenticated()
-//                || authentication instanceof AnonymousAuthenticationToken)
-//            return Optional.empty();
-//
-//        User userPrincipal = (User) authentication.getPrincipal();
-//        return Optional.ofNullable(userPrincipal.getEmail());
-        return Optional.of("admin@gmail.com");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null
+                || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken)
+            return Optional.of("admin@gmail.com");
+
+        User userPrincipal = (User) authentication.getPrincipal();
+        return Optional.ofNullable(userPrincipal.getEmail());
     }
 }
