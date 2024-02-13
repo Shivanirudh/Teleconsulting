@@ -1,0 +1,20 @@
+.left-navbar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .left-navbar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .left-navbar li {
+    cursor: pointer;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .left-navbar li:hover {
+    background-color: #ddd;
+  }

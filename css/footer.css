@@ -1,0 +1,32 @@
+.footer-container {
+    background-color: #007bff; /* Blue background color */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .footer-left p {
+    margin: 0;
+  }
+  
+  .footer-right a, .footer-right p {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s ease; /* Add transition for smooth color change */
+  }
+  
+  .footer-right a:hover {
+    text-decoration: underline;
+    color: #000; /* Change color to black on hover */
+  }
+  
+  .footer-right p:hover {
+    color: #000; /* Change color to black on hover */
+  }
+  
