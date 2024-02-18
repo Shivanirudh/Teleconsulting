@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("api/v1/admin")
 @AllArgsConstructor
@@ -17,13 +19,13 @@ public class AdminController {
 
     @GetMapping("/")
 //    @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<?> getAdmin(@RequestBody String email) {
+    public ResponseEntity<?> getAdmin(@RequestBody String email, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminByEmail(email));
     }
 
     @PostMapping("/")
 //    @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<?> addAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<?> addAdmin(@RequestBody Admin admin, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.addAdmin(admin));
     }
 }

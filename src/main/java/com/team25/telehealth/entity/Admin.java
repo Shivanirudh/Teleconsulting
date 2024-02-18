@@ -67,4 +67,10 @@ public class Admin {
     @LastModifiedBy
     @Column(name = "updated_by", insertable = false)
     private String updatedBy;
+
+    @Column(name = "otp")
+    private String otp;
+
+    @Column(name="otp_expiry")
+    private LocalDateTime otpExpiry;
 }
