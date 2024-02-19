@@ -1,9 +1,20 @@
-import Login from './components/Login';
+import Login from './pages/Login';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import DoctorLogin from './pages/DoctorLogin';
+import PatienLogin from './pages/PatientLogin';
+import Signup from './pages/Signup';
 
 function App() {
   return (
     <div className="App">
-      <Login/>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route exact path="/doctorlogin" element={<DoctorLogin />} />
+          <Route exact path="/patientlogin" element={<PatienLogin />} />
+          <Route exact path="/signup" element={<Signup />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
