@@ -5,40 +5,41 @@ import logo from './../images/doctor-logo.png';
 const DoctorLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
 
-  const handleLogin = () => {
-    // Hardcoded username and password for testing
-    if (username === 'doctor' && password === 'password') {
-      setIsVerified(true);
-      // Assume OTP generation and sending logic here
-      // For demonstration, let's generate a random OTP
-      const generatedOtp = Math.floor(1000 + Math.random() * 9000);
-      setOtp(generatedOtp);
-    }
+  const handleGetOTP = () => {
+    // Assume OTP generation and sending logic here
+    // For demonstration, let's set a hardcoded OTP
+    const hardcodedOtp = '0000';
+    setOtp(hardcodedOtp);
+    setIsOtpSent(true);
   };
 
-  const handleOtpVerification = () => {
-    // Perform OTP verification logic here
-    // For demonstration purposes, let's assume it's verified if OTP is correct
-    // In a real application, you'd compare the input OTP with the generated OTP
-    alert('OTP verified successfully!');
+  const handleLogin = () => {
+    // Perform login logic here
+    if (otp === '' || password === '') {
+      alert('Please enter OTP and password');
+      return;
+    }
+    // Hardcoded username and password for testing
+    if (username === 'doctor@example.com' && password === 'password' && otp === '0000') {
+      alert('Login successful!');
+    } else {
+      alert('Invalid username, password, or OTP');
+    }
   };
 
   return (
     <div className="container">
       <div className="login-container">
         <img src={logo} alt="Doctor Logo" className="doctor-logo" />
-        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={handleLogin}>Login</button>
-        {isVerified && (
-          <div className="otp-section">
-            <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-            <button onClick={handleOtpVerification}>Verify OTP</button>
-          </div>
-        )}
+        <input type="email" placeholder="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent || isVerified} />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={!isOtpSent || isVerified} />
+        <button onClick={handleGetOTP} disabled={isOtpSent}>Get OTP</button>
+        <button onClick={handleLogin} disabled={!isOtpSent || isVerified}>Login</button>
       </div>
     </div>
   );
