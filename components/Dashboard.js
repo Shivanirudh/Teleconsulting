@@ -1,21 +1,45 @@
-// Dashboard.js
 import React, { useState } from 'react';
 import './../css/Dashboard.css';
 import TopNavigationBar from './TopNavigationBar';
 import LeftNavigationBar from './LeftNavigationBar';
 import SearchBar from './SearchBar';
 import DoctorList from './DoctorList';
+import PreviousAppointments from './PreviousAppointments';
+import MyDocuments from './MyDocuments';
+import BookedAppointments from './BookedAppointments';
+// Import other components as needed
 
 function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedNavItem, setSelectedNavItem] = useState('');
 
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
 
   const handleNavigation = (page) => {
-    // Handle navigation to different pages
-    console.log('Navigating to:', page);
+    setSelectedNavItem(page);
+  };
+
+  const renderContent = () => {
+    switch (selectedNavItem) {
+      case 'home':
+        return (
+          <>
+            <SearchBar onSearch={handleSearch} />
+            <DoctorList searchTerm={searchTerm} />
+          </>
+        );
+      case 'previous-appointments':
+        return <PreviousAppointments />;
+      case 'my-documents':
+        return <MyDocuments />;
+      case 'booked-appointments':
+        return <BookedAppointments/>
+      // Add cases for other navigation items
+      default:
+        return null;
+    }
   };
 
   return (
@@ -24,8 +48,7 @@ function Dashboard() {
       <div className="dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
         <div className="main-content">
-          <SearchBar onSearch={handleSearch} />
-          <DoctorList searchTerm={searchTerm} />
+          {renderContent()}
         </div>
       </div>
     </div>
