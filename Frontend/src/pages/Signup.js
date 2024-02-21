@@ -9,8 +9,6 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [username, setUsername] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
   const [otp, setOtp] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -19,13 +17,14 @@ const SignUp = () => {
 
   useEffect(() => {
     if (signupSuccess) {
+      alert('Signup successful!');
       navigate('/patientlogin');
     }
   }, [signupSuccess, navigate]);
 
   const handleSignUp = () => {
     console.log("Handle sign up called");
-    console.log(firstName, lastName, email, password, phone, username, otp, isChecked);
+    console.log(firstName, lastName, email, password, phone, otp, isChecked);
     if (
       firstName &&
       lastName &&
@@ -37,6 +36,10 @@ const SignUp = () => {
     ) {
       console.log("All conditions met for signup success");
       setSignupSuccess(true);
+    }
+    else{
+      <alert>Signup failed!</alert>
+      setSignupSuccess(false);
     }
   };
   
@@ -64,14 +67,14 @@ const SignUp = () => {
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <input type="tel" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
-        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent || isVerified} />
+        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent} />
         <label className="terms-label" style={{ paddingBottom: '13px' }}>
         <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
         <span>I have read and agree to the <span className="terms-link" onClick={handleTermsClick}>terms and agreement</span></span>
         </label>
         <button onClick={handleGetOTP} disabled={isOtpSent}>Get OTP</button>
         <button onClick={handleSignUp}>Sign Up</button>
-        {signupSuccess && <p>Signup successful!</p>}
+        {signupSuccess}
       </div>
     </div>
   );

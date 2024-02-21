@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DoctorLogin from './pages/DoctorLogin';
 import PatienLogin from './pages/PatientLogin';
 import Signup from './pages/Signup';
+import AdminLogin from './pages/AdminLogin';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route exact path="/doctorlogin" element={<DoctorLogin />} />
           <Route exact path="/patientlogin" element={<PatienLogin />} />
           <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/adminlogin" element={<AdminLogin />} />
         </Routes>
       </Router>
     </div>

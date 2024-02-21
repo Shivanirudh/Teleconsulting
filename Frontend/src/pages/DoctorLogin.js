@@ -7,7 +7,6 @@ const DoctorLogin = () => {
   const [password, setPassword] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
 
   const handleGetOTP = () => {
     // Assume OTP generation and sending logic here
@@ -36,10 +35,10 @@ const DoctorLogin = () => {
       <div className="login-container">
         <img src={logo} alt="Doctor Logo" className="doctor-logo" />
         <input type="email" placeholder="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent || isVerified} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={!isOtpSent || isVerified} />
+        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent} />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={!isOtpSent} />
         <button onClick={handleGetOTP} disabled={isOtpSent}>Get OTP</button>
-        <button onClick={handleLogin} disabled={!isOtpSent || isVerified}>Login</button>
+        <button onClick={handleLogin} disabled={!isOtpSent}>Login</button>
       </div>
     </div>
   );

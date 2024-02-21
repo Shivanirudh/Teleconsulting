@@ -31,13 +31,6 @@ const PatientLogin = () => {
     }
   };
 
-  const handleOtpVerification = () => {
-    // Perform OTP verification logic here
-    // For demonstration purposes, let's assume it's verified if OTP is correct
-    alert('OTP verified successfully!');
-    // Here you can perform additional actions after OTP verification, if needed
-  };
-
   const handleSignUp = () => {
     // Redirect to SignUp page
     window.location.href = '/signup';
