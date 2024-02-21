@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import logo from './../images/admin.jpg';
 import './../css/AdminLogin.css';
+import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
     const[username,setUsername] = useState('');
     const[password,setPassword] = useState('');
-
+    const navigate = useNavigate()
     const handleLogin = () => {
         if (username === '' || password === '') {
             alert('Please enter Username and password');
@@ -13,7 +14,7 @@ const AdminLogin = () => {
         }
 
         if (username === 'admin' || password === 'password') {
-            alert('Login successful!');
+            navigate('/admindashboard')
         } else {
             alert('Invalid username, password, or OTP');
         }
