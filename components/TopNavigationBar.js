@@ -1,14 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import '../css/TopNavigationBar.css'; // Adjust the path to your CSS file
 
-function TopNavigationBar({ patientName, onEditProfile, onSignOut }) {
+function TopNavigationBar({ patientName, onSignOut }) {
   return (
     <div className="top-navbar">
       <span>Welcome, {patientName}</span>
       <div className="right-links">
-        <span className="edit-details-link" onClick={onEditProfile}>
+        <Link to="/editdetails" className="edit-details-link">
           Edit Details&nbsp;&nbsp;&nbsp;
-        </span>
+        </Link>
         <span className="signout-link" onClick={onSignOut}>
           Sign Out
         </span>
