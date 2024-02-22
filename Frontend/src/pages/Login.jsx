@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import logo from './../images/logo.jpeg';
 import './../css/login.css';
-import Footer from '../components/Footer.js';
+import Footer from '../components/Footer.jsx';
 
 function Login() {
   const navigate = useNavigate(); // Initialize the navigate function
