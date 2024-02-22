@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './../../css/Doctor/EditDetails.css'; 
+import './../../css/Patient/EditDetails.css'; 
 
 function EditDetails() {
   // Initial user details state

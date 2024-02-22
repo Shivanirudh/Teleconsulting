@@ -1,6 +1,6 @@
 // LeftNavigationBar.js
 import React from 'react';
-import './../../css/Doctor/LeftNavigationBar.css'; 
+import './../../css/Patient/LeftNavigationBar.css'; 
 
 function LeftNavigationBar({ navigateTo }) {
   return (

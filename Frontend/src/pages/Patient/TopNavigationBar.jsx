@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useHistory
-import './../../css/Doctor/TopNavigationBar.css'; // Adjust the path to your CSS file
+import './../../css/Patient/TopNavigationBar.css'; // Adjust the path to your CSS file
 
 function TopNavigationBar({ patientName, onSignOut }) {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function TopNavigationBar({ patientName, onSignOut }) {
     <div className="top-navbar">
       <span>Welcome, {patientName}</span>
       <div className="right-links">
-        <Link to="/doctoreditdetails" className="edit-details-link">
+        <Link to="/patienteditdetails" className="edit-details-link">
           Edit Details&nbsp;&nbsp;&nbsp;
         </Link>
         <span className="signout-link" onClick={handleSignOut}>

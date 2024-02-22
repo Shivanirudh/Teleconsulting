@@ -1,7 +1,7 @@
 // MyDocuments.js
 
 import React, { useState } from 'react';
-import './../../css/Doctor/MyDocuments.css';
+import './../../css/Patient/MyDocuments.css';
 
 function MyDocuments() {
   // Dummy data for patient's documents

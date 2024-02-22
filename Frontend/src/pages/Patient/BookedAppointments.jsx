@@ -1,7 +1,7 @@
 // BookedAppointments.js
 
 import React from 'react';
-import './../../css/Doctor/BookedAppointments.css';
+import './../../css/Patient/BookedAppointments.css';
 
 function BookedAppointments() {
   // Dummy data for booked appointments

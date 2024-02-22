@@ -1,5 +1,5 @@
 import React from 'react';
-import './../../css/Doctor/PreviousAppointments.css';
+import './../../css/Patient/PreviousAppointments.css';
 
 function PreviousAppointments() {
   // Dummy data for previous appointments

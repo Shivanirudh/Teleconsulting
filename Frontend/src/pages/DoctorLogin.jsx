@@ -26,7 +26,8 @@ const DoctorLogin = () => {
     }
     // Hardcoded username and password for testing
     if (username === 'doctor@example.com' && password === 'password' && otp === '0000') {
-      navigate('/doctordashboard');
+      // navigate('/doctordashboard');
+      alert('Login Successfull');
     } else {
       alert('Invalid username, password, or OTP');
     }

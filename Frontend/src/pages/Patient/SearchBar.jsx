@@ -1,6 +1,6 @@
 // SearchBar.js
 import React, { useState } from 'react';
-import './../../css/Doctor/SearchBar.css';
+import './../../css/Patient/SearchBar.css';
 
 function SearchBar({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');

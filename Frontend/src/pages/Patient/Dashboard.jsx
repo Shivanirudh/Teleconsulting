@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './../../css/Doctor/Dashboard.css';
+import './../../css/Patient/Dashboard.css';
 import TopNavigationBar from './TopNavigationBar';
 import LeftNavigationBar from './LeftNavigationBar';
 import SearchBar from './SearchBar';

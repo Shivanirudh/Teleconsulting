@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './../css/PatientLogin.css';
 import logo from './../images/patient-login.png';
+import { useNavigate } from 'react-router-dom';
 
 const PatientLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const navigate = useNavigate();
 
   const handleGetOTP = () => {
     // Assume OTP generation and sending logic here
@@ -26,6 +28,7 @@ const PatientLogin = () => {
     // Hardcoded username and password for testing
     if (username === 'patient@example.com' && password === 'password' && otp === '0000') {
       alert('Login successful!');
+      navigate('/patientdashboard');
     } else {
       alert('Invalid username, password, or OTP');
     }

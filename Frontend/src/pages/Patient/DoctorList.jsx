@@ -1,6 +1,6 @@
 // DoctorList.js
 import React from 'react';
-import './../../css/Doctor/DoctorList.css';
+import './../../css/Patient/DoctorList.css';
 
 function DoctorList({ searchTerm }) {
   // Dummy data for doctors

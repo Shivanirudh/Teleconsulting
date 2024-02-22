@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './../../images/logo.jpeg'; // Import your logo image
-import './../../css/Doctor/login.css'; // You can define your styles in a separate CSS file
+import './../../css/Patient/login.css'; // You can define your styles in a separate CSS file
 import Footer from './Footer.jsx';
 
 function Login() {
