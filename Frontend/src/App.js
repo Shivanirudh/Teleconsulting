@@ -5,6 +5,8 @@ import PatienLogin from './pages/PatientLogin';
 import Signup from './pages/Signup';
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import DoctorDashboard from './pages/Doctor/Dashboard';
+import DoctorEditDetails from './pages/Doctor/EditDetails';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/adminlogin" element={<AdminLogin />} />
           <Route exact path="/admindashboard" element={<AdminDashboard />} />
+          <Route exact path="/doctordashboard" element={<DoctorDashboard />} />
+          <Route exact path="/doctoreditdetails" element={<DoctorEditDetails />} />
         </Routes>
       </Router>
     </div>
