@@ -5,6 +5,8 @@ import PatienLogin from './pages/PatientLogin';
 import Signup from './pages/Signup';
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import AdminDoctor from './pages/Admin/AdminDoctor';
+import AdminPatient from './pages/Admin/AdminPatient';
 import PatientDashboard from './pages/Patient/Dashboard';
 import PatientEditDetails from './pages/Patient/EditDetails';
 import Aboutus from './pages/Aboutus';
@@ -25,6 +27,8 @@ function App() {
           <Route exact path="/admindashboard" element={<AdminDashboard />} />
           <Route exact path="/patientdashboard" element={<PatientDashboard />} />
           <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
+          <Route exact path="/admindoctor" element={<AdminDoctor />} />
+          <Route exact path="/adminpatient" element={<AdminPatient />} />
         </Routes>
       </Router>
     </div>
