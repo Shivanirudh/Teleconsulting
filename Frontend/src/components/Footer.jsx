@@ -8,8 +8,8 @@ function Footer() {
         <p>&copy; 2024 E-Consultation. All rights reserved.</p>
       </div>
       <div className="footer-right">
-        <a href="/about">About Us</a>
-        <a href="/contact">Contact Us</a>
+        <a href="/aboutus">About Us</a>
+        <a href="/contactus">Contact Us</a>
         <p>Trademark E-Consultation™</p>
       </div>
     </footer>
