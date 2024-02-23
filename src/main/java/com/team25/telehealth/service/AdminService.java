@@ -37,7 +37,6 @@ public class AdminService {
 
     public Admin getAdminByEmail(String email) {
         if (email == null || email.isEmpty()) return null;
-//        mailService.sendEmail("prashantjain0501@gmail.com", "Testing email", "Just a simple testing mail");
         return adminRepo.findByEmail(email).orElse(null);
     }
 
@@ -48,7 +47,7 @@ public class AdminService {
         admin.setOtp(otpHelper.generateOtp());
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
-
+        mailService.sendEmail(admin.getEmail(), "OTP For TeleHealth Website", admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
     }
 }

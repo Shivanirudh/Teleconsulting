@@ -24,6 +24,7 @@ public class PatientService {
     private final PasswordEncoder passwordEncoder;
     private final PatientIdGenerator patientIdGenerator;
     private final OtpHelper otpHelper;
+    private final MailService mailService;
     private final PatientMapper patientMapper = new PatientMapperImpl();
 
     @Transactional
@@ -46,7 +47,7 @@ public class PatientService {
         patient.setOtp(otpHelper.generateOtp());
         patient.setOtpExpiry(otpHelper.generateExpirationTime());
         patientRepo.save(patient);
-
+        mailService.sendEmail(patient.getEmail(), "OTP For TeleHealth Website", patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
     }
 }

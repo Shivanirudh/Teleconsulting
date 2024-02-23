@@ -11,6 +11,7 @@ import com.team25.telehealth.repo.PatientRepo;
 import com.team25.telehealth.repo.TokenRepo;
 import com.team25.telehealth.service.AdminService;
 import com.team25.telehealth.service.DoctorService;
+import com.team25.telehealth.service.MailService;
 import com.team25.telehealth.service.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepo tokenRepo;
     private final OtpHelper otpHelper;
+    private final MailService mailService;
 
 //    public AuthenticationResponse registerPatient(Patient req) {
 //        var patient = patientService.addPatient(req);
@@ -133,6 +135,7 @@ public class AuthenticationService {
         patient.setOtp(otpHelper.generateOtp());
         patient.setOtpExpiry(otpHelper.generateExpirationTime());
         patientRepo.save(patient);
+        mailService.sendEmail(patient.getEmail(), "OTP For TeleHealth Website", patient.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return "Otp Generated Successfully";
     }
 
@@ -143,6 +146,7 @@ public class AuthenticationService {
         doctor.setOtp(otpHelper.generateOtp());
         doctor.setOtpExpiry(otpHelper.generateExpirationTime());
         doctorRepo.save(doctor);
+        mailService.sendEmail(doctor.getEmail(), "OTP For TeleHealth Website", doctor.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return "Otp Generated Successfully";
     }
 
@@ -153,6 +157,7 @@ public class AuthenticationService {
         admin.setOtp(otpHelper.generateOtp());
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
+        mailService.sendEmail(admin.getEmail(), "OTP For TeleHealth Website", admin.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return "Otp Generated Successfully";
     }
 }
