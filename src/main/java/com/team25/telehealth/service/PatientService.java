@@ -2,6 +2,8 @@ package com.team25.telehealth.service;
 
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Patient;
+import com.team25.telehealth.helpers.EncryptionService;
+import com.team25.telehealth.helpers.FileStorageService;
 import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.helpers.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
@@ -10,9 +12,20 @@ import com.team25.telehealth.model.EmailRequest;
 import com.team25.telehealth.repo.PatientRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.security.Principal;
 
 import static com.team25.telehealth.model.Role.PATIENT;
@@ -25,7 +38,11 @@ public class PatientService {
     private final PatientIdGenerator patientIdGenerator;
     private final OtpHelper otpHelper;
     private final MailService mailService;
+    private final FileStorageService fileStorageService;
+    private final EncryptionService encryptionService;
     private final PatientMapper patientMapper = new PatientMapperImpl();
+
+    private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Patient_Data\\";
 
     @Transactional
     public Patient addPatient(Patient patient) {
@@ -49,5 +66,63 @@ public class PatientService {
         patientRepo.save(patient);
         mailService.sendEmail(patient.getEmail(), "OTP For TeleHealth Website", patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
+    }
+
+    public ResponseEntity<String> uploadFile(MultipartFile[] files, Principal principal) {
+        Patient patient = getPatientByEmail(principal.getName());
+        if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
+        try {
+            String folderPath = STORAGE_PATH + patient.getPatientId();
+            for (MultipartFile file : files) {
+                String filePath = folderPath + File.separator + file.getOriginalFilename();
+                fileStorageService.storeFile(folderPath, file);
+                try (InputStream inputStream = new ByteArrayInputStream(file.getBytes())) {
+                    encryptionService.encryptAndStoreFile(filePath, inputStream);
+                }
+            }
+            return ResponseEntity.ok().body("Files uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload files: " + e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> fetchFile(Principal principal, String fileName) {
+        Patient patient = getPatientByEmail(principal.getName());
+        if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
+        try {
+            String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
+            File file = fileStorageService.getFile(filePath);
+            if (file.exists()) {
+                // Fetch encryption key and decrypt file
+                // Assuming you have a method to fetch the key based on user ID
+                byte[] decryptedContent = encryptionService.decryptFile(filePath);
+
+                // Set content type based on file extension
+                MediaType mediaType = getMediaTypeForFileName(fileName);
+
+                // Set response headers to trigger download in Postman
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(mediaType);
+                headers.setContentDispositionFormData(fileName, fileName);
+
+                return new ResponseEntity<>(decryptedContent, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private MediaType getMediaTypeForFileName(String fileName) {
+        if (fileName.endsWith(".pdf")) {
+            return MediaType.APPLICATION_PDF;
+        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return MediaType.IMAGE_JPEG;
+        } else if (fileName.endsWith(".png")) {
+            return MediaType.IMAGE_PNG;
+        }
+        // Default to octet-stream for unknown file types
+        return MediaType.APPLICATION_OCTET_STREAM;
     }
 }
