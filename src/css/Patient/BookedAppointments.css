@@ -1,0 +1,39 @@
+/* BookedAppointments.css */
+
+/* Container styles */
+.booked-appointments-container {
+    margin: 20px;
+  }
+  
+  /* Table styles */
+  .appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Table header styles */
+  .appointments-table th {
+    background-color: #f2f2f2;
+    padding: 12px 8px;
+    text-align: left;
+  }
+  
+  /* Table row styles */
+  .appointments-table td, .appointments-table th {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 8px;
+  }
+  
+  /* Button styles */
+  .appointments-table button {
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .appointments-table button:hover {
+    background-color: #0056b3;
+  }
+  

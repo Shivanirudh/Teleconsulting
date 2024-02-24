@@ -1,0 +1,26 @@
+.top-navbar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-links {
+  display: flex;
+  align-items: center;
+}
+
+.right-links a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 10px; /* Add margin-right for space between links */
+}
+
+.right-links a:hover {
+  color: #0056b3;
+}
+.signout-link a:hover{
+  color: #0056b3;
+}

@@ -1,0 +1,50 @@
+/* DoctorList.css */
+.doctor-list-container {
+  overflow-x: auto;
+}
+
+.availability-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.availability-table th,
+.availability-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.availability-table th {
+  background-color: #f2f2f2;
+}
+
+.availability-table td.available {
+  background-color: #8effa8; /* Green for available slots */
+}
+
+.availability-table td.booked {
+  background-color: #ff8e8e; /* Red for booked slots */
+}
+
+.availability-table td:hover {
+  cursor: pointer;
+  background-color: #e8f5ff; /* Light blue on hover */
+}
+
+.booking-button {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.booking-button button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.booking-button button:hover {
+  background-color: #0056b3;
+}

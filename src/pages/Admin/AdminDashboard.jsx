@@ -1,0 +1,73 @@
+import React from 'react';
+import Navbar from '../../components/Admin/Navbar';
+import SideNavbar from '../../components/Admin/sidenavbar';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import Calendar from 'react-calendar'; // Import Calendar component
+import 'react-calendar/dist/Calendar.css'; // Import default calendar styles
+import './../../css/Admin/AdminDashboard.css'
+
+const AdminDashboard = () => {
+    // Dummy data for demonstration
+    const totalPatients = 1000;
+    const totalDoctors = 50;
+    const patientIncrease = 20; // Assume 20 new patients
+    const doctorIncrease = 2; // Assume 2 new doctors
+
+    return (
+        <div>
+            <Navbar />
+            <SideNavbar />
+            <div style={{ marginLeft: '250px', marginTop: '56px' }}>
+                <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333' }}>
+                    <Row className="mt-4">
+                        <Col md={6} lg={3}>
+                            <Card>
+                                <Card.Body>
+                                    <i className="bi bi-person-fill" style={{ fontSize: '2.5em', color: '#007bff' }}></i>
+                                    <h5>Total Patients</h5>
+                                    <h2>{totalPatients}</h2>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={3}>
+                            <Card>
+                                <Card.Body>
+                                    <i className="bi bi-person-circle" style={{ fontSize: '2.5em', color: '#28a745' }}></i>
+                                    <h5>New Patients (Today)</h5>
+                                    <h2>+{patientIncrease}</h2>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={3}>
+                            <Card>
+                                <Card.Body>
+                                    <i className="bi bi-person-check-fill" style={{ fontSize: '2.5em', color: '#dc3545' }}></i>
+                                    <h5>Total Doctors</h5>
+                                    <h2>{totalDoctors}</h2>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={3}>
+                            <Card>
+                                <Card.Body>
+                                    <i className="bi bi-person-plus-fill" style={{ fontSize: '2.5em', color: '#ffc107' }}></i>
+                                    <h5>New Doctors (Today)</h5>
+                                    <h2>+{doctorIncrease}</h2>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    {/* Add charts and additional components here */}
+                    <div className="mt-4" style={{ maxWidth: '300px' }}>
+                        <Calendar
+                            className="react-calendar"
+                            tileClassName="react-calendar-tile"
+                        /> {/* Calendar component */}
+                    </div>
+                </Container>
+            </div>
+        </div>
+    );
+};
+
+export default AdminDashboard;
