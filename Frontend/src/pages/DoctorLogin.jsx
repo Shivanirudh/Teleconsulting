@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import './../css/DoctorLogin.css';
 import logo from './../images/doctor-logo.png';
-import { useNavigate } from 'react-router-dom';
+import './../css/DoctorLogin.css';
+import videobg from './../Animation/bg.mp4'
 
 const DoctorLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const navigate = useNavigate();
 
   const handleGetOTP = () => {
     // Assume OTP generation and sending logic here
@@ -35,6 +34,11 @@ const DoctorLogin = () => {
 
   return (
     <div className="container">
+      <video autoPlay muted loop className="video-bg">
+        <source src={videobg} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
       <div className="login-container">
         <img src={logo} alt="Doctor Logo" className="doctor-logo" />
         <input type="email" placeholder="Email" value={username} onChange={(e) => setUsername(e.target.value)} />

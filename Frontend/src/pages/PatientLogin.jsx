@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './../css/PatientLogin.css';
 import logo from './../images/patient-login.png';
 import { useNavigate } from 'react-router-dom';
+import videobg from './../Animation/bg.mp4'
 
 const PatientLogin = () => {
   const [username, setUsername] = useState('');
@@ -41,6 +42,10 @@ const PatientLogin = () => {
 
   return (
     <div className="container">
+      <video autoPlay muted loop className="video-bg">
+        <source src={videobg} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       <div className="login-container">
         <img src={logo} alt="Patient Logo" className="patient-logo" />
         <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
