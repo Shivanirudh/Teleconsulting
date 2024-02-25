@@ -9,9 +9,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
   const [isChecked, setIsChecked] = useState(false);
-  const [isOtpSent, setIsOtpSent] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -24,14 +22,13 @@ const SignUp = () => {
 
   const handleSignUp = () => {
     console.log("Handle sign up called");
-    console.log(firstName, lastName, email, password, phone, otp, isChecked);
+    console.log(firstName, lastName, email, password, phone, isChecked);
     if (
       firstName &&
       lastName &&
       email &&
       password &&
-      phone &&
-      otp === '0000' &&
+      phone && 
       isChecked
     ) {
       console.log("All conditions met for signup success");
@@ -43,12 +40,6 @@ const SignUp = () => {
     }
   };
   
-
-  const handleGetOTP = () => {
-    const hardcodedOtp = '0000';
-    setOtp(hardcodedOtp);
-    setIsOtpSent(true);
-  };
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -67,12 +58,10 @@ const SignUp = () => {
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <input type="tel" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
-        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent} />
         <label className="terms-label" style={{ paddingBottom: '13px' }}>
         <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
         <span>I have read and agree to the <span className="terms-link" onClick={handleTermsClick}>terms and agreement</span></span>
         </label>
-        <button onClick={handleGetOTP} disabled={isOtpSent}>Get OTP</button>
         <button onClick={handleSignUp}>Sign Up</button>
         {signupSuccess}
       </div>
