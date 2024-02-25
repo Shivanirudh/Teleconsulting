@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './../../css/Patient/Dashboard.css';
-import TopNavigationBar from './TopNavigationBar';
-import LeftNavigationBar from './LeftNavigationBar';
-import SearchBar from './SearchBar';
+import TopNavigationBar from '../../components/Patient/TopNavigationBar';
+import LeftNavigationBar from '../../components/Patient/LeftNavigationBar';
+import SearchBar from './../../components/Patient/SearchBar';
 import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';

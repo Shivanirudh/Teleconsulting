@@ -1,6 +1,6 @@
 .left-navbar {
-  width: 220px;
-  background-color: #333;
+  width: 220px; /* Initial width */
+  background-color: black;
   padding: 20px;
   color: #fff;
   font-family: Arial, sans-serif;
@@ -28,7 +28,7 @@
 
 .left-navbar li::before {
   content: "\2022"; /* Bullet point */
-  color: #00ccff; /* Change bullet color */
+  color: #007bff; /* Change bullet color */
   font-weight: bold;
   display: inline-block;
   width: 1em;
@@ -37,4 +37,11 @@
 
 .left-navbar li:hover::before {
   color: #7700ff; /* Change bullet color on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .left-navbar {
+    width: 100%; /* Sidebar spans the whole width */
+  }
 }
