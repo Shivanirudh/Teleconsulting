@@ -11,6 +11,7 @@ import PatientDashboard from './pages/Patient/Dashboard';
 import PatientEditDetails from './pages/Patient/EditDetails';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
+import PrivateRoutes from './components/PrivateRoutes';
 
 function App() {
   return (
@@ -25,10 +26,12 @@ function App() {
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/adminlogin" element={<AdminLogin />} />
           <Route exact path="/admindashboard" element={<AdminDashboard />} />
-          <Route exact path="/patientdashboard" element={<PatientDashboard />} />
-          <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
           <Route exact path="/admindoctor" element={<AdminDoctor />} />
           <Route exact path="/adminpatient" element={<AdminPatient />} />
+          <Route element = {<PrivateRoutes/>}>
+            <Route exact path="/patientdashboard" element={<PatientDashboard />} />
+            <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
+          </Route>
         </Routes>
       </Router>
     </div>
