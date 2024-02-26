@@ -1,45 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './../css/Signup.css';
 import logo from './../images/signup-logo.png';
+import axios from 'axios';
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(0); // Initialize phone as a number
   const [isChecked, setIsChecked] = useState(false);
-  const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (signupSuccess) {
-      alert('Signup successful!');
-      navigate('/patientlogin');
-    }
-  }, [signupSuccess, navigate]);
+  const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8081/api/v1',
+  });
 
   const handleSignUp = () => {
-    console.log("Handle sign up called");
-    console.log(firstName, lastName, email, password, phone, isChecked);
     if (
       firstName &&
       lastName &&
       email &&
       password &&
-      phone && 
+      phone && // Make sure phone is not null or empty
       isChecked
     ) {
-      console.log("All conditions met for signup success");
-      setSignupSuccess(true);
-    }
-    else{
-      <alert>Signup failed!</alert>
-      setSignupSuccess(false);
+      console.log(firstName, lastName, email, password, phone, isChecked); // Check if data is correct
+      axiosInstance.post('/auth/patient/register', JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        phoneNo: phone
+      }), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          console.log(response.data);
+          alert('Signup successful!');
+          navigate('/patientlogin');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Signup failed!');
+        });
+    } else {
+      alert('Please fill in all fields and agree to terms.');
     }
   };
-  
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -57,13 +68,12 @@ const SignUp = () => {
         <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <input type="tel" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <input type="number" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(parseInt(e.target.value))} /> {/* Ensure phone is a number */}
         <label className="terms-label" style={{ paddingBottom: '13px' }}>
-        <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
-        <span>I have read and agree to the <span className="terms-link" onClick={handleTermsClick}>terms and agreement</span></span>
+          <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
+          <span>I have read and agree to the <span className="terms-link" onClick={handleTermsClick}>terms and agreement</span></span>
         </label>
         <button onClick={handleSignUp}>Sign Up</button>
-        {signupSuccess}
       </div>
     </div>
   );
