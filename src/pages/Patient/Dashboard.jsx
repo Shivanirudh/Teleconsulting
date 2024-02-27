@@ -1,12 +1,15 @@
+// Dashboard.jsx
+
 import React, { useState } from 'react';
 import './../../css/Patient/Dashboard.css';
 import TopNavigationBar from '../../components/Patient/TopNavigationBar';
 import LeftNavigationBar from '../../components/Patient/LeftNavigationBar';
-import SearchBar from './SearchBar';
+import SearchBar from './../../components/Patient/SearchBar';
 import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
+import Footer from '../../components/Footer'; // Import Footer component
 // Import other components as needed
 
 function Dashboard() {
@@ -51,6 +54,7 @@ function Dashboard() {
           {renderContent()}
         </div>
       </div>
+      <Footer /> {/* Add Footer component */}
     </div>
   );
 }

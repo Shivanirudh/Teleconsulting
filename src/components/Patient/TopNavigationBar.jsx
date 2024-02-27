@@ -1,12 +1,34 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link and useHistory
-import './../../css/Patient/TopNavigationBar.css'; // Adjust the path to your CSS file
+import { Link, useNavigate } from 'react-router-dom';
+import './../../css/Patient/TopNavigationBar.css';
+import axios from 'axios'; // Import Axios
+
+// Create Axios instance with baseURL
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+});
 
 function TopNavigationBar({ patientName, onSignOut }) {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    navigate('/');
+    // Send request to backend to logout using Axios
+    axiosInstance.post('/auth/logout', null, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(response => {
+      console.log(response.data.message); // Log the response from backend
+      // Clear token from local storage
+      localStorage.removeItem('token');
+      // Redirect to the home page
+      navigate('/');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
   };
 
   return (
