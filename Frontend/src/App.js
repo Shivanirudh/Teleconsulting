@@ -25,10 +25,10 @@ function App() {
           <Route exact path="/contactus" element={<Contactus />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/adminlogin" element={<AdminLogin />} />
-          <Route exact path="/admindashboard" element={<AdminDashboard />} />
-          <Route exact path="/admindoctor" element={<AdminDoctor />} />
-          <Route exact path="/adminpatient" element={<AdminPatient />} />
           <Route element = {<PrivateRoutes/>}>
+            <Route exact path="/admindashboard" element={<AdminDashboard />} />
+            <Route exact path="/admindoctor" element={<AdminDoctor />} />
+            <Route exact path="/adminpatient" element={<AdminPatient />} />
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
           </Route>

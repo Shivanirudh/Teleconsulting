@@ -7,7 +7,7 @@ const PrivateRoutes = () => {
     let auth = {'token': localStorage.getItem('token') !== null};
 
     return (
-        auth.token ? <Outlet /> : <Navigate to = '/patientlogin' />
+        auth.token ? <Outlet /> : <Navigate to = '/' />
     );
 };
 
