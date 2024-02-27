@@ -10,6 +10,7 @@ import PreviousAppointments from "./Pages/Appointment";
 import UploadSchedule from "./Pages/uploadschedule";
 import SideNavbar from "./components/sidenavbar";
 import Chats from "./Pages/ chats";
+import Footer from "./components/footer";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 
         <Navbar/>
         <SideNavbar/>
+        
     
       <Routes>
      
@@ -29,6 +31,7 @@ function App() {
         <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
         <Route exact path="/ddashboard/chats"     element = {<Chats/>}/>
       </Routes>
+      <Footer/>
       
         
       </Router>

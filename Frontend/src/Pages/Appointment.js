@@ -23,7 +23,7 @@ export default function PreviousAppointments() {
   };
 
   return (
-    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px' }}>
+    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '60px' ,marginBottom: '500px'}}>
       <h2>Previous Appointments</h2>
 
       {/* Search bar */}

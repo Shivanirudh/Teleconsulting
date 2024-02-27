@@ -19,9 +19,11 @@ export default function Navbar() {
     setModalVisible(false);
   };
 
-  // Render the Navbar only if it's on the doctor dashboard
   return isDoctorDashboard ? (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav
+      className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"
+      style={{ height: '60px', width: '100%' }}
+    >
       <div className="container">
         <span className="navbar-brand">Healthcare App</span>
 

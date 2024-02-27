@@ -70,7 +70,7 @@ export default function UploadSchedule() {
   };
 
   return (
-    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px' }}>
+    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px',marginBottom: '500px' }}>
       <h2>This weeks Schedule</h2>
 
       <table className="table table-bordered">

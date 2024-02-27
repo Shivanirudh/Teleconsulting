@@ -71,7 +71,7 @@ export default function DoctorDashboard() {
   return (
   
     
-    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px' }}>
+    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px' ,marginBottom: '550px'}}>
      
       <h2>Doctor Dashboard</h2>
      

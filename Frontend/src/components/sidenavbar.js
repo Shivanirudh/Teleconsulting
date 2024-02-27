@@ -14,7 +14,7 @@ export default function SideNavbar() {
 
   // Render the SideNavbar only if it should be displayed
   return shouldDisplayNavbar ? (
-    <div className="position-fixed bg-dark text-light" style={{ height: '100%', width: '250px' }}>
+    <div className="position-fixed bg-dark text-light" style={{ height:'1000px' , width: '250px',marginTop:'30px'}}>
       <ul className="nav flex-column">
         <li className="nav-item">
           <NavLink className="nav-link text-light" to="/ddashboard">

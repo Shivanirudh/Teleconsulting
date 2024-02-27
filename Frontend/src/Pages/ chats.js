@@ -32,7 +32,7 @@ function Chats() {
   };
 
   return (
-    <div className="chats-container" style={{marginLeft: '250px', marginTop: '56px' }}>
+    <div className="chats-container" style={{marginLeft: '250px', marginTop: '56px' ,marginBottom:'500px'}}>
       <h1>Chats</h1>
       <ul className="messages-list">
         {messages.map((message, index) => (
