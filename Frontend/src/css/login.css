@@ -1,15 +1,13 @@
-.main-container {
+.main-content{
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-}
-
-.big-container {
-  width: 100%;
-  padding: 20px;
-  background-color: #007bff;
-  text-align: center;
+  position: relative;
+  min-height: 100vh;
+  background-image: url('./../images/landing-page.png'); /* Add background image */
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .logo-container {

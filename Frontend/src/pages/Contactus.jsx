@@ -1,14 +1,11 @@
 import React from 'react';
 import Footer from './../components/Footer';
+import Header from '../components/Header.jsx';
 
 const ContactUs = () => {
     return (
         <div>
-            <div className="big-container">
-                <div className="welcome-container">
-                    <h1>Welcome to E-Consultation</h1>
-                </div>
-            </div>
+            <Header/>
             <div className="content-container">
                 <h2>Contact Information</h2>
                 <p>If you have any questions, concerns, or feedback, please feel free to reach out to us:</p>

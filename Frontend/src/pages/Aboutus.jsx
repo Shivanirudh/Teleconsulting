@@ -1,14 +1,11 @@
 import React from 'react';
 import Footer from './../components/Footer';
+import Header from '../components/Header';
 
 const AboutUs = () => {
     return (
         <div>
-            <div className="big-container">
-                <div className="welcome-container">
-                    <h1>Welcome to E-Consultation</h1>
-                </div>
-            </div>
+            <Header/>
             <div className="content-container">
                 <h2>About Us</h2>
                 <p>Welcome to our e-health teleconsulting platform! We are dedicated to providing convenient and accessible healthcare services to our users.</p>
