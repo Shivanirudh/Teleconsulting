@@ -1,35 +1,18 @@
 .main-content{
   display: flex;
   flex-direction: column;
-  align-items: center;
   position: relative;
   min-height: 100vh;
   background-image: url('./../images/landing-page.png'); /* Add background image */
   background-size:contain;
   background-repeat: no-repeat;
-  background-position: center;
-}
-
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-}
-
-.logo {
-  width: 100px; /* Adjust as needed */
-  height: 100px; /* Adjust as needed */
-}
-
-.logo-container h2 {
-  margin-top: 20px;
+  background-position: right;
 }
 
 .login-wrapper {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  align-content: left;
+  margin-top: 210px;
 }
 
 .login-container {
