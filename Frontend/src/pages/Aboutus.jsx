@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from './../components/Footer';
 import Header from '../components/Header';
+import "./../css/Aboutus.css"
 
 const AboutUs = () => {
     return (
@@ -15,7 +16,6 @@ const AboutUs = () => {
                 <p>At our core, we believe in leveraging technology to improve healthcare accessibility and empower individuals to take control of their well-being.</p>
                 <p>Thank you for choosing our platform for your healthcare needs. We look forward to serving you!</p>
             </div>
-            {/* Embedded video */}
             <div className="video-container">
                 <iframe
                     width="100%"
