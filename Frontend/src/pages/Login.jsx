@@ -20,15 +20,15 @@ function Login() {
   return (
     <div className="main-container">
       <Header />
-      <div className='main-content'>
+      <div className='LOGIN'>
         <div className="login-wrapper">
           <div className="login-container">
-            <h2>Doctor Login</h2>
+            <h2>Doctor?</h2>
             {/* On button click, call handleDoctorLogin function */}
             <button className="login-button" onClick={handleDoctorLogin}>Doctor Login</button>
           </div>
           <div className="login-container">
-            <h2>Patient Login</h2>
+            <h2>Patient?</h2>
             {/* On button click, call handlePatientLogin function */}
             <button className="login-button" onClick={handlePatientLogin}>Patient Login</button>
           </div>
