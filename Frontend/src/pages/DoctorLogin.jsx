@@ -52,19 +52,19 @@ const DoctorLogin = () => {
   };
 
   return (
-    <div className="container">
-      <video autoPlay muted loop className="video-bg">
+    <div className="doctor-login-page">
+      <video autoPlay muted loop className="login-video-bg">
         <source src={videobg} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
       <div className="login-container">
         <img src={logo} alt="Doctor Logo" className="doctor-logo" />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={handleGetOTP}>Get OTP</button>
-        <button onClick={handleLogin}>Login</button>
+        <input type="email" className="login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" className="login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+        <input type="password" className="login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button className="login-button" onClick={handleGetOTP}>Get OTP</button>
+        <button className="login-button" onClick={handleLogin}>Login</button>
       </div>
     </div>
   );
