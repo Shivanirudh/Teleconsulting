@@ -2,34 +2,53 @@ import React, { useState } from 'react';
 import logo from './../images/doctor-logo.png';
 import './../css/DoctorLogin.css';
 import videobg from './../Animation/bg.mp4'
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
+
+// Create Axios instance with baseURL
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+});
 
 const DoctorLogin = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isOtpSent, setIsOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
+  const navigate = useNavigate();
 
   const handleGetOTP = () => {
-    // Assume OTP generation and sending logic here
-    // For demonstration, let's set a hardcoded OTP
-    const hardcodedOtp = '0000';
-    setOtp(hardcodedOtp);
-    setIsOtpSent(true);
+    axiosInstance.post('/auth/generate/doctor/otp', JSON.stringify({ email: email }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        alert("OTP has been sent to your email.");
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   const handleLogin = () => {
-    // Perform login logic here
-    if (otp === '' || password === '') {
-      alert('Please enter OTP and password');
-      return;
-    }
-    // Hardcoded username and password for testing
-    if (username === 'doctor@example.com' && password === 'password' && otp === '0000') {
-      // navigate('/doctordashboard');
-      alert('Login Successfull');
-    } else {
-      alert('Invalid username, password, or OTP');
-    }
+    axiosInstance.post('/auth/doctor/authenticate', JSON.stringify({
+      email: email,
+      otp: otp,
+      password: password,
+    }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        localStorage.setItem('token', response.data.token);
+        alert('Login successful!');
+        navigate('/ddashboard');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Invalid email, password, or OTP');
+      });
   };
 
   return (
@@ -41,11 +60,11 @@ const DoctorLogin = () => {
 
       <div className="login-container">
         <img src={logo} alt="Doctor Logo" className="doctor-logo" />
-        <input type="email" placeholder="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} disabled={!isOtpSent} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={!isOtpSent} />
-        <button onClick={handleGetOTP} disabled={isOtpSent}>Get OTP</button>
-        <button onClick={handleLogin} disabled={!isOtpSent}>Login</button>
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button onClick={handleGetOTP}>Get OTP</button>
+        <button onClick={handleLogin}>Login</button>
       </div>
     </div>
   );
