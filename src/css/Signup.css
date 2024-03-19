@@ -4,7 +4,7 @@ body {
     background-color: #f0f0f0;
 }
 
-.container {
+.signup-outer-container {
     display: flex;
     justify-content: center;
     align-items: center;

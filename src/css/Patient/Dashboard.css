@@ -1,11 +1,12 @@
 /* Dashboard.css */
-.dashboard-container {
+.patient-dashboard-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: #f4f4f4;
 }
 
-.dashboard-content {
+.patient-dashboard-content {
   display: flex;
   flex-grow: 1;
 }
@@ -16,7 +17,7 @@
   padding: 20px;
 }
 
-.main-content {
+.patient-main-content {
   flex-grow: 1;
   padding: 20px;
 }
@@ -35,7 +36,7 @@
 }
 
 /* Styling for main content area */
-.main-content {
+.patient-main-content {
   background-color: #c4c9ca;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -51,7 +52,7 @@
     width: 100%; /* Sidebar spans the whole width */
   }
 
-  .main-content {
+  .patient-main-content {
     margin-top: 20px; /* Add margin to separate main content from the sidebar */
   }
 }

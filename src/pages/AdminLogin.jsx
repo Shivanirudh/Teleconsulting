@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import logo from './../images/admin.jpg';
 import './../css/AdminLogin.css';
 import { useNavigate } from 'react-router-dom';
-import videobg from './../Animation/bg.mp4'
-import axios from 'axios'; // Import Axios
+import videobg from './../Animation/bg.mp4';
+import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+  baseURL: 'http://localhost:8081/api/v1',
 });
 
 const AdminLogin = () => {
@@ -50,23 +50,22 @@ const AdminLogin = () => {
       });
   };
 
-
-    return (
-        <div className="container">
-          <video autoPlay muted loop className="video-bg">
-            <source src={videobg} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="login-container">
-            <img src={logo} alt="Patient Logo" className="patient-logo" />
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleGetOTP}>Get OTP</button>
-            <button onClick={handleLogin}>Login</button>
-          </div>
-        </div>
-      );
+  return (
+    <div className="admin-login-container">
+      <video autoPlay muted loop className="login-video-bg">
+        <source src={videobg} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className="login-content-container">
+        <img src={logo} alt="Admin Logo" className="admin-logo" />
+        <input type="email" className="login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" className="login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+        <input type="password" className="login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button className="login-button" onClick={handleGetOTP}>Get OTP</button>
+        <button className="login-button" onClick={handleLogin}>Login</button>
+      </div>
+    </div>
+  );
 };
 
 export default AdminLogin;

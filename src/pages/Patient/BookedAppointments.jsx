@@ -21,7 +21,7 @@ function BookedAppointments() {
   return (
     <div className="booked-appointments-container">
       <h2>Booked Appointments</h2>
-      <table className="appointments-table">
+      <table className="booked-appointments-table">
         <thead>
           <tr>
             <th>Doctor Name</th>

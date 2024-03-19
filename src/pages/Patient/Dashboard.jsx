@@ -1,5 +1,3 @@
-// Dashboard.jsx
-
 import React, { useState } from 'react';
 import './../../css/Patient/Dashboard.css';
 import TopNavigationBar from '../../components/Patient/TopNavigationBar';
@@ -9,7 +7,6 @@ import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
-import Footer from '../../components/Footer'; // Import Footer component
 // Import other components as needed
 
 function Dashboard() {
@@ -46,15 +43,14 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="patient-dashboard-container">
       <TopNavigationBar patientName="Atul Tripathi" />
-      <div className="dashboard-content">
+      <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
-        <div className="main-content">
+        <div className="patiient-main-content">
           {renderContent()}
         </div>
       </div>
-      <Footer /> {/* Add Footer component */}
     </div>
   );
 }

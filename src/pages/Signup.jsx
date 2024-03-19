@@ -61,7 +61,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="container">
+    <div className="signup-outer-container">
       <div className="signup-container">
         <img src={logo} alt="Sign Up Logo" className="signup-logo" />
         <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />

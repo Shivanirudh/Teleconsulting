@@ -1,33 +1,33 @@
 /* MyDocuments.css */
 
 /* Container styles */
-.my-documents-container {
+.patient-my-documents-container {
     margin: 20px;
   }
   
   /* Table styles */
-  .documents-table {
+  .patient-documents-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
   }
   
-  .documents-table th, .documents-table td {
+  .patient-documents-table th, .patient-documents-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
   }
   
-  .documents-table th {
+  .patient-documents-table th {
     background-color: #f2f2f2;
   }
   
   /* Upload section styles */
-  .upload-section {
+  .patient-upload-section {
     margin-top: 20px;
   }
   
-  .upload-section h3 {
+  .patient-upload-section h3 {
     margin-bottom: 10px;
   }
   
