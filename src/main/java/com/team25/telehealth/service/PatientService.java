@@ -1,14 +1,12 @@
 package com.team25.telehealth.service;
 
-import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.EncryptionService;
 import com.team25.telehealth.helpers.FileStorageService;
 import com.team25.telehealth.helpers.OtpHelper;
-import com.team25.telehealth.helpers.PatientIdGenerator;
+import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.mappers.PatientMapperImpl;
-import com.team25.telehealth.model.EmailRequest;
 import com.team25.telehealth.repo.PatientRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -18,9 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -48,6 +43,7 @@ public class PatientService {
     public Patient addPatient(Patient patient) {
         patient.setRole(PATIENT);
         patient.setPatientId(patientIdGenerator.generateNextId());
+        patient.setActive(true);
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientRepo.save(patient);
     }
@@ -57,6 +53,7 @@ public class PatientService {
         return patientRepo.findByEmail(email).orElse(null);
     }
 
+    @Transactional
     public String generateOTP(Principal principal) {
         String adminEmail = principal.getName();
         Patient patient = getPatientByEmail(adminEmail);
@@ -68,6 +65,7 @@ public class PatientService {
         return "Otp generated Successfully";
     }
 
+    @Transactional
     public ResponseEntity<String> uploadFile(MultipartFile[] files, Principal principal) {
         Patient patient = getPatientByEmail(principal.getName());
         if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
@@ -86,6 +84,7 @@ public class PatientService {
         }
     }
 
+    @Transactional
     public ResponseEntity<?> fetchFile(Principal principal, String fileName) {
         Patient patient = getPatientByEmail(principal.getName());
         if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");

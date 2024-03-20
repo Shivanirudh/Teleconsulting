@@ -1,6 +1,8 @@
-package com.team25.telehealth.model;
+package com.team25.telehealth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,15 +14,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    @NotNull
+    @NotEmpty(message = "Email cannot be empty")
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @JsonProperty("email")
     private String email;
 
-    @NotNull
+    @NotEmpty(message = "OTP cannot be empty")
     @JsonProperty("otp")
     private String otp;
 
-    @NotNull
+    @NotEmpty(message = "Password cannot be empty")
     @JsonProperty("password")
     private String password;
 }

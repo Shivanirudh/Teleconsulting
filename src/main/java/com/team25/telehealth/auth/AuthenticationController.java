@@ -1,9 +1,8 @@
 package com.team25.telehealth.auth;
 
 import com.team25.telehealth.entity.Patient;
-import com.team25.telehealth.model.AuthenticationRequest;
-import com.team25.telehealth.model.AuthenticationResponse;
-import com.team25.telehealth.model.EmailRequest;
+import com.team25.telehealth.dto.request.AuthenticationRequest;
+import com.team25.telehealth.dto.request.EmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class AuthenticationController {
 
     @PostMapping("/patient/register")
     public ResponseEntity<?> registerPatient(@RequestBody Patient req) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.registerPatient(req));
+        return service.registerPatient(req);
     }
 
     @PostMapping("/generate/patient/otp")

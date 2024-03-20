@@ -1,12 +1,10 @@
 package com.team25.telehealth.service;
 
-import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Doctor;
-import com.team25.telehealth.helpers.DoctorIdGenerator;
+import com.team25.telehealth.helpers.generators.DoctorIdGenerator;
 import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.mappers.DoctorMapper;
 import com.team25.telehealth.mappers.DoctorMapperImpl;
-import com.team25.telehealth.model.EmailRequest;
 import com.team25.telehealth.repo.DoctorRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -31,6 +29,7 @@ public class DoctorService {
     public Doctor addDoctor(Doctor doctor) {
         doctor.setRole(DOCTOR);
         doctor.setDoctorId(doctorIdGenerator.generateNextId());
+        doctor.setActive(true);
         doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
         return doctorRepo.save(doctor);
     }
@@ -40,6 +39,7 @@ public class DoctorService {
         return doctorRepo.findByEmail(email).orElse(null);
     }
 
+    @Transactional
     public String generateOtp(Principal principal) {
         String adminEmail = principal.getName();
         Doctor doctor = getDoctorByEmail(adminEmail);

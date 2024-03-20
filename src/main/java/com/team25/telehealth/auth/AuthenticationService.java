@@ -1,6 +1,9 @@
 package com.team25.telehealth.auth;
 
 import com.team25.telehealth.config.JwtService;
+import com.team25.telehealth.dto.request.AuthenticationRequest;
+import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.dto.response.AuthenticationResponse;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.entity.Token;
 import com.team25.telehealth.helpers.OtpHelper;
@@ -13,6 +16,7 @@ import com.team25.telehealth.service.AdminService;
 import com.team25.telehealth.service.DoctorService;
 import com.team25.telehealth.service.MailService;
 import com.team25.telehealth.service.PatientService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +48,13 @@ public class AuthenticationService {
 //                .build();
 //    }
 
-    public String registerPatient(Patient req) {
+    @Transactional
+    public ResponseEntity<?> registerPatient(Patient req) {
         var patient = patientService.addPatient(req);
         if(patient == null) {
-            return "Couldn't create the user.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't create the user.");
         }
-        return "User created Successfully";
+        return ResponseEntity.ok("User created Successfully");
     }
 
     public ResponseEntity<?> authenticatePatient(AuthenticationRequest req) {
@@ -60,6 +65,8 @@ public class AuthenticationService {
         if(!req.getOtp().equals(patient.getOtp()) || otpHelper.isOtpExpired(patient.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
+        if(!patient.getActive())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Patient "+ patient.getEmail() + " is blocked or not present");
         var user = new User(patient);
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user.getId());
@@ -78,6 +85,8 @@ public class AuthenticationService {
         if(!req.getOtp().equals(doctor.getOtp()) || otpHelper.isOtpExpired(doctor.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
+        if(!doctor.getActive())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Doctor "+ doctor.getEmail() + " is blocked or not present");
         var user = new User(doctor);
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user.getId());
@@ -97,6 +106,8 @@ public class AuthenticationService {
         if(!req.getOtp().equals(admin.getOtp()) || otpHelper.isOtpExpired(admin.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
+        if(!admin.getActive())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Admin " + admin.getEmail() + " is blocked or not present");
         var user = new User(admin);
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user.getId());

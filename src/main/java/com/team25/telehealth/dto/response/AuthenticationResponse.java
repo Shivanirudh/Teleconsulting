@@ -1,4 +1,4 @@
-package com.team25.telehealth.model;
+package com.team25.telehealth.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

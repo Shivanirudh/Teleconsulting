@@ -1,4 +1,4 @@
-package com.team25.telehealth.helpers;
+package com.team25.telehealth.helpers.generators;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

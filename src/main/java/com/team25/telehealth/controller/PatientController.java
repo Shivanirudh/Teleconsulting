@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.service.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("/")
-    public ResponseEntity<?> getPatient(@RequestBody String email, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientByEmail(email));
+    public ResponseEntity<?> getPatient(@RequestBody EmailRequest email, Principal principal) {
+        return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientByEmail(email.getEmail()));
     }
 
     @PostMapping("/upload")
