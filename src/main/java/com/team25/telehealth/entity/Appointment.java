@@ -25,7 +25,7 @@ public class Appointment extends BaseEntity {
     @Column(name="slot", nullable = false)
     private LocalDateTime slot;
 
-    @Column(name="meeting_link")
+    @Column(name="meeting_link", nullable = false)
     private String meetingLink;
 
     @Column(name="patient_joined")

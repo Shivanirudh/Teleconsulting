@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +21,12 @@ public class AuthenticationRequest {
     private String email;
 
     @NotEmpty(message = "OTP cannot be empty")
+    @Size(min = 6, max = 6, message = "Enter the complete OTP")
     @JsonProperty("otp")
     private String otp;
 
     @NotEmpty(message = "Password cannot be empty")
+    @Size(min = 4, max = 255, message = "Atleast 4 characters are required")
     @JsonProperty("password")
     private String password;
 }

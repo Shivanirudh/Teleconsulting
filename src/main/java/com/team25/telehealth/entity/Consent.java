@@ -27,6 +27,9 @@ public class Consent extends BaseEntity {
     @Column(name="expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
+    // When requesting for consent we give two options 1 is self and 2 is other hospital
+    // if it is self, req_doctor_id and hospital id should be of the requesting doctor
+    // but in other case it will be doctor and hospital we are requesting for.
     @Column(name="req_doctor_id", nullable = false)
     private String reqDoctorId;
 

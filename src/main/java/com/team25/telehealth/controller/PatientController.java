@@ -2,6 +2,7 @@ package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.service.PatientService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping("/")
-    public ResponseEntity<?> getPatient(@RequestBody EmailRequest email, Principal principal) {
+    public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientByEmail(email.getEmail()));
     }
 
