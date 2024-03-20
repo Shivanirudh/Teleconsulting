@@ -4,6 +4,7 @@ import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.EncryptionService;
 import com.team25.telehealth.helpers.FileStorageService;
 import com.team25.telehealth.helpers.OtpHelper;
+import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.mappers.PatientMapperImpl;
@@ -50,25 +51,25 @@ public class PatientService {
 
     public Patient getPatientByEmail(String email) {
         if (email == null || email.isEmpty()) return null;
-        return patientRepo.findByEmail(email).orElse(null);
+        return patientRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Patient", "email", email));
     }
 
     @Transactional
     public String generateOTP(Principal principal) {
-        String adminEmail = principal.getName();
-        Patient patient = getPatientByEmail(adminEmail);
-        if(patient == null) return "User not Found";
+        String patientEmail = principal.getName();
+        Patient patient = getPatientByEmail(patientEmail);
         patient.setOtp(otpHelper.generateOtp());
         patient.setOtpExpiry(otpHelper.generateExpirationTime());
         patientRepo.save(patient);
-        mailService.sendEmail(patient.getEmail(), "OTP For TeleHealth Website", patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
+        mailService.sendEmail(patient.getEmail(),
+                "OTP For TeleHealth Website",
+                patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
     }
 
     @Transactional
     public ResponseEntity<String> uploadFile(MultipartFile[] files, Principal principal) {
         Patient patient = getPatientByEmail(principal.getName());
-        if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
         try {
             String folderPath = STORAGE_PATH + patient.getPatientId();
             for (MultipartFile file : files) {
@@ -87,7 +88,6 @@ public class PatientService {
     @Transactional
     public ResponseEntity<?> fetchFile(Principal principal, String fileName) {
         Patient patient = getPatientByEmail(principal.getName());
-        if(patient == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patient not found");
         try {
             String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
             File file = fileStorageService.getFile(filePath);

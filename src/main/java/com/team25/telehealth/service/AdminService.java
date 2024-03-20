@@ -1,6 +1,7 @@
 package com.team25.telehealth.service;
 
 import com.team25.telehealth.entity.Admin;
+import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.AdminIdGenerator;
 import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.mappers.AdminMapper;
@@ -37,18 +38,19 @@ public class AdminService {
 
     public Admin getAdminByEmail(String email) {
         if (email == null || email.isEmpty()) return null;
-        return adminRepo.findByEmail(email).orElse(null);
+        return adminRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Admin", "email", email));
     }
 
     @Transactional
     public String generateOtp(Principal principal) {
         String adminEmail = principal.getName();
         Admin admin = getAdminByEmail(adminEmail);
-        if(admin == null) return "User not Found";
         admin.setOtp(otpHelper.generateOtp());
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
-        mailService.sendEmail(admin.getEmail(), "OTP For TeleHealth Website", admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
+        mailService.sendEmail(admin.getEmail(),
+                "OTP For TeleHealth Website",
+                admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
     }
 }

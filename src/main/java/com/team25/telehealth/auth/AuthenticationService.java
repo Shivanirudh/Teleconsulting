@@ -139,36 +139,36 @@ public class AuthenticationService {
         tokenRepo.saveAll(validUserTokens);
     }
 
-    public String generatePatientOtp(EmailRequest req) {
-        if(req.getEmail() == null) return "Provide necessary details";
+    public ResponseEntity<?> generatePatientOtp(EmailRequest req) {
         var patient = patientService.getPatientByEmail(req.getEmail());
-        if(patient == null) return "Patient not found";
         patient.setOtp(otpHelper.generateOtp());
         patient.setOtpExpiry(otpHelper.generateExpirationTime());
         patientRepo.save(patient);
-        mailService.sendEmail(patient.getEmail(), "OTP For TeleHealth Website", patient.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
-        return "Otp Generated Successfully";
+        mailService.sendEmail(patient.getEmail(),
+                "OTP For TeleHealth Website",
+                patient.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone. It will only be valid for 10 minutes.");
+        return ResponseEntity.ok("Otp Generated Successfully");
     }
 
-    public String generateDoctorOtp(EmailRequest req) {
-        if(req.getEmail() == null) return "Provide necessary details";
+    public ResponseEntity<?> generateDoctorOtp(EmailRequest req) {
         var doctor = doctorService.getDoctorByEmail(req.getEmail());
-        if(doctor == null) return "Doctor not found";
         doctor.setOtp(otpHelper.generateOtp());
         doctor.setOtpExpiry(otpHelper.generateExpirationTime());
         doctorRepo.save(doctor);
-        mailService.sendEmail(doctor.getEmail(), "OTP For TeleHealth Website", doctor.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
-        return "Otp Generated Successfully";
+        mailService.sendEmail(doctor.getEmail(),
+                "OTP For TeleHealth Website",
+                doctor.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+        return ResponseEntity.ok("Otp Generated Successfully");
     }
 
-    public String generateAdminOtp(EmailRequest req) {
-        if(req.getEmail() == null) return "Provide necessary details";
+    public ResponseEntity<?> generateAdminOtp(EmailRequest req) {
         var admin = adminService.getAdminByEmail(req.getEmail());
-        if(admin == null) return "Admin not found";
         admin.setOtp(otpHelper.generateOtp());
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
-        mailService.sendEmail(admin.getEmail(), "OTP For TeleHealth Website", admin.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
-        return "Otp Generated Successfully";
+        mailService.sendEmail(admin.getEmail(),
+                "OTP For TeleHealth Website",
+                admin.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+        return ResponseEntity.ok("Otp Generated Successfully");
     }
 }
