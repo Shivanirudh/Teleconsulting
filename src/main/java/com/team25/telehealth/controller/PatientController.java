@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.service.PatientService;
 import jakarta.validation.Valid;
@@ -31,5 +32,15 @@ public class PatientController {
     @GetMapping("/fetch/{fileName}")
     public ResponseEntity<?> fetchFile(Principal principal, @PathVariable String fileName) {
         return patientService.fetchFile(principal, fileName);
+    }
+
+    @PostMapping("/generateotp")
+    public ResponseEntity<?> generateOTP(Principal principal) {
+        return ResponseEntity.ok(patientService.generateOtp(principal));
+    }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
+        return patientService.changePassword(principal, req);
     }
 }

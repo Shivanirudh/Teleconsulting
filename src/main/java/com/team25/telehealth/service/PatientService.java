@@ -1,5 +1,6 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.EncryptionService;
 import com.team25.telehealth.helpers.FileStorageService;
@@ -55,7 +56,7 @@ public class PatientService {
     }
 
     @Transactional
-    public String generateOTP(Principal principal) {
+    public String generateOtp(Principal principal) {
         String patientEmail = principal.getName();
         Patient patient = getPatientByEmail(patientEmail);
         patient.setOtp(otpHelper.generateOtp());
@@ -123,5 +124,20 @@ public class PatientService {
         }
         // Default to octet-stream for unknown file types
         return MediaType.APPLICATION_OCTET_STREAM;
+    }
+
+    public ResponseEntity<?> changePassword(Principal principal, AuthenticationRequest req) {
+        Patient patient = getPatientByEmail(principal.getName());
+        if(!otpHelper.otpCheck(req.getOtp(), patient.getOtp(), patient.getOtpExpiry())) {
+            return ResponseEntity.badRequest().body("OTP is wrong or expired");
+        }
+        if(!req.getPassword().equals(req.getRetypePassword())
+                || !(req.getPassword().length() >= 4 && req.getPassword().length() <= 255)) {
+            return ResponseEntity.badRequest()
+                    .body("Passwords should be same. Password should have atleast 4 characters and atmost 255");
+        }
+        patient.setPassword(passwordEncoder.encode(req.getPassword()));
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Password Changed Successfully");
     }
 }

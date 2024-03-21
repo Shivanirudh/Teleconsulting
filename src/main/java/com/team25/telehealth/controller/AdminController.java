@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.service.AdminService;
 import lombok.AllArgsConstructor;
@@ -23,9 +24,19 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminByEmail(email));
     }
 
-    @PostMapping("/")
+//    @PostMapping("/")
 //    @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<?> addAdmin(@RequestBody Admin admin, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.addAdmin(admin));
+//    public ResponseEntity<?> addAdmin(@RequestBody Admin admin, Principal principal) {
+//        return ResponseEntity.status(HttpStatus.OK).body(adminService.addAdmin(admin));
+//    }
+
+    @PostMapping("/generateotp")
+    public ResponseEntity<?> generateOTP(Principal principal) {
+        return ResponseEntity.ok(adminService.generateOtp(principal));
+    }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
+        return adminService.changePassword(principal, req);
     }
 }

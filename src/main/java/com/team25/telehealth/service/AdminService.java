@@ -1,5 +1,6 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.AdminIdGenerator;
@@ -9,6 +10,7 @@ import com.team25.telehealth.mappers.AdminMapperImpl;
 import com.team25.telehealth.repo.AdminRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +54,20 @@ public class AdminService {
                 "OTP For TeleHealth Website",
                 admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
+    }
+
+    public ResponseEntity<?> changePassword(Principal principal, AuthenticationRequest req) {
+        Admin admin = getAdminByEmail(principal.getName());
+        if(!otpHelper.otpCheck(req.getOtp(), admin.getOtp(), admin.getOtpExpiry())) {
+            return ResponseEntity.badRequest().body("OTP is wrong or expired");
+        }
+        if(!req.getPassword().equals(req.getRetypePassword())
+                || !(req.getPassword().length() >= 4 && req.getPassword().length() <= 255)) {
+            return ResponseEntity.badRequest()
+                    .body("Passwords should be same. Password should have atleast 4 characters and atmost 255");
+        }
+        admin.setPassword(passwordEncoder.encode(req.getPassword()));
+        adminRepo.save(admin);
+        return ResponseEntity.ok("Password Changed Successfully");
     }
 }
