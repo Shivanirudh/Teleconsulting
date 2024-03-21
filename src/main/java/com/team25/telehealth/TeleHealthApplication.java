@@ -24,7 +24,7 @@ public class TeleHealthApplication {
         SpringApplication.run(TeleHealthApplication.class, args);
     }
 
-//    @Bean
+    @Bean
     public CommandLineRunner commandLineRunner(PatientService patientService, DoctorService doctorService, AdminService adminService) {
         return  args -> {
             adminService.addAdmin(Admin.builder()

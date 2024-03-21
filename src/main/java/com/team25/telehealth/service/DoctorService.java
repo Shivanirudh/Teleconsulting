@@ -24,7 +24,7 @@ public class DoctorService {
     private final DoctorIdGenerator doctorIdGenerator;
     private final OtpHelper otpHelper;
     private final MailService mailService;
-    private final DoctorMapper doctorMapper = new DoctorMapperImpl();
+    private final DoctorMapper doctorMapper;
 
     @Transactional
     public Doctor addDoctor(Doctor doctor) {

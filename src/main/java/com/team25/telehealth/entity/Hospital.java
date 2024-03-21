@@ -28,7 +28,7 @@ public class Hospital extends BaseEntity {
     private String address;
 
     @Column(name = "phone_number", unique = true, nullable = false)
-    private String phoneNo;
+    private Long phoneNo;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;

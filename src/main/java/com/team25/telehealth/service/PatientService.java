@@ -7,7 +7,6 @@ import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
-import com.team25.telehealth.mappers.PatientMapperImpl;
 import com.team25.telehealth.repo.PatientRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -36,12 +35,13 @@ public class PatientService {
     private final MailService mailService;
     private final FileStorageService fileStorageService;
     private final EncryptionService encryptionService;
-    private final PatientMapper patientMapper = new PatientMapperImpl();
+    private final PatientMapper patientMapper;
 
     private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Patient_Data\\";
 
     @Transactional
     public Patient addPatient(Patient patient) {
+        System.out.println(patient.getPassword());
         patient.setRole(PATIENT);
         patient.setPatientId(patientIdGenerator.generateNextId());
         patient.setActive(true);

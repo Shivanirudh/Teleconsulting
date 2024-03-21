@@ -21,6 +21,14 @@ public class OtpHelper {
         return LocalDateTime.now().plusMinutes(OTP_EXPIRATION_MINUTES);
     }
 
+    public boolean otpEqual(String input, String existing) {
+        return input.equals(existing);
+    }
+
+    public boolean otpCheck(String input, String existing, LocalDateTime expirationTime) {
+        return !isOtpExpired(expirationTime) && otpEqual(input, existing);
+    }
+
     public boolean isOtpExpired(LocalDateTime expirationTime) {
         return LocalDateTime.now().isAfter(expirationTime);
     }

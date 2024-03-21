@@ -25,7 +25,7 @@ public class AdminService {
     private final AdminIdGenerator adminIdGenerator;
     private final MailService mailService;
     private final OtpHelper otpHelper;
-    private final AdminMapper adminMapper = new AdminMapperImpl();
+    private final AdminMapper adminMapper;
 
     @Transactional
     public Admin addAdmin(Admin admin) {

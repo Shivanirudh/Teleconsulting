@@ -1,5 +1,6 @@
 package com.team25.telehealth.auth;
 
+import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
@@ -19,7 +20,7 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/patient/register")
-    public ResponseEntity<?> registerPatient(@Valid @RequestBody Patient req) {
+    public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientDTO req) {
         return service.registerPatient(req);
     }
 
@@ -49,5 +50,20 @@ public class AuthenticationController {
     @PostMapping("/admin/authenticate")
     public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody AuthenticationRequest req) {
         return service.authenticateAdmin(req);
+    }
+
+    @PostMapping("/patient/forgotpassword")
+    public ResponseEntity<?> forgotPasswordPatient(@Valid @RequestBody AuthenticationRequest req) {
+        return service.forgotPasswordPatient(req);
+    }
+
+    @PostMapping("/doctor/forgotpassword")
+    public ResponseEntity<?> forgotPasswordDoctor(@Valid @RequestBody AuthenticationRequest req) {
+        return service.forgotPasswordDoctor(req);
+    }
+
+    @PostMapping("/admin/forgotpassword")
+    public ResponseEntity<?> forgotPasswordAdmin(@Valid @RequestBody AuthenticationRequest req) {
+        return service.forgotPasswordAdmin(req);
     }
 }

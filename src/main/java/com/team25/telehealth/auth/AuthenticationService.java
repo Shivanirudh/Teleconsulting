@@ -1,12 +1,14 @@
 package com.team25.telehealth.auth;
 
 import com.team25.telehealth.config.JwtService;
+import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.dto.response.AuthenticationResponse;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.entity.Token;
 import com.team25.telehealth.helpers.OtpHelper;
+import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.model.*;
 import com.team25.telehealth.repo.AdminRepo;
 import com.team25.telehealth.repo.DoctorRepo;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +41,8 @@ public class AuthenticationService {
     private final TokenRepo tokenRepo;
     private final OtpHelper otpHelper;
     private final MailService mailService;
+    private final PatientMapper patientMapper;
+    private final PasswordEncoder passwordEncoder;
 
 //    public AuthenticationResponse registerPatient(Patient req) {
 //        var patient = patientService.addPatient(req);
@@ -49,8 +54,8 @@ public class AuthenticationService {
 //    }
 
     @Transactional
-    public ResponseEntity<?> registerPatient(Patient req) {
-        var patient = patientService.addPatient(req);
+    public ResponseEntity<?> registerPatient(PatientDTO req) {
+        var patient = patientService.addPatient(patientMapper.toEntity(req));
         if(patient == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't create the user.");
         }
@@ -146,7 +151,7 @@ public class AuthenticationService {
         patientRepo.save(patient);
         mailService.sendEmail(patient.getEmail(),
                 "OTP For TeleHealth Website",
-                patient.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone. It will only be valid for 10 minutes.");
+                patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 
@@ -157,7 +162,7 @@ public class AuthenticationService {
         doctorRepo.save(doctor);
         mailService.sendEmail(doctor.getEmail(),
                 "OTP For TeleHealth Website",
-                doctor.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+                doctor.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 
@@ -168,7 +173,43 @@ public class AuthenticationService {
         adminRepo.save(admin);
         mailService.sendEmail(admin.getEmail(),
                 "OTP For TeleHealth Website",
-                admin.getOtp() + " This is the OTP generated for logging into your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+                admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> forgotPasswordAdmin(AuthenticationRequest req) {
+        var admin = adminService.getAdminByEmail(req.getEmail());
+        if(!otpHelper.otpCheck(req.getOtp(), admin.getOtp(), admin.getOtpExpiry()))
+            return ResponseEntity.badRequest().body("OTP is incorrect or expired");
+        if(!req.getPassword().equals(req.getRetypePassword()))
+            return ResponseEntity.badRequest().body("Both passwords should be same");
+        admin.setPassword(passwordEncoder.encode(req.getPassword()));
+        adminRepo.save(admin);
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> forgotPasswordDoctor(AuthenticationRequest req) {
+        var doctor = doctorService.getDoctorByEmail(req.getEmail());
+        if(!otpHelper.otpCheck(req.getOtp(), doctor.getOtp(), doctor.getOtpExpiry()))
+            return ResponseEntity.badRequest().body("OTP is incorrect or expired");
+        if(!req.getPassword().equals(req.getRetypePassword()))
+            return ResponseEntity.badRequest().body("Both passwords should be same");
+        doctor.setPassword(passwordEncoder.encode(req.getPassword()));
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> forgotPasswordPatient(AuthenticationRequest req) {
+        var patient = patientService.getPatientByEmail(req.getEmail());
+        if(!otpHelper.otpCheck(req.getOtp(), patient.getOtp(), patient.getOtpExpiry()))
+            return ResponseEntity.badRequest().body("OTP is incorrect or expired");
+        if(!req.getPassword().equals(req.getRetypePassword()))
+            return ResponseEntity.badRequest().body("Both passwords should be same");
+        patient.setPassword(passwordEncoder.encode(req.getPassword()));
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Password updated successfully");
     }
 }

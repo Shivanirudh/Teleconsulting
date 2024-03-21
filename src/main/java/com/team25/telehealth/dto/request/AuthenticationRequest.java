@@ -29,4 +29,7 @@ public class AuthenticationRequest {
     @Size(min = 4, max = 255, message = "Atleast 4 characters are required")
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("retype_password")
+    private String retypePassword;
 }
