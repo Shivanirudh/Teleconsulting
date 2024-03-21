@@ -1,7 +1,9 @@
 package com.team25.telehealth;
 
+import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.model.BloodGroup;
 import com.team25.telehealth.model.Specialization;
@@ -44,12 +46,20 @@ public class TeleHealthApplication {
                     .DOB(LocalDateTime.now())
                     .bloodType(BloodGroup.A_POSITIVE)
                     .build());
+            adminService.addHospital(null, HospitalDTO.builder()
+                    .name("Team25")
+                    .address("somewhere in india")
+                    .phoneNo(1234567890L)
+                    .email("team25telehealth@gmail.com")
+                    .build());
+            Hospital hospital = adminService.getHospitalByEmail("team25telehealth@gmail.com");
             doctorService.addDoctor(Doctor.builder()
                     .firstName("Yash")
                     .lastName("Jain")
                     .phoneNo(9953123857L)
                     .password("1234")
                     .specialization(Specialization.GYNECOLOGIST)
+                    .hospital(hospital)
                     .email("prashantjain0501@gmail.com")
                     .build());
 

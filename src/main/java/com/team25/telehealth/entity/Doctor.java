@@ -58,7 +58,7 @@ public class Doctor extends BaseEntity{
     private Specialization specialization;
 
     @ManyToOne
-    @JoinColumn(name = "hospital_id")
+    @JoinColumn(name = "hospital_id", nullable = false)
     @JsonManagedReference
     private Hospital hospital;
 

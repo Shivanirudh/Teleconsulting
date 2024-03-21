@@ -1,8 +1,10 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,22 @@ import java.security.Principal;
 public class AdminController {
     private final AdminService adminService;
 
-    @GetMapping("/")
+//    @GetMapping("/")
 //    @PreAuthorize("hasAuthority('admin:read')")
-    public ResponseEntity<?> getAdmin(@RequestBody String email, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminByEmail(email));
-    }
+//    public ResponseEntity<?> getAdmin(@RequestBody String email, Principal principal) {
+//        return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdminByEmail(email));
+//    }
 
 //    @PostMapping("/")
 //    @PreAuthorize("hasAuthority('admin:create')")
 //    public ResponseEntity<?> addAdmin(@RequestBody Admin admin, Principal principal) {
 //        return ResponseEntity.status(HttpStatus.OK).body(adminService.addAdmin(admin));
 //    }
+
+    @PostMapping("/hospital")
+    public ResponseEntity<?> addHospital(Principal principal, @Valid @RequestBody HospitalDTO hospitalDTO) {
+        return adminService.addHospital(principal, hospitalDTO);
+    }
 
     @PostMapping("/generateotp")
     public ResponseEntity<?> generateOTP(Principal principal) {

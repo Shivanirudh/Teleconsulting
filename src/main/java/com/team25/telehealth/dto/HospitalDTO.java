@@ -29,7 +29,7 @@ public class HospitalDTO {
     @NotNull(message = "Phone Number Cannot be empty")
     @Digits(integer = 10, message = "Enter correct phone number", fraction = 0)
     @JsonProperty("phone_number")
-    private String phoneNo;
+    private Long phoneNo;
 
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")

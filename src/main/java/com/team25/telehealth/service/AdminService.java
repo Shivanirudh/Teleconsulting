@@ -1,13 +1,23 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.AdminIdGenerator;
 import com.team25.telehealth.helpers.OtpHelper;
+import com.team25.telehealth.helpers.generators.HospitalIdGenerator;
 import com.team25.telehealth.mappers.AdminMapper;
-import com.team25.telehealth.mappers.AdminMapperImpl;
+import com.team25.telehealth.mappers.HospitalMapper;
 import com.team25.telehealth.repo.AdminRepo;
+import com.team25.telehealth.repo.HospitalRepo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +31,7 @@ import static com.team25.telehealth.model.Role.ADMIN;
 @Service
 @AllArgsConstructor
 public class AdminService {
+    private final EntityManager entityManager;
     private final AdminRepo adminRepo;
     private final DoctorService doctorService;
     private final PasswordEncoder passwordEncoder;
@@ -28,6 +39,9 @@ public class AdminService {
     private final MailService mailService;
     private final OtpHelper otpHelper;
     private final AdminMapper adminMapper;
+    private final HospitalRepo hospitalRepo;
+    private final HospitalMapper hospitalMapper;
+    private final HospitalIdGenerator hospitalIdGenerator;
 
     @Transactional
     public Admin addAdmin(Admin admin) {
@@ -69,5 +83,44 @@ public class AdminService {
         admin.setPassword(passwordEncoder.encode(req.getPassword()));
         adminRepo.save(admin);
         return ResponseEntity.ok("Password Changed Successfully");
+    }
+
+    private boolean isDuplicateHospital(Hospital hospital) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Hospital> query = cb.createQuery(Hospital.class);
+        Root<Hospital> root = query.from(Hospital.class);
+
+        Predicate predicate = cb.or(
+                cb.equal(root.get("name"), hospital.getName()),
+                cb.equal(root.get("address"), hospital.getAddress()),
+                cb.equal(root.get("phoneNo"), hospital.getPhoneNo()),
+                cb.equal(root.get("email"), hospital.getEmail())
+        );
+
+        query.where(predicate);
+        TypedQuery<Hospital> typedQuery = entityManager.createQuery(query);
+
+        var count = typedQuery.getResultList();
+
+        count.forEach(item -> {
+            System.out.println(item.toString());
+        });
+
+        return !count.isEmpty();
+    }
+
+    public ResponseEntity<?> addHospital(Principal principal, HospitalDTO hospitalDTO) {
+        Hospital hospital = hospitalMapper.toEntity(hospitalDTO);
+        if(isDuplicateHospital(hospital)) {
+            return ResponseEntity.badRequest().body("Email, Phone number, address, Name should be unique");
+        }
+        hospital.setHospitalId(hospitalIdGenerator.generateNextId());
+        hospital.setActive(true);
+        hospitalRepo.save(hospital);
+        return ResponseEntity.ok("Hospital Created Successfully");
+    }
+
+    public Hospital getHospitalByEmail(String email) {
+        return hospitalRepo.findByEmail(email).get();
     }
 }

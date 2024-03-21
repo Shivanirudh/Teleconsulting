@@ -1,5 +1,6 @@
 package com.team25.telehealth.helpers.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,5 +29,10 @@ public class GlobalExceptionHandler {
         });
 
         return new ResponseEntity<Map<String, String>>(res, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return new ResponseEntity<>("Data integrity violation occurred: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
