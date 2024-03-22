@@ -1,5 +1,6 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
@@ -39,9 +40,8 @@ public class AdminService {
     private final MailService mailService;
     private final OtpHelper otpHelper;
     private final AdminMapper adminMapper;
-    private final HospitalRepo hospitalRepo;
     private final HospitalMapper hospitalMapper;
-    private final HospitalIdGenerator hospitalIdGenerator;
+    private final HospitalService hospitalService;
 
     @Transactional
     public Admin addAdmin(Admin admin) {
@@ -85,42 +85,14 @@ public class AdminService {
         return ResponseEntity.ok("Password Changed Successfully");
     }
 
-    private boolean isDuplicateHospital(Hospital hospital) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Hospital> query = cb.createQuery(Hospital.class);
-        Root<Hospital> root = query.from(Hospital.class);
-
-        Predicate predicate = cb.or(
-                cb.equal(root.get("name"), hospital.getName()),
-                cb.equal(root.get("address"), hospital.getAddress()),
-                cb.equal(root.get("phoneNo"), hospital.getPhoneNo()),
-                cb.equal(root.get("email"), hospital.getEmail())
-        );
-
-        query.where(predicate);
-        TypedQuery<Hospital> typedQuery = entityManager.createQuery(query);
-
-        var count = typedQuery.getResultList();
-
-        count.forEach(item -> {
-            System.out.println(item.toString());
-        });
-
-        return !count.isEmpty();
-    }
-
     public ResponseEntity<?> addHospital(Principal principal, HospitalDTO hospitalDTO) {
-        Hospital hospital = hospitalMapper.toEntity(hospitalDTO);
-        if(isDuplicateHospital(hospital)) {
-            return ResponseEntity.badRequest().body("Email, Phone number, address, Name should be unique");
-        }
-        hospital.setHospitalId(hospitalIdGenerator.generateNextId());
-        hospital.setActive(true);
-        hospitalRepo.save(hospital);
-        return ResponseEntity.ok("Hospital Created Successfully");
+        return hospitalService.addHospital(principal, hospitalDTO);
     }
 
-    public Hospital getHospitalByEmail(String email) {
-        return hospitalRepo.findByEmail(email).get();
+    public ResponseEntity<?> addDoctor(Principal principal, DoctorDTO doctorDTO) {
+        if(doctorDTO.getHospital().getHospitalId() == null || doctorDTO.getHospital().getHospitalId().isEmpty())
+            return ResponseEntity.badRequest().body("Hospital of the doctor must be provided");
+        Hospital hospital = hospitalService.findByHospitalId(doctorDTO.getHospital().getHospitalId());
+        return doctorService.addDoctor(principal, doctorDTO, hospital);
     }
 }

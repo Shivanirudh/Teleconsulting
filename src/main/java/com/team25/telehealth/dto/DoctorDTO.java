@@ -39,7 +39,6 @@ public class DoctorDTO {
     @JsonProperty("email")
     private String email;
 
-    @NotEmpty(message = "Password cannot be empty")
     @Size(min = 4, max = 255, message = "Atleast 4 characters are required")
     @JsonProperty("password")
     private String password;

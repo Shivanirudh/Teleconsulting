@@ -1,14 +1,21 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.DoctorIdGenerator;
 import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.mappers.DoctorMapper;
-import com.team25.telehealth.mappers.DoctorMapperImpl;
 import com.team25.telehealth.repo.DoctorRepo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +35,20 @@ public class DoctorService {
     private final OtpHelper otpHelper;
     private final MailService mailService;
     private final DoctorMapper doctorMapper;
+    private final EntityManager entityManager;
 
     @Transactional
-    public Doctor addDoctor(Doctor doctor) {
-        doctor.setRole(DOCTOR);
+    public ResponseEntity<?> addDoctor(Principal principal, DoctorDTO doctorDTO, Hospital hospital) {
+        Doctor doctor = doctorMapper.toEntity(doctorDTO);
+        if(isDuplicateDoctor(doctor)) {
+            return ResponseEntity.badRequest().body("Email, Phone number should be unique");
+        }
         doctor.setDoctorId(doctorIdGenerator.generateNextId());
         doctor.setActive(true);
-        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
-        return doctorRepo.save(doctor);
+        doctor.setHospital(hospital);
+        doctor.setPassword(passwordEncoder.encode("1234"));
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Doctor Saved Successfully");
     }
 
     public Doctor getDoctorByEmail(String email) {
@@ -70,4 +83,23 @@ public class DoctorService {
         doctorRepo.save(doctor);
         return ResponseEntity.ok("Password Changed Successfully");
     }
+
+    private boolean isDuplicateDoctor(Doctor doctor) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Doctor> query = cb.createQuery(Doctor.class);
+        Root<Doctor> root = query.from(Doctor.class);
+
+        Predicate predicate = cb.or(
+                cb.equal(root.get("phoneNo"), doctor.getPhoneNo()),
+                cb.equal(root.get("email"), doctor.getEmail())
+        );
+
+        query.where(predicate);
+        TypedQuery<Doctor> typedQuery = entityManager.createQuery(query);
+
+        var count = typedQuery.getResultList();
+
+        return !count.isEmpty();
+    }
+
 }

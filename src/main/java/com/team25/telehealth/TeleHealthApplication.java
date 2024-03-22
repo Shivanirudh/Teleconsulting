@@ -1,14 +1,17 @@
 package com.team25.telehealth;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.entity.Admin;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.model.BloodGroup;
+import com.team25.telehealth.model.Role;
 import com.team25.telehealth.model.Specialization;
 import com.team25.telehealth.service.AdminService;
 import com.team25.telehealth.service.DoctorService;
+import com.team25.telehealth.service.HospitalService;
 import com.team25.telehealth.service.PatientService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +30,7 @@ public class TeleHealthApplication {
     }
 
 //    @Bean
-    public CommandLineRunner commandLineRunner(PatientService patientService, DoctorService doctorService, AdminService adminService) {
+    public CommandLineRunner commandLineRunner(PatientService patientService, DoctorService doctorService, AdminService adminService, HospitalService hospitalService) {
         return  args -> {
             adminService.addAdmin(Admin.builder()
                     .firstName("admin")
@@ -52,16 +55,15 @@ public class TeleHealthApplication {
                     .phoneNo(1234567890L)
                     .email("team25telehealth@gmail.com")
                     .build());
-            Hospital hospital = adminService.getHospitalByEmail("team25telehealth@gmail.com");
-            doctorService.addDoctor(Doctor.builder()
+            Hospital hospital = hospitalService.getHospitalByEmail("team25telehealth@gmail.com");
+            doctorService.addDoctor(null, DoctorDTO.builder()
                     .firstName("Yash")
                     .lastName("Jain")
                     .phoneNo(9953123857L)
-                    .password("1234")
+                    .role(Role.SENIORDOCTOR)
                     .specialization(Specialization.GYNECOLOGIST)
-                    .hospital(hospital)
                     .email("prashantjain0501@gmail.com")
-                    .build());
+                    .build(), hospital);
 
             System.out.println(adminService.getAdminByEmail("team25telehealth@gmail.com"));
             System.out.println(patientService.getPatientByEmail("me.prashantjn@gmail.com"));

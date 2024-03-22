@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Admin;
@@ -35,6 +36,11 @@ public class AdminController {
     @PostMapping("/hospital")
     public ResponseEntity<?> addHospital(Principal principal, @Valid @RequestBody HospitalDTO hospitalDTO) {
         return adminService.addHospital(principal, hospitalDTO);
+    }
+
+    @PostMapping("/doctor")
+    public ResponseEntity<?> addDoctor(Principal principal, @Valid @RequestBody DoctorDTO doctorDTO) {
+        return adminService.addDoctor(principal, doctorDTO);
     }
 
     @PostMapping("/generateotp")
