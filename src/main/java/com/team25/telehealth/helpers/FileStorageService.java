@@ -7,6 +7,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FileStorageService {
@@ -28,5 +32,18 @@ public class FileStorageService {
 
     public File getFile(String filePath) {
         return new File(filePath);
+    }
+
+    public List<String> getAllFileNames(String folderPath) {
+        File folder = new File(folderPath);
+        File[] files = folder.listFiles();
+        if (files != null) {
+            return Arrays.stream(files)
+                    .filter(File::isFile)
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

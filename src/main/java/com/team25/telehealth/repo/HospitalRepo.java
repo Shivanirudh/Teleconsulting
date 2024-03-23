@@ -1,5 +1,6 @@
 package com.team25.telehealth.repo;
 
+import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,4 +10,6 @@ public interface HospitalRepo extends JpaRepository<Hospital, Integer> {
     public Optional<Hospital> findByEmail(String email);
 
     public Optional<Hospital> findByHospitalId(String hospitalId);
+
+    public Optional<Hospital> findByDoctor(Doctor doctor);
 }

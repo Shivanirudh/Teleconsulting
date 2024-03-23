@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.List;
 
 import static com.team25.telehealth.model.Role.PATIENT;
 
@@ -86,7 +87,6 @@ public class PatientService {
         }
     }
 
-    @Transactional
     public ResponseEntity<?> fetchFile(Principal principal, String fileName) {
         Patient patient = getPatientByEmail(principal.getName());
         try {
@@ -109,6 +109,17 @@ public class PatientService {
             } else {
                 return ResponseEntity.notFound().build();
             }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<?> fetchAllFileNames(Principal principal) {
+        Patient patient = getPatientByEmail(principal.getName());
+        try {
+            String folderPath = STORAGE_PATH + patient.getPatientId();
+            List<String> fileNames = fileStorageService.getAllFileNames(folderPath);
+            return ResponseEntity.ok().body(fileNames);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -139,5 +150,15 @@ public class PatientService {
         patient.setPassword(passwordEncoder.encode(req.getPassword()));
         patientRepo.save(patient);
         return ResponseEntity.ok("Password Changed Successfully");
+    }
+
+    public Patient getPatientByPatientId(String patientId) {
+        return patientRepo.findByPatientId(patientId).orElseThrow(() -> new ResourceNotFoundException("Patient", "Patient Id", patientId));
+    }
+
+    public boolean documentExists(Patient patient, String fileName) {
+        String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
+        File file = fileStorageService.getFile(filePath);
+        return file.exists();
     }
 }

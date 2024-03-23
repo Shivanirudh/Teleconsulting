@@ -1,8 +1,10 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.ConsentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.DoctorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ import java.security.Principal;
 @AllArgsConstructor
 public class DoctorController {
     private final DoctorService doctorService;
+    private final ConsentService consentService;
 
     @GetMapping("/")
     public ResponseEntity<?> getDoctor(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -36,5 +39,10 @@ public class DoctorController {
     @PutMapping("/changePassword")
     public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
         return doctorService.changePassword(principal, req);
+    }
+
+    @PostMapping("/consent")
+    public ResponseEntity<?> getConsent(Principal principal,@RequestBody ConsentDTO consentDTO) {
+        return consentService.getConsent(principal, consentDTO);
     }
 }

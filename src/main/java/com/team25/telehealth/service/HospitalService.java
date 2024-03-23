@@ -1,6 +1,7 @@
 package com.team25.telehealth.service;
 
 import com.team25.telehealth.dto.HospitalDTO;
+import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.HospitalIdGenerator;
@@ -65,5 +66,10 @@ public class HospitalService {
     public Hospital findByHospitalId(String hospitalId) {
         return hospitalRepo.findByHospitalId(hospitalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "id", hospitalId));
+    }
+
+    public Hospital findHospitalByDoctor(Doctor doctor) {
+        return hospitalRepo.findByDoctor(doctor)
+                .orElseThrow(() -> new ResourceNotFoundException("Hospital", "Doctor Id", doctor.getId().toString()));
     }
 }

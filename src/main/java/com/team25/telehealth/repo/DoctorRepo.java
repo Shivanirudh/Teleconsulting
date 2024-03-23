@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface DoctorRepo extends JpaRepository<Doctor, Integer> {
     public Optional<Doctor> findByEmail(String email);
+
+    public Optional<Doctor> findByDoctorId(String doctorId);
 }

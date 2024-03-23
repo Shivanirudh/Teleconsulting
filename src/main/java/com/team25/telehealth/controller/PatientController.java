@@ -43,4 +43,9 @@ public class PatientController {
     public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
         return patientService.changePassword(principal, req);
     }
+
+    @GetMapping("/files")
+    public ResponseEntity<?> fetchAllFileNames(Principal principal) {
+        return patientService.fetchAllFileNames(principal);
+    }
 }

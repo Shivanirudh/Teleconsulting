@@ -102,4 +102,8 @@ public class DoctorService {
         return !count.isEmpty();
     }
 
+    public Doctor getDoctorByDoctorId(String doctorId) {
+        return doctorRepo.findByDoctorId(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", "id", doctorId));
+    }
 }
