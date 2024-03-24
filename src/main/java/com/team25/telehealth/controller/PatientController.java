@@ -1,7 +1,9 @@
 package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.request.AuthenticationRequest;
+import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import java.security.Principal;
 public class PatientController {
 
     private final PatientService patientService;
+    private final ConsentService consentService;
 
     @GetMapping("/")
     public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -47,5 +50,15 @@ public class PatientController {
     @GetMapping("/files")
     public ResponseEntity<?> fetchAllFileNames(Principal principal) {
         return patientService.fetchAllFileNames(principal);
+    }
+
+    @GetMapping("/consents-requested")
+    public ResponseEntity<?> fetchAllConsentRequests(Principal principal) {
+        return consentService.fetchAllConsentRequests(principal);
+    }
+
+    @PutMapping("/give-consent")
+    public ResponseEntity<?> giveConsent(Principal principal, @Valid @RequestBody ConsentRequest request) {
+        return consentService.giveConsent(principal, request);
     }
 }

@@ -1,12 +1,15 @@
 package com.team25.telehealth.service;
 
 import com.team25.telehealth.dto.ConsentDTO;
+import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.entity.Consent;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.OtpHelper;
+import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.ConsentIdGenerator;
+import com.team25.telehealth.mappers.ConsentMapper;
 import com.team25.telehealth.mappers.DoctorMapper;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.repo.ConsentRepo;
@@ -30,6 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ConsentService {
     private final PatientMapper patientMapper;
+    private final ConsentMapper consentMapper;
     private final DoctorMapper doctorMapper;
     private final ConsentRepo consentRepo;
     private final DoctorService doctorService;
@@ -120,5 +124,36 @@ public class ConsentService {
         TypedQuery<Consent> typedQuery = entityManager.createQuery(query);
 
         return typedQuery.getResultList();
+    }
+
+    public ResponseEntity<?> fetchAllConsentRequests(Principal principal) {
+        Patient patient = patientService.getPatientByEmail(principal.getName());
+        List<Consent> consents = consentRepo.findConsentsByPatientAndExpiryDate(patient, LocalDateTime.now());
+        List<ConsentDTO> response = consentMapper.toDTOList(consents);
+        return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    public ResponseEntity<?> giveConsent(Principal principal, ConsentRequest request) {
+        Patient patient = patientService.getPatientByEmail(principal.getName());
+        Consent consent = consentRepo.findByConsentIdAndPatient(request.getConsentId(), patient)
+                .orElseThrow(() -> new ResourceNotFoundException("Consent", "consent id", request.getConsentId()));
+
+        if(!otpHelper.otpCheck(request.getOtp(), consent.getOtp(), consent.getOtpExpiry())) {
+            return ResponseEntity.badRequest().body("OTP is expired or wrong");
+        }
+        if(request.getExpiryDay().equals("15")) {
+            consent.setExpiryDate(otpHelper.generateExpirationTime(15*24*60));
+        } else if(request.getExpiryDay().equals("30")) {
+            consent.setExpiryDate(otpHelper.generateExpirationTime(30*24*60));
+        } else if(request.getExpiryDay().equals("90")) {
+            consent.setExpiryDate(otpHelper.generateExpirationTime(90*24*60));
+        } else if(request.getExpiryDay().equals("180")) {
+            consent.setExpiryDate(otpHelper.generateExpirationTime(180*24*60));
+        } else {
+            return ResponseEntity.badRequest().body("Expiry Day provided is wrong");
+        }
+        consentRepo.save(consent);
+        return ResponseEntity.ok("Consent has been given");
     }
 }

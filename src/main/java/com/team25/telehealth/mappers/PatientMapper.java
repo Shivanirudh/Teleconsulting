@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface PatientMapper {
     PatientMapper INSTANCE = Mappers.getMapper(PatientMapper.class);
 
+    @Mapping(target = "password", ignore = true)
     PatientDTO toDTO(Patient patient);
 
     @Mapping(target = "password", source = "password")
