@@ -45,4 +45,14 @@ public class DoctorController {
     public ResponseEntity<?> getConsent(Principal principal,@RequestBody ConsentDTO consentDTO) {
         return consentService.getConsent(principal, consentDTO);
     }
+
+    @GetMapping("/consent")
+    public ResponseEntity<?> checkDoctorConsents(Principal principal) {
+        return consentService.checkDoctorConsents(principal);
+    }
+
+    @GetMapping("/consent/{consentId}/patient/{patientId}")
+    public ResponseEntity<?> fetchDocument(Principal principal, @PathVariable String consentId, @PathVariable String patientId) {
+        return consentService.fetchDocument(principal, consentId, patientId);
+    }
 }

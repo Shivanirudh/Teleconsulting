@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -155,5 +156,28 @@ public class ConsentService {
         }
         consentRepo.save(consent);
         return ResponseEntity.ok("Consent has been given");
+    }
+
+    public ResponseEntity<?> checkDoctorConsents(Principal principal) {
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        List<Consent> consents = consentRepo.findByHospitalAndExpiryDateAfter(doctor.getHospital(), LocalDateTime.now());
+        List<ConsentDTO> response = consentMapper.toDTOList(consents);
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> fetchDocument(Principal principal, String consentId, String patientId) {
+        Consent consent = consentRepo.findByConsentId(consentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Consent", "id", consentId));
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        if(!doctor.getHospital().getId().equals(consent.getHospital().getId())) {
+            return ResponseEntity.badRequest().body("You do not have consent to access this document");
+        }
+        if(LocalDateTime.now().isAfter(consent.getExpiryDate())) {
+            return ResponseEntity.badRequest().body("You need to apply again for the consent as it is expired");
+        }
+        Patient patient = patientService.getPatientByPatientId(patientId);
+        if(!Objects.equals(patient.getId(), consent.getPatient().getId()))
+            return ResponseEntity.badRequest().body("Patient Id is wrong for this consent");
+        return patientService.fetchFile(patient, consent.getDocumentName());
     }
 }

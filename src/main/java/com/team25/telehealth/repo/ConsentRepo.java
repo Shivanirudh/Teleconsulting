@@ -1,6 +1,8 @@
 package com.team25.telehealth.repo;
 
 import com.team25.telehealth.entity.Consent;
+import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +19,6 @@ public interface ConsentRepo extends JpaRepository<Consent, Integer> {
 
     @Query("SELECT c FROM Consent c WHERE c.patient = :patient AND (c.expiryDate IS NULL OR c.expiryDate < :currentTime)")
     List<Consent> findConsentsByPatientAndExpiryDate(@Param("patient") Patient patient, @Param("currentTime") LocalDateTime currentTime);
+
+    List<Consent> findByHospitalAndExpiryDateAfter(Hospital hospital, LocalDateTime localDateTime);
 }

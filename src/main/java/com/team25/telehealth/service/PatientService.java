@@ -114,6 +114,33 @@ public class PatientService {
         }
     }
 
+    public ResponseEntity<?> fetchFile(Patient patient, String fileName) {
+
+        try {
+            String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
+            File file = fileStorageService.getFile(filePath);
+            if (file.exists()) {
+                // Fetch encryption key and decrypt file
+                // Assuming you have a method to fetch the key based on user ID
+                byte[] decryptedContent = encryptionService.decryptFile(filePath);
+
+                // Set content type based on file extension
+                MediaType mediaType = getMediaTypeForFileName(fileName);
+
+                // Set response headers to trigger download in Postman
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(mediaType);
+                headers.setContentDispositionFormData(fileName, fileName);
+
+                return new ResponseEntity<>(decryptedContent, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     public ResponseEntity<?> fetchAllFileNames(Principal principal) {
         Patient patient = getPatientByEmail(principal.getName());
         try {
