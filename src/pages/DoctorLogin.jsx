@@ -53,18 +53,18 @@ const DoctorLogin = () => {
 
   return (
     <div className="doctor-login-page">
-      <video autoPlay muted loop className="login-video-bg">
+      <video autoPlay muted loop className="dc-login-video-bg">
         <source src={videobg} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      <div className="login-container">
-        <img src={logo} alt="Doctor Logo" className="doctor-logo" />
-        <input type="email" className="login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="text" className="login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-        <input type="password" className="login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button className="login-button" onClick={handleGetOTP}>Get OTP</button>
-        <button className="login-button" onClick={handleLogin}>Login</button>
+      <div className="dc-login-container">
+        <img src={logo} alt="Doctor Logo" className="dc-doctor-logo" />
+        <input type="email" className="dc-login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="text" className="dc-login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+        <input type="password" className="dc-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button className="dc-login-button" onClick={handleGetOTP}>Get OTP</button>
+        <button className="dc-login-button" onClick={handleLogin}>Login</button>
       </div>
     </div>
   );

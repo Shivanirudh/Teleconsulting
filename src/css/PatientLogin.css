@@ -1,13 +1,13 @@
 /* PatientLogin.css */
 
-.patient-login-container {
+.ani-patient-login-container {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
 }
 
-.login-video-bg {
+.ani-login-video-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   object-fit: cover; /* Ensures the video covers the entire container */
 }
 
-.login-content-container {
+.ani-login-content-container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -24,57 +24,58 @@
   z-index: 1;
   max-width: 400px; /* Adjust maximum width as needed */
   width: 90%; /* Adjust width as needed */
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(61, 63, 70, 0.7);
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.patient-logo {
+.ani-patient-logo {
   width: 100px; /* Adjust size as needed */
   height: auto;
   margin-bottom: 20px;
 }
 
-.login-input,
-.login-button,
-.signup-btn {
+.ani-login-input,
+.ani-login-button,
+.ani-signup-btn {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid transparent; /* Transparent border */
   border-radius: 5px;
   font-size: 16px;
   transition: border-color 0.3s;
 }
 
-.login-input:focus {
+.ani-login-input:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.login-button {
+.ani-login-button {
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
 }
 
-.login-button:hover {
+.ani-login-button:hover {
   background-color: #0056b3;
 }
 
-.signup-btn {
+.ani-signup-btn {
   background-color: transparent;
   color: #007bff;
+  border: 1px solid transparent; /* Transparent border */
 }
 
-.signup-btn:hover {
+.ani-signup-btn:hover {
   color: #0056b3;
 }
 
 @media (max-width: 600px) {
-  .login-content-container {
+  .ani-login-content-container {
     width: 80%;
   }
 }
