@@ -1,9 +1,11 @@
 package com.team25.telehealth.service;
 
 import com.team25.telehealth.dto.ScheduleDTO;
+import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Schedule;
 import com.team25.telehealth.helpers.generators.ScheduleIdGenerator;
+import com.team25.telehealth.repo.AppointmentRepo;
 import com.team25.telehealth.repo.ScheduleRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ public class ScheduleService {
     private final DoctorService doctorService;
     private final ScheduleRepo scheduleRepo;
     private final ScheduleIdGenerator scheduleIdGenerator;
+    private final AppointmentRepo appointmentRepo;
+    private final MailService mailService;
 
     @Transactional
     public ResponseEntity<?> uploadSchedule(Principal principal, ScheduleDTO scheduleDTO) {
@@ -50,6 +54,18 @@ public class ScheduleService {
                     .doctor(doctor)
                     .build();
             scheduleRepo.save(newSchedule);
+        }
+
+        for (Schedule s: inactiveSchedules) {
+            Appointment appointment = appointmentRepo.findByDoctorAndSlotAndActive(doctor, s.getSlot(), true).orElse(null);
+            if(appointment != null && appointment.getSlot().isAfter(LocalDateTime.now())) {
+                appointment.setActive(false);
+                appointmentRepo.save(appointment);
+                mailService.sendEmail(appointment.getPatient().getEmail(),
+                    "Doctor cancelled your appointment",
+                    "Doctor Cancelled your upcoming appointment " + appointment.getSlot().toString()
+                );
+            }
         }
 
         scheduleRepo.saveAll(inactiveSchedules);

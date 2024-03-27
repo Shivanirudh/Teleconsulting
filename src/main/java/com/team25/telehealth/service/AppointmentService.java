@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -80,6 +81,10 @@ public class AppointmentService {
 
         if(!appointment.getPatient().getId().equals(patient.getId())) {
             return ResponseEntity.badRequest().body("Wrong Appointment");
+        }
+
+        if(appointment.getSlot().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body("Cannot cancel the past appointments");
         }
 
         appointment.setActive(false);
