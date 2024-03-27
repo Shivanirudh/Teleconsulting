@@ -45,3 +45,6 @@
   .bas-aps-but:hover {
     background-color: #79c2d0;/* Darker blue on hover */
   }
+.booked-appointments-container{
+  text-align: center;
+}

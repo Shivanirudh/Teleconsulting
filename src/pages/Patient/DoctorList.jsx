@@ -42,7 +42,7 @@ function DoctorList() {
   return (
     <div className="doctor-list-container">
       <SearchBar onSearch={setSearchTerm} />
-      <h2>Available Doctors</h2>
+      <h2 style={{textAlign: 'center'}}>Available Doctors</h2>
       <ul>
         {filteredDoctors.map((doctor, index) => (
           <li key={index}>

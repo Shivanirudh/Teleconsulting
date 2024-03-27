@@ -3,6 +3,7 @@
 /* Container styles */
 .patient-my-documents-container {
     margin: 20px;
+    text-align: center;
   }
   
   /* Table styles */
@@ -10,12 +11,14 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    text-align: center;
   }
   
   .patient-documents-table th, .patient-documents-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    text-align: center;
   }
   
   .patient-documents-table th {

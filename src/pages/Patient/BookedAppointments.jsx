@@ -23,8 +23,8 @@ function BookedAppointments() {
       <h2>Booked Appointments</h2>
       <table className="booked-appointments-table">
         <thead>
-          <tr>
-            <th>Doctor Name</th>
+          <tr >
+            <th >Doctor Name</th>
             <th>Date</th>
             <th>Time</th>
             <th>Actions</th>
