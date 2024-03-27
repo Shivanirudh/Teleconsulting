@@ -65,6 +65,12 @@ public class ScheduleService {
                     "Doctor cancelled your appointment",
                     "Doctor Cancelled your upcoming appointment " + appointment.getSlot().toString()
                 );
+                mailService.sendEmail(appointment.getDoctor().getEmail(),
+                    "Appointment Cancellation due to Schedule update",
+                    "Your upcoming schedule with patient " + appointment.getPatient().getFirstName() +
+                            " having email id " + appointment.getPatient().getEmail() + " got cancelled due to update in the schedule"
+                        + ". Timing of the appointment was " + appointment.getSlot().toString()
+                );
             }
         }
 

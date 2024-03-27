@@ -26,6 +26,7 @@ public class AppointmentService {
     private final AppointmentRepo appointmentRepo;
     private final ScheduleRepo scheduleRepo;
     private final AppointmentIdGenerator appointmentIdGenerator;
+    private final MailService mailService;
 
     @Transactional
     public ResponseEntity<?> bookAppointment(Principal principal, AppointmentDTO appointmentDTO) {
@@ -68,6 +69,18 @@ public class AppointmentService {
                 .build();
 
         appointmentRepo.save(appointment);
+        mailService.sendEmail(
+                patient.getEmail(),
+                "Appointment Booked",
+                "You just booked an appointment with Doctor " + doctor.getFirstName() + ". Date and time of appointment is " +
+                        appointment.getSlot().toString()
+        );
+        mailService.sendEmail(
+                doctor.getEmail(),
+                "Appointment Booked",
+                "Patient " + patient.getFirstName() + " just booked an appointment. Date and time of appointment is " +
+                        appointment.getSlot().toString()
+        );
         return ResponseEntity.ok("Appointment booked successfully");
     }
 
@@ -89,6 +102,18 @@ public class AppointmentService {
 
         appointment.setActive(false);
         appointmentRepo.save(appointment);
-        return ResponseEntity.ok("Appointment cancelled successfully");
+        mailService.sendEmail(
+                patient.getEmail(),
+                "Appointment Canceled",
+                "You just canceled an appointment with Doctor " + appointment.getDoctor().getFirstName()
+                        + ". Date and time of appointment is " + appointment.getSlot().toString()
+        );
+        mailService.sendEmail(
+                appointment.getDoctor().getEmail(),
+                "Appointment Canceled",
+                "Patient " + patient.getFirstName() + " just canceled an appointment. Date and time of appointment is " +
+                        appointment.getSlot().toString()
+        );
+        return ResponseEntity.ok("Appointment canceled successfully");
     }
 }
