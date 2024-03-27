@@ -1,11 +1,13 @@
 package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.ConsentDTO;
+import com.team25.telehealth.dto.ScheduleDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.DoctorService;
+import com.team25.telehealth.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.security.Principal;
 public class DoctorController {
     private final DoctorService doctorService;
     private final ConsentService consentService;
+    private final ScheduleService scheduleService;
 
     @GetMapping("/")
     public ResponseEntity<?> getDoctor(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -54,5 +57,15 @@ public class DoctorController {
     @GetMapping("/consent/{consentId}/patient/{patientId}")
     public ResponseEntity<?> fetchDocument(Principal principal, @PathVariable String consentId, @PathVariable String patientId) {
         return consentService.fetchDocument(principal, consentId, patientId);
+    }
+
+    @PostMapping("/schedule")
+    public ResponseEntity<?> uploadSchedule(Principal principal, @Valid @RequestBody ScheduleDTO scheduleDTO) {
+        return scheduleService.uploadSchedule(principal, scheduleDTO);
+    }
+
+    @GetMapping("/schedule")
+    public ResponseEntity<?> fetchSchedule(Principal principal) {
+        return scheduleService.fetchSchedule(principal);
     }
 }
