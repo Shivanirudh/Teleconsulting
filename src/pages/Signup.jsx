@@ -68,12 +68,12 @@ const SignUp = () => {
         <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <input type="number" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(parseInt(e.target.value))} /> {/* Ensure phone is a number */}
-        <label className="terms-label" style={{ paddingBottom: '13px' }}>
+        <input type="text" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(parseInt(e.target.value))} /> {/* Ensure phone is a number */}
+        <div className="terms-label">
           <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
           <span>I have read and agree to the <span className="terms-link" onClick={handleTermsClick}>terms and agreement</span></span>
-        </label>
-        <button onClick={handleSignUp}>Sign Up</button>
+        </div>
+        <button className='sign-kardunga' onClick={handleSignUp}>Sign Up</button>
       </div>
     </div>
   );

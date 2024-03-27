@@ -26,7 +26,6 @@ function Dashboard() {
       case 'home':
         return (
           <>
-            <SearchBar onSearch={handleSearch} />
             <DoctorList searchTerm={searchTerm} />
           </>
         );
@@ -44,7 +43,7 @@ function Dashboard() {
 
   return (
     <div className="patient-dashboard-container">
-      <TopNavigationBar patientName="Atul Tripathi" />
+      <TopNavigationBar patientName="First Name Last Name" />
       <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
         <div className="patiient-main-content">

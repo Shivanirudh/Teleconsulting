@@ -5,12 +5,18 @@ import Header from '../components/Header.jsx';
 const ContactUs = () => {
     // Inline CSS styles
     const containerStyle = {
-        maxWidth: '800px',
+        width: '80%',
         margin: '0 auto',
         padding: '20px',
         backgroundColor: '#f7f7f7',
         borderRadius: '8px',
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        maxHeight: '80vh',
+        overflowY: 'auto',
     };
 
     const headerStyle = {
@@ -72,8 +78,7 @@ const ContactUs = () => {
     });
 
     return (
-        <div>
-            <Header/>
+        <div style={{ position: 'relative', height: '100vh' }}>
             <div className="content-container" style={containerStyle}>
                 <h2 style={headerStyle}>Contact Information</h2>
                 <p>If you have any questions, concerns, or feedback, please feel free to reach out to us:</p>

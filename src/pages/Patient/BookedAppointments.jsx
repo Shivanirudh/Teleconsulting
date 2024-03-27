@@ -37,7 +37,7 @@ function BookedAppointments() {
               <td>{appointment.date}</td>
               <td>{appointment.time}</td>
               <td>
-                <button onClick={() => handleGoToMeeting(appointment.id)}>Go to Meeting</button>
+                <button className='bas-aps-but'onClick={() => handleGoToMeeting(appointment.id)}>Go to Meeting</button>
               </td>
             </tr>
           ))}

@@ -8,13 +8,15 @@
   background: linear-gradient(to bottom, #79c2d0ef, #4a91a80a); /* Gradient background */
   text-align: center;
   z-index: 2;
+  
 }
 
 /* Header title */
 .header-title {
   font-size: 28px; /* Adjust font size */
   font-weight: bold;
-  color: #fff; /* White text color */
+  font-family: serif;
+  color: #4e0808; /* White text color */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
   transition: background-color 0.3s ease; /* Smooth hover effect */
 }

@@ -81,7 +81,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <button type="submit" className="edit-form-group">Save</button>
+        <button className='edit-det-wala-but' type="submit">Save</button>
       </form>
     </div>
   );

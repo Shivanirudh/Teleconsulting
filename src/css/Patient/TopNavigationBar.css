@@ -1,10 +1,15 @@
 .top-navbar {
-  background-color: #007bff;
+  background: linear-gradient(to bottom,  #79c2d0e3, #79c2d062); /* Gradient background */
   color: #fff;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.center-links {
+  flex-grow: 1; /* Grow to fill the remaining space */
+  text-align: center; /* Center the content */
 }
 
 .right-links {
@@ -21,6 +26,7 @@
 .right-links a:hover {
   color: #0056b3;
 }
+
 .signout-link a:hover{
   color: #0056b3;
 }

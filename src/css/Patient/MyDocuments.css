@@ -30,4 +30,74 @@
   .patient-upload-section h3 {
     margin-bottom: 10px;
   }
-  
+  /* DoctorList.css */
+.doctor-list-container {
+  overflow-x: auto;
+  width: 80vw; /* Set width to 80% of the viewport width */
+  height: 80vh; /* Set height to 80% of the viewport height */
+}
+
+.availability-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.availability-table th,
+.availability-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.availability-table th {
+  background-color: #f2f2f2;
+}
+
+.availability-table td.available {
+  background-color: #4CAF50; /* Green for available slots */
+}
+
+.availability-table td.booked {
+  background-color: #F44336; /* Red for booked slots */
+}
+
+.availability-table td:hover {
+  cursor: pointer;
+  background-color: #2196F3; /* Blue on hover */
+}
+
+.booking-button {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.booking-button button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.booking-button button:hover {
+  background-color: #0056b3;
+}
+
+.doc-wala-but {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6; /* Blue button */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.doc-wala-but:hover {
+  background-color: #79c2d0;/* Darker blue on hover */
+}

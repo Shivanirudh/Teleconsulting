@@ -11,8 +11,6 @@
   background-position: center;
 }
 
-
-
 .ani-login-video-bg {
   position: fixed;
   top: 0;
@@ -37,7 +35,6 @@
   text-align: center;
 }
 
-
 .ani-patient-logo {
   width: 100px; /* Adjust size as needed */
   height: auto;
@@ -61,28 +58,37 @@
   border-color: #007bff;
 }
 
-.ani-login-button {
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-}
-
-.ani-login-button:hover {
-  background-color: #0056b3;
-}
-
+/* Modify button styles as requested */
+.ani-login-button,
 .ani-signup-btn {
-  background-color: transparent;
-  color: #007bff;
-  border: 1px solid transparent; /* Transparent border */
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
 }
 
+.ani-login-button:hover,
 .ani-signup-btn:hover {
-  color: #0056b3;
+  background-color: #79c2d0;
 }
 
 @media (max-width: 600px) {
   .ani-login-content-container {
     width: 80%;
   }
+}
+
+.linkin-login{
+  color:rgb(217, 242, 243);
+}
+.linkin-login:hover{
+  color:rgb(173, 236, 238);
 }

@@ -1,10 +1,12 @@
 /* DoctorLogin.css */
-
 .doctor-login-page {
+  position: relative; /* Add position relative */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   margin: 0;
   padding: 0;
   background-image: url('../Animation/back.jpg');
@@ -13,31 +15,30 @@
   background-position: center;
 }
 
-
 .dc-login-video-bg {
   position: fixed;
-  z-index: -1;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ensures the video covers the entire container */
+  z-index: -1; /* Move the video background to the back */
 }
 
 .dc-login-container {
+  position: absolute; /* Position the container */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  max-width: 300px; /* Reduced max-width */
+  width: 90%; /* Adjust width as needed */
   background-color: rgba(61, 63, 70, 0.7);
   padding: 20px; /* Reduced padding */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 300px; /* Reduced max-width */
-  width: 90%; /* Adjust width as needed */
 }
-
-@media (max-width: 600px) {
-  .dc-login-container {
-    width: 80%; /* Adjust width as needed */
-  }
-}
-
 
 .dc-doctor-logo {
   width: 100px; /* Adjust size as needed */
@@ -50,7 +51,7 @@
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid transparent;
   border-radius: 5px;
   font-size: 16px;
   transition: border-color 0.3s;
@@ -62,17 +63,34 @@
 }
 
 .dc-login-button {
-  background-color: #007bff;
-  color: #fff;
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  border: 1px solid transparent;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
 }
 
 .dc-login-button:hover {
-  background-color: #0056b3;
+  background-color: #79c2d0;
 }
 
 .dc-otp-section {
   display: flex;
   justify-content: space-between;
+}
+
+/* Add the styles for the link similar to PatientLogin.css */
+.linkin-login {
+  color: rgb(217, 242, 243);
+}
+
+.linkin-login:hover {
+  color: rgb(173, 236, 238);
 }

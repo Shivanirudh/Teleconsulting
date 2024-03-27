@@ -62,7 +62,7 @@ function MyDocuments() {
           <input type="file" id="fileInput" onChange={handleFileChange} />
           <label htmlFor="fileInput">Choose File</label>
         </div>
-        <button onClick={handleFileUpload}>Upload</button>
+        <button className='doc-wala-but' onClick={handleFileUpload}>Upload</button>
       </div>
     </div>
   );

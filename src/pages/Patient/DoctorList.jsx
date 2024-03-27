@@ -1,9 +1,10 @@
-// DoctorList.js
-import React from 'react';
+import React, { useState } from 'react';
 import './../../css/Patient/DoctorList.css';
+import SearchBar from './../../components/Patient/SearchBar';
 
-function DoctorList({ searchTerm }) {
+function DoctorList() {
   // Dummy data for doctors
+  const [searchTerm, setSearchTerm] = useState('');
   const doctors = [
     {
       name: 'Dr. John Doe',
@@ -40,6 +41,7 @@ function DoctorList({ searchTerm }) {
 
   return (
     <div className="doctor-list-container">
+      <SearchBar onSearch={setSearchTerm} />
       <h2>Available Doctors</h2>
       <ul>
         {filteredDoctors.map((doctor, index) => (
@@ -60,7 +62,7 @@ function DoctorList({ searchTerm }) {
                 </tr>
               </tbody>
             </table>
-            <button>Book Appointment</button>
+            <button className='doc-list-wala-button'>Book Appointment</button>
           </li>
         ))}
       </ul>

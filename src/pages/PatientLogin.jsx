@@ -66,12 +66,13 @@ const PatientLogin = () => {
           <input type="password" className="ani-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button className="ani-login-button" onClick={handleGetOTP}>Get OTP</button>
           <button className="ani-login-button" onClick={handleLogin}>Login</button>
-          <button className="ani-signup-btn" onClick={handleSignUp}>Don't have an account? Register.</button>
+          <a className="linkin-login" href="/signup">Don't have an account? Register.</a>
         </div>
       </div>
       <Footer />
     </div>
   );
+  
 };
 
 export default PatientLogin;

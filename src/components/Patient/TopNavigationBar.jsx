@@ -33,10 +33,12 @@ function TopNavigationBar({ patientName, onSignOut }) {
 
   return (
     <div className="top-navbar">
-      <span>Welcome, {patientName}</span>
+      <div className="center-links">
+        <span className="welcome-text">Welcome, {patientName}</span>
+      </div>
       <div className="right-links">
         <Link to="/patienteditdetails" className="edit-details-link">
-          Edit Details&nbsp;&nbsp;&nbsp;
+          Edit Details
         </Link>
         <span className="signout-link" onClick={handleSignOut}>
           Sign Out
