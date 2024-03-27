@@ -5,7 +5,13 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-image: url('../Animation/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
+
+
 
 .ani-login-video-bg {
   position: fixed;
@@ -22,14 +28,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  max-width: 400px; /* Adjust maximum width as needed */
+  max-width: 300px; /* Adjust maximum width to match DoctorLogin */
   width: 90%; /* Adjust width as needed */
   background-color: rgba(61, 63, 70, 0.7);
-  padding: 40px;
+  padding: 20px; /* Reduced padding */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
+
 
 .ani-patient-logo {
   width: 100px; /* Adjust size as needed */

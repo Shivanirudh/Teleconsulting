@@ -7,7 +7,12 @@
   height: 100vh;
   margin: 0;
   padding: 0;
+  background-image: url('../Animation/back.jpg');
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat;
+  background-position: center;
 }
+
 
 .dc-login-video-bg {
   position: fixed;
@@ -19,11 +24,20 @@
 
 .dc-login-container {
   background-color: rgba(61, 63, 70, 0.7);
-  padding: 40px;
+  padding: 20px; /* Reduced padding */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 300px; /* Reduced max-width */
+  width: 90%; /* Adjust width as needed */
 }
+
+@media (max-width: 600px) {
+  .dc-login-container {
+    width: 80%; /* Adjust width as needed */
+  }
+}
+
 
 .dc-doctor-logo {
   width: 100px; /* Adjust size as needed */
@@ -61,10 +75,4 @@
 .dc-otp-section {
   display: flex;
   justify-content: space-between;
-}
-
-@media (max-width: 600px) {
-  .dc-login-container {
-    width: 40%; /* Change to desired width percentage */
-  }
 }
