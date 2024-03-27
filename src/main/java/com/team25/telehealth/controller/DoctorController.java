@@ -1,6 +1,8 @@
 package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.ConsentDTO;
+import com.team25.telehealth.dto.DoctorDTO;
+import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
@@ -54,5 +56,15 @@ public class DoctorController {
     @GetMapping("/consent/{consentId}/patient/{patientId}")
     public ResponseEntity<?> fetchDocument(Principal principal, @PathVariable String consentId, @PathVariable String patientId) {
         return consentService.fetchDocument(principal, consentId, patientId);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateDoctor(Principal principal, @RequestBody DoctorDTO doctorDTO){
+        return doctorService.updateDoctor(principal, doctorDTO);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteDoctor(Principal principal){
+        return doctorService.deleteDoctor(principal);
     }
 }

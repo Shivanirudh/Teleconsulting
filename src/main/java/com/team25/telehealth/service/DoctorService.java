@@ -22,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.security.Principal;
+import java.util.Optional;
 
 import static com.team25.telehealth.model.Role.DOCTOR;
 
@@ -105,5 +107,22 @@ public class DoctorService {
     public Doctor getDoctorByDoctorId(String doctorId) {
         return doctorRepo.findByDoctorId(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor", "id", doctorId));
+    }
+
+    public ResponseEntity<?> updateDoctor(Principal principal, DoctorDTO doctorDTO){
+        Doctor doctor = getDoctorByEmail(principal.getName());
+        if(doctorDTO.getFirstName() != null)
+            doctor.setFirstName(doctorDTO.getFirstName());
+        if(doctorDTO.getLastName() != null)
+            doctor.setLastName(doctorDTO.getLastName());
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Doctor Updated Successfully");
+    }
+
+    public ResponseEntity<?> deleteDoctor(Principal principal){
+        Doctor doctor = getDoctorByEmail(principal.getName());
+        doctor.setActive(false);
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Doctor deleted Successfully");
     }
 }

@@ -1,5 +1,6 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
@@ -16,6 +17,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.html.HTMLOptGroupElement;
 
 import java.security.Principal;
 
@@ -71,5 +73,24 @@ public class HospitalService {
     public Hospital findHospitalByDoctor(Doctor doctor) {
         return hospitalRepo.findByDoctor(doctor)
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "Doctor Id", doctor.getId().toString()));
+    }
+
+    public ResponseEntity<?> updateHospital(Principal principal, HospitalDTO hospitalDTO){
+        Hospital hospital = getHospitalByEmail(principal.getName());
+
+        if(hospitalDTO.getName() != null)
+            hospital.setName(hospitalDTO.getName());
+        if(hospitalDTO.getAddress() != null)
+            hospital.setAddress(hospitalDTO.getAddress());
+
+        hospitalRepo.save(hospital);
+        return ResponseEntity.ok("Hospital updated Successfully");
+    }
+
+    public ResponseEntity<?> deleteHospital(Principal principal){
+        Hospital hospital = getHospitalByEmail(principal.getName());
+        hospital.setActive(false);
+        hospitalRepo.save(hospital);
+        return ResponseEntity.ok("Hospital deleted Successfully");
     }
 }
