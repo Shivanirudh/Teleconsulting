@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from '../../components (1)/Admin/Navbar';
-import SideNavbar from '../../components (1)/Admin/sidenavbar';
+import Navbar from '../../components/Admin/Navbar';
+import SideNavbar from '../../components/Admin/sidenavbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AdminDoctor = () => {
@@ -34,12 +34,13 @@ const AdminDoctor = () => {
     ];
 
     return (
-        <div>
+        <div className='dashboard-container'>
             <Navbar />
+            <div className='dashboard-content'>
             <SideNavbar />
-            <div style={{ marginLeft: '250px', paddingTop: '20px' }}>
+            <div className='main-content'>
                 <h2>Doctors</h2>
-                <div className="table-responsive">
+                <div className="table-responsive custom-box">
                     <table className="table table-striped table-bordered">
                         <thead className="thead-dark">
                             <tr>
@@ -74,6 +75,7 @@ const AdminDoctor = () => {
                     </table>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './../../css/Patient/Dashboard.css';
-import TopNavigationBar from '../../components (1)/Patient/TopNavigationBar';
-import LeftNavigationBar from '../../components (1)/Patient/LeftNavigationBar';
-import SearchBar from './../../components (1)/Patient/SearchBar';
+import TopNavigationBar from '../../components/Patient/TopNavigationBar';
+import LeftNavigationBar from '../../components/Patient/LeftNavigationBar';
+import SearchBar from './../../components/Patient/SearchBar';
 import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
@@ -26,7 +26,6 @@ function Dashboard() {
       case 'home':
         return (
           <>
-            <SearchBar onSearch={handleSearch} />
             <DoctorList searchTerm={searchTerm} />
           </>
         );
@@ -43,11 +42,11 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
-      <TopNavigationBar patientName="Atul Tripathi" />
-      <div className="dashboard-content">
+    <div className="patient-dashboard-container">
+      <TopNavigationBar patientName="First Name Last Name" />
+      <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
-        <div className="main-content">
+        <div className="patiient-main-content">
           {renderContent()}
         </div>
       </div>

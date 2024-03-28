@@ -1,0 +1,96 @@
+/* Dashboard.css */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .dashboard-content {
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  .sidebar {
+    width: 250px; /* Initial width */
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  /* Styling for navigation links */
+  .sidebar a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+  }
+  
+  .sidebar a:hover {
+    color: #007bff;
+  }
+  
+  /* Styling for main content area */
+  .main-content {
+    
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .custom-table {
+   /* White text color */
+ 
+    opacity: 0.8; /* Adjust opacity here (0 for fully transparent, 1 for fully opaque) */
+    /* Ensure specificity by adding a descendant selector */
+    table-layout: fixed; /* Optional: Set fixed table layout (may be needed for some browsers) */
+  }
+  
+  .custom-table th{
+    color:#144958;
+  }
+  .custom-table td {
+    color: #144958;
+    padding: 10px; /* Adjust padding as needed */
+  }
+  
+ 
+  .custom-button {
+    background-color: #5db2c7; /* Dark navy blue */
+    color: #fff; /* White text */
+    border: none; /* Remove default button border */
+    padding: 5px 10px; /* Adjust padding as needed */
+    border-radius: 4px; /* Add rounded corners */
+  }
+ 
+  .custom-button:hover {
+    background-color: #75bdd3; /* Lighter navy blue on hover */
+  }
+
+  
+  .custom-button2 {
+    background-color: #4f96a8; /* Dark navy blue */
+    color: #fff; /* White text */
+    border: none; /* Remove default button border */
+    padding: 5px 10px; /* Adjust padding as needed */
+    border-radius: 4px; 
+  }
+  .custom-box{
+    opacity: 0.8;
+  }
+  /* Responsive adjustments */
+  @media (max-width: 800px) {
+    .dashboard-content {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      width: 100%; /* Sidebar spans the whole width */
+    }
+  
+    .main-content {
+      margin-top: 20px; /* Add margin to separate main content from the sidebar */
+    }
+  }

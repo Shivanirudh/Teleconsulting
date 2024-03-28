@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from '../../components (1)/Admin/Navbar';
-import SideNavbar from '../../components (1)/Admin/sidenavbar';
+import Navbar from '../../components/Admin/Navbar';
+import SideNavbar from '../../components/Admin/sidenavbar';
 
 const AdminPatient = () => {
     // Dummy patient data
@@ -35,12 +35,13 @@ const AdminPatient = () => {
     ];
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div className='dashboard-container'>
             <Navbar />
+            <div className='dashboard-content'>
             <SideNavbar />
-            <div style={{ marginLeft: '250px', paddingTop: '20px' }}>
+            <div className='main-content'>
                 <h2>Patients</h2>
-                <div className="table-responsive">
+                <div className="table-responsive custom-box">
                     <table className="table table-striped table-bordered">
                         <thead className="thead-dark">
                             <tr>
@@ -77,6 +78,7 @@ const AdminPatient = () => {
                     </table>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

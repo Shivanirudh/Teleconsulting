@@ -1,10 +1,11 @@
 import React from 'react';
-import Navbar from '../../components (1)/Admin/Navbar';
-import SideNavbar from '../../components (1)/Admin/sidenavbar';
+import Navbar from '../../components/Admin/Navbar';
+import SideNavbar from '../../components/Admin/sidenavbar';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import Calendar from 'react-calendar'; // Import Calendar component
 import 'react-calendar/dist/Calendar.css'; // Import default calendar styles
 import './../../css/Admin/AdminDashboard.css'
+
 
 const AdminDashboard = () => {
     // Dummy data for demonstration
@@ -14,11 +15,13 @@ const AdminDashboard = () => {
     const doctorIncrease = 2; // Assume 2 new doctors
 
     return (
-        <div>
+        <div className='dashboard-container'>
             <Navbar />
+            <div className='dashboard-content'>
             <SideNavbar />
-            <div style={{ marginLeft: '250px', marginTop: '56px' }}>
-                <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333' }}>
+            
+            <div className='main-content'>
+                <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333',opacity:'0.8' }}>
                     <Row className="mt-4">
                         <Col md={6} lg={3}>
                             <Card>
@@ -66,6 +69,7 @@ const AdminDashboard = () => {
                     </div>
                 </Container>
             </div>
+        </div>
         </div>
     );
 };

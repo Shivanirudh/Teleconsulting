@@ -1,13 +1,17 @@
 /* PatientLogin.css */
 
-.patient-login-container {
+.ani-patient-login-container {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-image: url('../Animation/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.login-video-bg {
+.ani-login-video-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,65 +20,75 @@
   object-fit: cover; /* Ensures the video covers the entire container */
 }
 
-.login-content-container {
+.ani-login-content-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  max-width: 400px; /* Adjust maximum width as needed */
+  max-width: 300px; /* Adjust maximum width to match DoctorLogin */
   width: 90%; /* Adjust width as needed */
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 40px;
+  background-color: rgba(61, 63, 70, 0.7);
+  padding: 20px; /* Reduced padding */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.patient-logo {
+.ani-patient-logo {
   width: 100px; /* Adjust size as needed */
   height: auto;
   margin-bottom: 20px;
 }
 
-.login-input,
-.login-button,
-.signup-btn {
+.ani-login-input,
+.ani-login-button,
+.ani-signup-btn {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid transparent; /* Transparent border */
   border-radius: 5px;
   font-size: 16px;
   transition: border-color 0.3s;
 }
 
-.login-input:focus {
+.ani-login-input:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.login-button {
-  background-color: #007bff;
-  color: #fff;
+/* Modify button styles as requested */
+.ani-login-button,
+.ani-signup-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
 }
 
-.login-button:hover {
-  background-color: #0056b3;
-}
-
-.signup-btn {
-  background-color: transparent;
-  color: #007bff;
-}
-
-.signup-btn:hover {
-  color: #0056b3;
+.ani-login-button:hover,
+.ani-signup-btn:hover {
+  background-color: #79c2d0;
 }
 
 @media (max-width: 600px) {
-  .login-content-container {
+  .ani-login-content-container {
     width: 80%;
   }
+}
+
+.linkin-login{
+  color:rgb(217, 242, 243);
+}
+.linkin-login:hover{
+  color:rgb(173, 236, 238);
 }

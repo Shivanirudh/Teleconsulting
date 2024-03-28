@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../../css/Doctor/container.css';
-
+import './../../css/Doctor/container.css'
+import SideNavbar from "../../components/Doctor/sidenavbar";
+import Navbar from "../../components/Doctor/Navbar";
 const dummyData = [
   { message: 'Hello there!', senderName: 'John Doe' },
   { message: 'Haddi kaate bina kaam kaise chalau?', senderName: 'Nitish Kumar' },
@@ -32,7 +33,11 @@ function Chats() {
   };
 
   return (
+    <div>
+         <Navbar />
+     <SideNavbar />
     <div className="chats-container" style={{marginLeft: '250px', marginTop: '56px' ,marginBottom:'500px'}}>
+   
       <h1>Chats</h1>
       <ul className="messages-list">
         {messages.map((message, index) => (
@@ -57,6 +62,7 @@ function Chats() {
         />
         <button type="submit">Send</button>
       </form>
+    </div>
     </div>
   );
 }
