@@ -1,6 +1,7 @@
 package com.team25.telehealth.service;
 
 import com.team25.telehealth.dto.ConsentDTO;
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.entity.Consent;
 import com.team25.telehealth.entity.Doctor;
@@ -183,5 +184,15 @@ public class ConsentService {
         if(!Objects.equals(patient.getId(), consent.getPatient().getId()))
             return ResponseEntity.badRequest().body("Patient Id is wrong for this consent");
         return patientService.fetchFile(patient, consent.getDocumentName());
+    }
+
+    // No point of having update function here
+    public ResponseEntity<?> deleteConsent(String consentId){
+        Consent consent = consentRepo.findByConsentId(consentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Consent", "id", consentId));
+
+        consent.setActive(false);
+        consentRepo.save(consent);
+        return ResponseEntity.ok("Consent deleted Successfully");
     }
 }

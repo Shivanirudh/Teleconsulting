@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.ConsentRequest;
@@ -64,6 +65,15 @@ public class PatientController {
     public ResponseEntity<?> giveConsent(Principal principal, @Valid @RequestBody ConsentRequest request) {
         return consentService.giveConsent(principal, request);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updatePatient(Principal principal, @RequestBody PatientDTO patientDTO){
+        return patientService.updatePatient(principal, patientDTO);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> update(Principal principal){
+        return patientService.deletePatient(principal);
 
     @PostMapping("/appointment")
     public ResponseEntity<?> bookAppointment(Principal principal, @Valid @RequestBody AppointmentDTO appointmentDTO) {

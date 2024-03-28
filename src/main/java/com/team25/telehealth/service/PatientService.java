@@ -1,6 +1,8 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
+import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.EncryptionService;
 import com.team25.telehealth.helpers.FileStorageService;
@@ -9,12 +11,19 @@ import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.repo.PatientRepo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +47,7 @@ public class PatientService {
     private final FileStorageService fileStorageService;
     private final EncryptionService encryptionService;
     private final PatientMapper patientMapper;
+    private final  EntityManager entityManager;
 
     private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Patient_Data\\";
 
@@ -187,5 +197,45 @@ public class PatientService {
         String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
         File file = fileStorageService.getFile(filePath);
         return file.exists();
+    }
+
+    private boolean isExistPatient(Patient patient) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Patient> query = cb.createQuery(Patient.class);
+        Root<Patient> root = query.from(Patient.class);
+
+        Predicate predicate = cb.or(
+                cb.equal(root.get("email"), patient.getEmail())
+        );
+
+        query.where(predicate);
+        TypedQuery<Patient> typedQuery = entityManager.createQuery(query);
+
+        var count = typedQuery.getResultList();
+
+        return !count.isEmpty();
+    }
+    public ResponseEntity<?> updatePatient(Principal principal, PatientDTO patientDTO){
+        Patient patient = getPatientByEmail(principal.getName());
+        if(patientDTO.getFirstName() != null)
+            patient.setFirstName(patientDTO.getFirstName());
+        if(patientDTO.getLastName() != null)
+            patient.setLastName(patientDTO.getLastName());
+        if(patientDTO.getGender() != null)
+            patient.setGender(patientDTO.getGender());
+        if(patientDTO.getHeight() != null)
+            patient.setHeight(patientDTO.getHeight());
+        if(patientDTO.getWeight() != null)
+            patient.setWeight(patientDTO.getWeight());
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Patient Updated Successfully");
+    }
+
+    public ResponseEntity<?> deletePatient(Principal principal){
+        Patient patient = getPatientByEmail(principal.getName());
+        patient.setActive(false);
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Patient deleted Successfully");
     }
 }
