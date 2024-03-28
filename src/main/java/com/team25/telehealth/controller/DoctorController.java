@@ -67,8 +67,10 @@ public class DoctorController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteDoctor(Principal principal){
+    public ResponseEntity<?> deleteDoctor(Principal principal) {
         return doctorService.deleteDoctor(principal);
+    }
+    
     @PostMapping("/schedule")
     public ResponseEntity<?> uploadSchedule(Principal principal, @Valid @RequestBody ScheduleDTO scheduleDTO) {
         return scheduleService.uploadSchedule(principal, scheduleDTO);
