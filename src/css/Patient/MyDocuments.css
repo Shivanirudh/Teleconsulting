@@ -2,94 +2,59 @@
 
 /* Container styles */
 .patient-my-documents-container {
-    margin: 20px;
-    text-align: center;
-  }
-  
-  /* Table styles */
-  .patient-documents-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .patient-documents-table th, .patient-documents-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    text-align: center;
-  }
-  
-  .patient-documents-table th {
-    background-color: #f2f2f2;
-  }
-  
-  /* Upload section styles */
-  .patient-upload-section {
-    margin-top: 20px;
-  }
-  
-  .patient-upload-section h3 {
-    margin-bottom: 10px;
-  }
-  /* DoctorList.css */
-.doctor-list-container {
-  overflow-x: auto;
-  width: 80vw; /* Set width to 80% of the viewport width */
-  height: 80vh; /* Set height to 80% of the viewport height */
+  margin: 20px;
+  text-align: center;
 }
 
-.availability-table {
+/* Table styles */
+.patient-documents-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
 }
 
-.availability-table th,
-.availability-table td {
-  border: 1px solid #ccc;
+.patient-documents-table th,
+.patient-documents-table td {
+  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-.availability-table th {
+.patient-documents-table th {
   background-color: #f2f2f2;
 }
 
-.availability-table td.available {
-  background-color: #4CAF50; /* Green for available slots */
+/* Upload section styles */
+.patient-upload-section {
+  margin-top: 20px;
 }
 
-.availability-table td.booked {
-  background-color: #F44336; /* Red for booked slots */
+.patient-upload-section h3 {
+  margin-bottom: 10px;
 }
 
-.availability-table td:hover {
-  cursor: pointer;
-  background-color: #2196F3; /* Blue on hover */
+/* Adjusted styles for upload section */
+.upload-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.booking-button {
-  margin-top: 10px;
-  text-align: center;
+.upload-section input[type="file"] {
+  margin-bottom: 10px;
+  width: 200px; /* Adjust as needed */
+  
 }
 
-.booking-button button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.booking-button button:hover {
-  background-color: #0056b3;
-}
-
+/* Adjusted styles for upload button */
 .doc-wala-but {
-  display: block;
-  width: 100%;
+  width: 200px; /* Adjust as needed */
+  padding: 8px 16px;
+  font-size: 12px;
   padding: 12px 0;
+  background-color: #53a8b6;
   background-color: #53a8b6; /* Blue button */
   border: none;
   border-radius: 8px;
@@ -100,7 +65,6 @@
   text-transform: uppercase;
   transition: background-color 0.6s;
 }
-
 .doc-wala-but:hover {
-  background-color: #79c2d0;/* Darker blue on hover */
+  background-color: #79c2d0; /* Darker blue on hover */
 }

@@ -1,5 +1,3 @@
-// MyDocuments.js
-
 import React, { useState } from 'react';
 import './../../css/Patient/MyDocuments.css';
 
@@ -58,9 +56,9 @@ function MyDocuments() {
       </div>
       <div className="patient-upload-section">
         <h3>Upload New Document</h3>
-        <div>
+        <div className="upload-section">
           <input type="file" id="fileInput" onChange={handleFileChange} />
-          <label htmlFor="fileInput">Choose File</label>
+          <label htmlFor="fileInput"></label>
         </div>
         <button className='doc-wala-but' onClick={handleFileUpload}>Upload</button>
       </div>
