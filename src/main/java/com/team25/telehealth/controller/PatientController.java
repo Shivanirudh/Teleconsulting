@@ -72,8 +72,9 @@ public class PatientController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> update(Principal principal){
+    public ResponseEntity<?> update(Principal principal) {
         return patientService.deletePatient(principal);
+    }
 
     @PostMapping("/appointment")
     public ResponseEntity<?> bookAppointment(Principal principal, @Valid @RequestBody AppointmentDTO appointmentDTO) {
