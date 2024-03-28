@@ -144,18 +144,22 @@ public class ConsentService {
         if(!otpHelper.otpCheck(request.getOtp(), consent.getOtp(), consent.getOtpExpiry())) {
             return ResponseEntity.badRequest().body("OTP is expired or wrong");
         }
-        if(request.getExpiryDay().equals("15")) {
-            consent.setExpiryDate(otpHelper.generateExpirationTime(15*24*60));
-        } else if(request.getExpiryDay().equals("30")) {
-            consent.setExpiryDate(otpHelper.generateExpirationTime(30*24*60));
-        } else if(request.getExpiryDay().equals("90")) {
-            consent.setExpiryDate(otpHelper.generateExpirationTime(90*24*60));
-        } else if(request.getExpiryDay().equals("180")) {
-            consent.setExpiryDate(otpHelper.generateExpirationTime(180*24*60));
-        } else {
-            return ResponseEntity.badRequest().body("Expiry Day provided is wrong");
+        switch (request.getExpiryDay()) {
+            case "15" -> consent.setExpiryDate(otpHelper.generateExpirationTime(15 * 24 * 60));
+            case "30" -> consent.setExpiryDate(otpHelper.generateExpirationTime(30 * 24 * 60));
+            case "90" -> consent.setExpiryDate(otpHelper.generateExpirationTime(90 * 24 * 60));
+            case "180" -> consent.setExpiryDate(otpHelper.generateExpirationTime(180 * 24 * 60));
+            default -> {
+                return ResponseEntity.badRequest().body("Expiry Day provided is wrong");
+            }
         }
         consentRepo.save(consent);
+        mailService.sendEmail(
+                consent.getDoctor().getEmail(),
+                patient.getFirstName() + " gave you access of document",
+                patient.getFirstName() + " gave you access of document " + consent.getDocumentName()
+                        + ". You can go to the website to access it."
+                );
         return ResponseEntity.ok("Consent has been given");
     }
 

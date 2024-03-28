@@ -1,9 +1,11 @@
 package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.PatientDTO;
+import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.PatientService;
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ public class PatientController {
 
     private final PatientService patientService;
     private final ConsentService consentService;
+    private final AppointmentService appointmentService;
 
     @GetMapping("/")
     public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -71,5 +74,14 @@ public class PatientController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> update(Principal principal){
         return patientService.deletePatient(principal);
+
+    @PostMapping("/appointment")
+    public ResponseEntity<?> bookAppointment(Principal principal, @Valid @RequestBody AppointmentDTO appointmentDTO) {
+        return appointmentService.bookAppointment(principal, appointmentDTO);
+    }
+
+    @PostMapping("/cancel-appointment")
+    public ResponseEntity<?> cancelAppointment(Principal principal, @RequestBody AppointmentDTO appointmentDTO) {
+        return appointmentService.cancelAppointment(principal, appointmentDTO);
     }
 }
