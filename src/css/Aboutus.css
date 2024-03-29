@@ -1,0 +1,28 @@
+/* Container styles */
+.about-container {
+  background-color: rgba(61, 63, 70, 0.7);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 50px; /* Adjust this value to create the desired gap */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 70%;
+  margin: 50px auto 20px; /* Center the container horizontally and create a gap between top and container */
+}
+
+.about-video-container p {
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+/* Video styles */
+.about-video-container {
+  margin: 50px auto; /* Center the container horizontally */
+  width: 600px; /* Fixed width */
+  height: 450px; /* Fixed height for 16:9 aspect ratio (400 * 9 / 16) */
+  position: relative;
+  overflow: hidden;
+}
