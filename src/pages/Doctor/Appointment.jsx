@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
+import '../../css/Patient/Dashboard.css'
 
 export default function PreviousAppointments() {
   // Dummy data for demonstration purposes
@@ -12,10 +13,11 @@ export default function PreviousAppointments() {
 
   // State for search query
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchByDate, setSearchByDate] = useState(false);
 
   // Filter appointments based on search query
   const filteredAppointments = appointmentData.filter(appointment =>
-    appointment.patientName.toLowerCase().includes(searchQuery.toLowerCase())
+    (searchByDate ? appointment.date.toLowerCase().includes(searchQuery.toLowerCase()) : appointment.patientName.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   // Function to handle viewing appointment details
@@ -25,26 +27,36 @@ export default function PreviousAppointments() {
   };
 
   return (
-    <div>
+    <div className="dashboard-container">
       <Navbar/>
+    <div className="dashboard-content">
       <SideNavbar/>
-    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '60px' ,marginBottom: '500px'}}>
+    <div className="main-content">
     
       <h2>Previous Appointments</h2>
 
       {/* Search bar */}
-      <div className="mb-3">
+      <div className="mb-3 custom-box">
         <input
           type="text"
           className="form-control"
-          placeholder="Search by patient name"
+          placeholder={searchByDate ? "Search by date (YYYY-MM-DD)" : "Search by patient name"}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <label className="form-check-label">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            checked={searchByDate}
+            onChange={() => setSearchByDate(!searchByDate)}
+          />
+          Search by date
+        </label>
       </div>
 
       {/* List of appointments */}
-      <ul className="list-group">
+      <ul className="list-group custom-box">
         {filteredAppointments.map(appointment => (
           <li key={appointment.id} className="list-group-item">
             <div className="d-flex justify-content-between align-items-center">
@@ -53,13 +65,14 @@ export default function PreviousAppointments() {
                 <p>Time: {appointment.time}</p>
                 <p>Patient: {appointment.patientName}</p>
               </div>
-              <button className="btn btn-primary" onClick={() => handleViewDetails(appointment.id)}>
+              <button className="btn btn-primary custom-button" onClick={() => handleViewDetails(appointment.id)}>
                 View Details
               </button>
             </div>
           </li>
         ))}
       </ul>
+    </div>
     </div>
     </div>
   );

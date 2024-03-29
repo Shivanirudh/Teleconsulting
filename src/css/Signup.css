@@ -1,4 +1,4 @@
-body {
+.signup-body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: rgba(61, 63, 70, 0.7); /* Background color similar to PatientLogin */

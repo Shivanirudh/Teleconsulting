@@ -6,6 +6,7 @@ import Calendar from 'react-calendar'; // Import Calendar component
 import 'react-calendar/dist/Calendar.css'; // Import default calendar styles
 import './../../css/Admin/AdminDashboard.css'
 
+
 const AdminDashboard = () => {
     // Dummy data for demonstration
     const totalPatients = 1000;
@@ -14,11 +15,14 @@ const AdminDashboard = () => {
     const doctorIncrease = 2; // Assume 2 new doctors
 
     return (
-        <div>
+        <div className='dashboard-container'>
             <Navbar />
+            <div className='dashboard-content'>
             <SideNavbar />
-            <div style={{ marginLeft: '250px', marginTop: '56px' }}>
-                <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333' }}>
+            
+            <div className='main-content'>
+                <h1>Welcome Vishnuraaj</h1>
+                <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333',opacity:'0.8' }}>
                     <Row className="mt-4">
                         <Col md={6} lg={3}>
                             <Card>
@@ -57,15 +61,10 @@ const AdminDashboard = () => {
                             </Card>
                         </Col>
                     </Row>
-                    {/* Add charts and additional components here */}
-                    <div className="mt-4" style={{ maxWidth: '300px' }}>
-                        <Calendar
-                            className="react-calendar"
-                            tileClassName="react-calendar-tile"
-                        /> {/* Calendar component */}
-                    </div>
+                   
                 </Container>
             </div>
+        </div>
         </div>
     );
 };

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
-
+import '../../css/Doctor/ddashboard.css';
 
 
 export default function DoctorDashboard() {
-  // Function to generate dates for the next 5 days
+  // Function to generate dates for the next 7 days
   const getNextDates = () => {
     const today = new Date();
     const dates = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       const nextDate = new Date(today);
       nextDate.setDate(today.getDate() + i);
       dates.push(nextDate.toISOString().split('T')[0]);
@@ -20,21 +20,17 @@ export default function DoctorDashboard() {
   };
 
   // Dummy data for demonstration purposes
-  const scheduleData = getNextDates().map(date => ({
-    date,
-    slots: Array.from({ length: 16 }, (_, index) => {
-      const slotStartTime = 8 * 60 + (index * 60); // Convert hours to minutes
-      const slotEndTime = slotStartTime + 45;
-      const formattedStartTime = new Date(2022, 1, 1, Math.floor(slotStartTime / 60), slotStartTime % 60);
-      const formattedEndTime = new Date(2022, 1, 1, Math.floor(slotEndTime / 60), slotEndTime % 60);
-
-      return {
-        startTime: formattedStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        endTime: formattedEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        patientName: index % 2 === 0 ? `Patient ${index + 1}` : null,
-      };
-    }),
-  }));
+  const appointments = [
+    { date: getNextDates()[0], time: '09:00', patientName: 'John Doe' },
+    { date: getNextDates()[4], time: '09:00',patientName: 'somebody someone'},
+    { date: getNextDates()[1], time: '10:00', patientName: 'Alice Smith' },
+    { date: getNextDates()[3], time: '14:00', patientName: 'Bob Johnson' },
+    { date: getNextDates()[5], time: '09:00', patientName: 'John Doe' },
+    { date: getNextDates()[7], time: '19:00',patientName: 'somebody someone'},
+    { date: getNextDates()[6], time: '10:00', patientName: 'Alice Smith' },
+    { date: getNextDates()[2], time: '14:00', patientName: 'Bob Johnson' },
+    // Add more dummy appointment data as needed
+  ];
 
   // State to manage the modal visibility and appointment details
   const [modalVisible, setModalVisible] = useState(false);
@@ -69,83 +65,92 @@ export default function DoctorDashboard() {
     alert('View Patient Details');
   };
 
-  return (
-    <div>
-  <Navbar/>
-  <SideNavbar/>
-    
-    <div className="container mt-4" style={{ marginLeft: '250px', marginTop: '56px' ,marginBottom: '550px'}}>
-     
-      <h2>Doctor Dashboard</h2>
-     
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Date</th>
-            {scheduleData[0].slots.slice(0, -2).map((slot, index) => (
-              <th key={index} className="text-center">
-                {slot.startTime}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {scheduleData.map(dateData => (
-            <tr key={dateData.date}>
-              <td className="font-weight-bold">{dateData.date}</td>
-              {dateData.slots.slice(0, -2).map(slot => (
-                <td
-                  key={`${dateData.date}-${slot.startTime}`}
-                  className={`text-center ${slot.patientName ? 'bg-light' : 'bg-secondary'}`}
-                >
-                  {slot.patientName && (
-                    <button className="btn btn-primary btn-sm" onClick={() => handleOpenModal(slot)}>
-                      View
-                    </button>
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  // Function to check if an appointment exists for a specific date and time
+  const hasAppointment = (date, time) => {
+    return appointments.some(appointment => appointment.date === date && appointment.time === time);
+  };
 
-      {/* Modal for displaying appointment details */}
-      {selectedAppointment && (
-        <div className={`modal ${modalVisible ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: modalVisible ? 'block' : 'none' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Appointment Details</h5>
-                <button type="button" className="close" onClick={handleCloseModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <p>Date: {selectedAppointment.date}</p>
-                <p>Time: {`${selectedAppointment.startTime} - ${selectedAppointment.endTime}`}</p>
-                <p>Patient: {selectedAppointment.patientName || ''}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-success" onClick={handleJoinMeeting}>
-                  Join Meeting
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
-                  Cancel Appointment
-                </button>
-                <button type="button" className="btn btn-info" onClick={handleViewPatientDetails}>
-                  View Patient Details
-                </button>
-                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
-                  Close
-                </button>
+  return (
+    <div className="dashboard-container">
+      <Navbar/>
+      <div className='dashboard-content'>
+        <SideNavbar/>
+        <div className= 'main-content'>
+          <h2>This week's appointments</h2>
+          <table className="table table-bordered custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                {Array.from({ length: 11 }, (_, index) => index + 9).map(hour => (
+                  <th key={hour} className="text-center costum-color">
+                    {hour}:00
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {getNextDates().map(date => (
+                <tr key={date}>
+                  <td className="font-weight-bold">{date}</td>
+                  {Array.from({ length: 11 }, (_, index) => index + 9).map(hour => {
+                    const time = `${hour < 10 ? '0' : ''}${hour}:00`;
+                    return (
+                      <td
+                        key={`${date}-${time}`}
+                        className={`text-center ${hasAppointment(date, time) ? 'bg-success' : 'bg-secondary'}`}
+                        style={{ width: '10%', minWidth: '50px' }} // Ensure all cells have uniform size
+                      >
+                        {hasAppointment(date, time) && (
+                          <button className="btn btn-primary btn-sm custom-button" onClick={() => handleOpenModal({ date, time })}>
+                            View 
+                          </button>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {selectedAppointment && (
+            <div
+              className={`modal ${modalVisible ? 'show' : ''}`}
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: modalVisible ? 'block' : 'none' }}
+            >
+              <div className="modal-dialog modal-sm custom-box">  {/* Add modal-sm for smaller size */}
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Appointment Details - {selectedAppointment.date}</h5>
+                    <button type="button" className="close" onClick={handleCloseModal}>
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <p>Date: {selectedAppointment.date}</p>
+                    <p>Time: {selectedAppointment.time}</p>
+                    <p>Patient: {appointments.find(appointment => appointment.date === selectedAppointment.date && appointment.time === selectedAppointment.time).patientName}</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
+                      Join Meeting
+                    </button>
+                    
+                    <button type="button" className="btn btn-info custom-button2" onClick={handleViewPatientDetails}>
+                      View Patient 
+                    </button>
+                    <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
+                      Cancel Appointment
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
-    </div>
-    
   );
 }

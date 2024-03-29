@@ -1,27 +1,27 @@
-// SideNavbar.js
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+
+import './../../css/Patient/LeftNavigationBar.css'; 
 
 export default function SideNavbar() {
+  const navigate = useNavigate(); // useNavigate hook to navigate
+ 
+  // Check if the current location is in the allowed paths
+
+
+  // Function to handle navigation
+  const handleNavigation = (route) => {
+    navigate(route); // Navigate to the specified route
+  };
+
+  // Render the SideNavbar only if it should be displayed
   return (
-    <div className="position-fixed bg-dark text-light" style={{ height: '100%', width: '250px' }}>
-      <ul className="nav flex-column">
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/admindashboard">
-            Home
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/adminpatient">
-            Patient
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/admindoctor">
-            Doctor
-          </NavLink>
-        </li>
+    <div className="left-navbar">
+      <ul>
+        <li onClick={() => handleNavigation('/admindashboard')}>Home</li>
+        <li onClick={() => handleNavigation('/adminpatient')}>Patient</li>                               
+        <li onClick={() => handleNavigation('/admindoctor')}>Doctor</li>
+       
       </ul>
     </div>
   );

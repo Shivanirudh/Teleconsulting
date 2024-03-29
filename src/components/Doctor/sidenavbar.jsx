@@ -1,9 +1,10 @@
-// SideNavbar.js
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import './../../css/Patient/LeftNavigationBar.css'; 
 
 export default function SideNavbar() {
+  const navigate = useNavigate(); // useNavigate hook to navigate
   const location = useLocation();
 
   // Define an array of paths where you want to display the SideNavbar
@@ -12,37 +13,20 @@ export default function SideNavbar() {
   // Check if the current location is in the allowed paths
   const shouldDisplayNavbar = allowedPaths.some(path => location.pathname.startsWith(path));
 
+  // Function to handle navigation
+  const handleNavigation = (route) => {
+    navigate(route); // Navigate to the specified route
+  };
+
   // Render the SideNavbar only if it should be displayed
   return shouldDisplayNavbar ? (
-    <div className="position-fixed bg-dark text-light" style={{ height:'1000px' , width: '250px',marginTop:'30px'}}>
-      <ul className="nav flex-column">
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/ddashboard">
-            Home
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/ddashboard/upload">
-            Upload Schedule
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/ddashboard/join-meetings">
-            Join Meetings
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/ddashboard/chats">
-            Chats
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link text-light" to="/ddashboard/appointment">
-            View Previous Appointments
-          </NavLink>
-        </li>
+    <div className="left-navbar">
+      <ul>
+        <li onClick={() => handleNavigation('/ddashboard')}>Home</li>
+        <li onClick={() => handleNavigation('/ddashboard/upload')}>Upload Schedule</li>                               
+        <li onClick={() => handleNavigation('/ddashboard/chats')}>Chats</li>
+        <li onClick={() => handleNavigation('/ddashboard/appointment')}>PreviousAppointments</li>
       </ul>
     </div>
   ) : null;
 }
-
