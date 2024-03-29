@@ -52,4 +52,34 @@ public class AdminController {
     public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
         return adminService.changePassword(principal, req);
     }
+
+    @PutMapping("/block-patient")
+    public ResponseEntity<?> blockPatient(Principal principal, @RequestBody String patientId){
+        return adminService.blockPatient(principal, patientId);
+    }
+
+    @PutMapping("/unblock-patient")
+    public ResponseEntity<?> unblockPatient(Principal principal, @RequestBody String patientId){
+        return adminService.unblockPatient(principal, patientId);
+    }
+
+    @PutMapping("/block-doctor")
+    public ResponseEntity<?> blockDoctor(Principal principal, @RequestBody String doctorId){
+        return adminService.blockDoctor(principal, doctorId);
+    }
+
+    @PutMapping("/unblock-doctor")
+    public ResponseEntity<?> unblockDoctor(Principal principal, @RequestBody String doctorId){
+        return adminService.unblockDoctor(principal, doctorId);
+    }
+
+    @PutMapping("/block-hospital")
+    public ResponseEntity<?> blockHospital(Principal principal, @RequestBody String hospitalId){
+        return adminService.blockHospital(principal, hospitalId);
+    }
+
+    @PutMapping("/unblock-hospital")
+    public ResponseEntity<?> unblockHospital(Principal principal, @RequestBody String hospitalId){
+        return adminService.unblockHospital(principal, hospitalId);
+    }
 }
