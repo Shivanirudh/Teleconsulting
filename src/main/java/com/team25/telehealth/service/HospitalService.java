@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.html.HTMLOptGroupElement;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -92,5 +93,9 @@ public class HospitalService {
         hospital.setActive(false);
         hospitalRepo.save(hospital);
         return ResponseEntity.ok("Hospital deleted Successfully");
+    }
+
+    public List<Hospital> listHospitals(Principal principal){
+        return hospitalRepo.getAllByActive(true);
     }
 }
