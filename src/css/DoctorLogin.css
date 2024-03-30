@@ -1,0 +1,96 @@
+/* DoctorLogin.css */
+.doctor-login-page {
+  position: relative; /* Add position relative */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background-image: url('../Animation/back.jpg');
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.dc-login-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the entire container */
+  z-index: -1; /* Move the video background to the back */
+}
+
+.dc-login-container {
+  position: absolute; /* Position the container */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  max-width: 300px; /* Reduced max-width */
+  width: 90%; /* Adjust width as needed */
+  background-color: rgba(61, 63, 70, 0.7);
+  padding: 20px; /* Reduced padding */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.dc-doctor-logo {
+  width: 100px; /* Adjust size as needed */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.dc-login-input,
+.dc-login-button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.dc-login-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.dc-login-button {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.dc-login-button:hover {
+  background-color: #79c2d0;
+}
+
+.dc-otp-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Add the styles for the link similar to PatientLogin.css */
+.linkin-login {
+  color: rgb(217, 242, 243);
+}
+
+.linkin-login:hover {
+  color: rgb(173, 236, 238);
+}

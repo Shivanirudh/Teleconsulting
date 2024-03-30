@@ -1,0 +1,48 @@
+.patient-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-image: url('../../Animation/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.patient-dashboard-content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.patiient-main-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh; /* Set height to 80% of the viewport height */
+}
+
+.patiient-main-content > div {
+  width: 80%; /* Set width to 80% of the viewport width */
+  margin-top: 20px;/* Set maximum width for consistency */
+  padding: 50px;
+  background-color: #c4c9ca;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+@media (max-width: 800px) {
+  .patient-dashboard-content {
+    flex-direction: column;
+  }
+
+  .left-navbar {
+    width: 100%;
+  }
+
+  .patient-main-content {
+    margin-top: 20px;
+  }
+}
