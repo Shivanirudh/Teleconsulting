@@ -5,7 +5,9 @@ import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
+import com.team25.telehealth.model.Specialization;
 import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.HospitalService;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.Doc;
 import java.security.Principal;
 import java.util.List;
 
@@ -93,5 +96,10 @@ public class PatientController {
     @GetMapping("/view-hospitals")
     public List<Hospital> viewHospitals(Principal principal){
         return hospitalService.listHospitals(principal);
+    }
+
+    @GetMapping("/list-doctors")
+    public List<Doctor> listDoctors(Principal principal, String email, Specialization specialization){
+        return patientService.getDoctorsByHospital(principal, email, specialization);
     }
 }
