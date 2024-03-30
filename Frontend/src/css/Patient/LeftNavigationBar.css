@@ -1,6 +1,6 @@
 .left-navbar {
   width: 220px; /* Initial width */
-  background-color: black;
+  background-color: rgba(61, 63, 70, 0.7); /* Translucent black background */
   padding: 20px;
   color: #fff;
   font-family: Arial, sans-serif;

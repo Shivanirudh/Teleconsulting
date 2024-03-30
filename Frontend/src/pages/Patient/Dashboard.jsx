@@ -26,7 +26,6 @@ function Dashboard() {
       case 'home':
         return (
           <>
-            <SearchBar onSearch={handleSearch} />
             <DoctorList searchTerm={searchTerm} />
           </>
         );
@@ -37,17 +36,21 @@ function Dashboard() {
       case 'booked-appointments':
         return <BookedAppointments/>
       // Add cases for other navigation items
-      default:
+      default: return (
+        <>
+          <DoctorList searchTerm={searchTerm} />
+        </>
+      );
         return null;
     }
   };
 
   return (
-    <div className="dashboard-container">
-      <TopNavigationBar patientName="Atul Tripathi" />
-      <div className="dashboard-content">
+    <div className="patient-dashboard-container">
+      <TopNavigationBar patientName="First Name Last Name" />
+      <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
-        <div className="main-content">
+        <div className="patiient-main-content">
           {renderContent()}
         </div>
       </div>

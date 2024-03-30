@@ -22,7 +22,7 @@ function SearchBar({ onSearch }) {
         value={searchTerm}
         onChange={handleChange}
       />
-      <button type="submit">Search</button>
+      <button className='search-wala-but' type="submit">Search</button>
     </form>
   );
 }

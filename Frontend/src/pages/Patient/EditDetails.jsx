@@ -28,10 +28,10 @@ function EditDetails() {
   };
 
   return (
-    <div className="form-container"> {/* Apply CSS class to container */}
+    <div className="edit-form-container"> {/* Apply CSS class to container */}
       <h2>Edit Details</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="edit-form-group">
           <label htmlFor="firstName">First Name:</label>
           <input
             type="text"
@@ -41,7 +41,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group">
+        <div className="edit-edit-form-group">
           <label htmlFor="lastName">Last Name:</label>
           <input
             type="text"
@@ -51,7 +51,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group">
+        <div className="edit-form-group">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -61,7 +61,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group">
+        <div className="edit-form-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -71,7 +71,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group">
+        <div className="edit-form-group">
           <label htmlFor="phoneNumber">Phone Number:</label>
           <input
             type="text"
@@ -81,7 +81,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <button type="submit" className="form-group">Save</button>
+        <button className='edit-det-wala-but' type="submit">Save</button>
       </form>
     </div>
   );

@@ -1,5 +1,3 @@
-// MyDocuments.js
-
 import React, { useState } from 'react';
 import './../../css/Patient/MyDocuments.css';
 
@@ -31,11 +29,11 @@ function MyDocuments() {
   };
 
   return (
-    <div className="my-documents-container">
+    <div className="patient-my-documents-container">
       <h2>My Documents</h2>
-      <div className="previous-documents">
+      <div className="patient-previous-documents">
         <h3>Previous Documents</h3>
-        <table className="documents-table">
+        <table className="patient-documents-table">
           <thead>
             <tr>
               <th>Sl. No.</th>
@@ -56,13 +54,13 @@ function MyDocuments() {
           </tbody>
         </table>
       </div>
-      <div className="upload-section">
+      <div className="patient-upload-section">
         <h3>Upload New Document</h3>
-        <div>
+        <div className="upload-section">
           <input type="file" id="fileInput" onChange={handleFileChange} />
-          <label htmlFor="fileInput">Choose File</label>
+          <label htmlFor="fileInput"></label>
         </div>
-        <button onClick={handleFileUpload}>Upload</button>
+        <button className='doc-wala-but' onClick={handleFileUpload}>Upload</button>
       </div>
     </div>
   );

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './../css/PatientLogin.css';
 import logo from './../images/patient-login.png';
 import { useNavigate } from 'react-router-dom';
-import videobg from './../Animation/bg.mp4';
+import Footer from '../components/Footer.jsx';
+import Header from '../components/Header.jsx';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -55,22 +56,23 @@ const PatientLogin = () => {
   };
 
   return (
-    <div className="patient-login-container">
-      <video autoPlay muted loop className="login-video-bg">
-        <source src={videobg} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="login-content-container">
-        <img src={logo} alt="Patient Logo" className="patient-logo" />
-        <input type="email" className="login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="text" className="login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-        <input type="password" className="login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button className="login-button" onClick={handleGetOTP}>Get OTP</button>
-        <button className="login-button" onClick={handleLogin}>Login</button>
-        <button className="signup-btn" onClick={handleSignUp}>Don't have an account? Register.</button>
+    <div>
+      <Header />
+      <div className="ani-patient-login-container">
+        <div className="ani-login-content-container">
+          <img src={logo} alt="Patient Logo" className="ani-patient-logo" />
+          <input type="email" className="ani-login-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="text" className="ani-login-input" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+          <input type="password" className="ani-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <button className="ani-login-button" onClick={handleGetOTP}>Get OTP</button>
+          <button className="ani-login-button" onClick={handleLogin}>Login</button>
+          <a className="linkin-login" href="/signup">Don't have an account? Register.</a>
+        </div>
       </div>
+      <Footer />
     </div>
   );
+  
 };
 
 export default PatientLogin;

@@ -11,19 +11,18 @@ import PatientDashboard from './pages/Patient/Dashboard';
 import PatientEditDetails from './pages/Patient/EditDetails';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
+import Ddashboard from './pages/Doctor/Ddashboard';
+import PreviousAppointments from './pages/Doctor/Appointment';
+import UploadSchedule from './pages/Doctor/uploadschedule';
+import EditDetails from './pages/Patient/EditDetails';
 import PrivateRoutes from './components/PrivateRoutes';
-import DoctorDashboard from "./pages/Doctor/Ddashboard";
-import PreviousAppointments from "./pages/Doctor/Appointment";
-import UploadSchedule from "./pages/Doctor/uploadschedule";
-import Chats from "./pages/Doctor/ chats";
-import JoinMeeting from "./pages/Doctor/JoinMeeting";
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route exact path="/" element={<Login />} />
+          <Route exact path="/" element={<Login />} />        /
           <Route exact path="/doctorlogin" element={<DoctorLogin />} />
           <Route exact path="/patientlogin" element={<PatienLogin />} />
           <Route exact path="/aboutus" element={<Aboutus />} />
@@ -31,16 +30,15 @@ function App() {
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/adminlogin" element={<AdminLogin />} />
           <Route element = {<PrivateRoutes/>}>
-            <Route exact path = "/ddashboard" element = {<DoctorDashboard/>}/>
-            <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
-            <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
-            <Route exact path="/ddashboard/chats"     element = {<Chats/>}/>
-            <Route exact path="/ddashboard/join-meetings"     element = {<JoinMeeting/>}/>
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />
             <Route exact path="/adminpatient" element={<AdminPatient />} />
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
+            <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
+            <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
+            <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
+            <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
           </Route>
         </Routes>
       </Router>

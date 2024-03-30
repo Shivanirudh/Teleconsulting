@@ -6,34 +6,46 @@
   }
   
   /* Table styles */
-  .appointments-table {
+  .booked-appointments-table {
     width: 100%;
     border-collapse: collapse;
   }
   
   /* Table header styles */
-  .appointments-table th {
+  .booked-appointments-table th {
     background-color: #f2f2f2;
     padding: 12px 8px;
     text-align: left;
   }
   
   /* Table row styles */
-  .appointments-table td, .appointments-table th {
+  .booked-appointments-table td, .appointments-table th {
     border-bottom: 1px solid #ddd;
     padding: 10px 8px;
   }
   
   /* Button styles */
-  .appointments-table button {
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: #fff;
+
+
+  .bas-aps-but {
+    display: block;
+    width: 60%;
+    padding: 12px 0;
+    background-color: #53a8b6; /* Blue button */
     border: none;
+    border-radius: 8px;
     cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.6s;
+
   }
   
-  .appointments-table button:hover {
-    background-color: #0056b3;
+  .bas-aps-but:hover {
+    background-color: #79c2d0;/* Darker blue on hover */
   }
-  
+.booked-appointments-container{
+  text-align: center;
+}

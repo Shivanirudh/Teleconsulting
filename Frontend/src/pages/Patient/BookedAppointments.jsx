@@ -21,10 +21,10 @@ function BookedAppointments() {
   return (
     <div className="booked-appointments-container">
       <h2>Booked Appointments</h2>
-      <table className="appointments-table">
+      <table className="booked-appointments-table">
         <thead>
-          <tr>
-            <th>Doctor Name</th>
+          <tr >
+            <th >Doctor Name</th>
             <th>Date</th>
             <th>Time</th>
             <th>Actions</th>
@@ -37,7 +37,7 @@ function BookedAppointments() {
               <td>{appointment.date}</td>
               <td>{appointment.time}</td>
               <td>
-                <button onClick={() => handleGoToMeeting(appointment.id)}>Go to Meeting</button>
+                <button className='bas-aps-but'onClick={() => handleGoToMeeting(appointment.id)}>Go to Meeting</button>
               </td>
             </tr>
           ))}

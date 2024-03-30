@@ -35,12 +35,13 @@ const AdminPatient = () => {
     ];
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div className='dashboard-container'>
             <Navbar />
+            <div className='dashboard-content'>
             <SideNavbar />
-            <div style={{ marginLeft: '250px', paddingTop: '20px' }}>
+            <div className='main-content'>
                 <h2>Patients</h2>
-                <div className="table-responsive">
+                <div className="table-responsive custom-box">
                     <table className="table table-striped table-bordered">
                         <thead className="thead-dark">
                             <tr>
@@ -77,6 +78,7 @@ const AdminPatient = () => {
                     </table>
                 </div>
             </div>
+        </div>
         </div>
     );
 };
