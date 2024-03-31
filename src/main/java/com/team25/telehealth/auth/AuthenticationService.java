@@ -78,6 +78,9 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         AuthenticationResponse res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(patient.getEmail())
+                .firstName(patient.getFirstName())
+                .lastName(patient.getLastName())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
@@ -98,6 +101,9 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(doctor.getEmail())
+                .firstName(doctor.getFirstName())
+                .lastName(doctor.getLastName())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
@@ -119,6 +125,9 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .email(admin.getEmail())
+                .firstName(admin.getFirstName())
+                .lastName(admin.getLastName())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
