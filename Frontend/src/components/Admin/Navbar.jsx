@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import '/home/somya/Desktop/had/Teleconsulting/Frontend/src/css/Admin/Navbar.css'
 
 // Create Axios instance with baseURL
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
 });
+
 export default function Navbar() {
   const navigate = useNavigate();
 
@@ -31,14 +33,22 @@ export default function Navbar() {
 
   return (
     <div className="top-navbar">
-    <div className="center-links">
-    
+      <div className="center-links">
+        {/* Add your center links here */}
+      </div>
+      <div className="right-links">
+        <span className="signout-link" onClick={handleSignOut} style={{ 
+          backgroundColor: 'red',
+          color: 'white',
+          padding: '8px 16px',
+          borderRadius: '4px',
+          transition: 'box-shadow 0.3s, color 0.3s',
+          cursor: 'pointer',
+          boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
+          }}>
+          Log out
+        </span>
+      </div>
     </div>
-    <div className="right-links">
-     
-      <span className="signout-link" onClick={handleSignOut}>
-        Log out
-      </span>
-    </div>
-  </div>);
+  );
 }

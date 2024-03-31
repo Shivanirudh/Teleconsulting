@@ -21,7 +21,7 @@ const AdminDashboard = () => {
             <SideNavbar />
             
             <div className='main-content'>
-                <h1>Welcome Vishnuraaj</h1>
+                <h1>Welcome Vishnu Raj</h1>
                 <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333',opacity:'0.8' }}>
                     <Row className="mt-4">
                         <Col md={6} lg={3}>

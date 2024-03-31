@@ -2,7 +2,7 @@ import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DoctorLogin from './pages/DoctorLogin';
 import PatienLogin from './pages/PatientLogin';
-import Signup from './pages/Signup';
+import Signup from './pages/Patient/PatientSignup';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminDoctor from './pages/Admin/AdminDoctor';
@@ -16,6 +16,9 @@ import PreviousAppointments from './pages/Doctor/Appointment';
 import UploadSchedule from './pages/Doctor/uploadschedule';
 import EditDetails from './pages/Patient/EditDetails';
 import PrivateRoutes from './components/PrivateRoutes';
+import PForgotPassword from './pages/Patient/PForgotPassword';
+import DForgotPassword from './pages/Doctor/DForgotPassword';
+import AForgotPassword from './pages/Admin/AForgotPassword';
 
 function App() {
   return (
@@ -27,8 +30,11 @@ function App() {
           <Route exact path="/patientlogin" element={<PatienLogin />} />
           <Route exact path="/aboutus" element={<Aboutus />} />
           <Route exact path="/contactus" element={<Contactus />} />
-          <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/patientsignup" element={<Signup />} />
           <Route exact path="/adminlogin" element={<AdminLogin />} />
+          <Route exact path="/pforgotpassword" element={<PForgotPassword />} />
+          <Route exact path="/aforgotpassword" element={<AForgotPassword />} />
+          <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
           <Route element = {<PrivateRoutes/>}>
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />

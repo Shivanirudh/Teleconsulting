@@ -63,6 +63,7 @@ const AdminLogin = () => {
         <input type="password" className="login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button className="login-button" onClick={handleGetOTP}>Get OTP</button>
         <button className="login-button" onClick={handleLogin}>Login</button>
+        <a className="linkin-login" href="/aforgotpassword">Forgot Password?</a>
       </div>
     </div>
   );

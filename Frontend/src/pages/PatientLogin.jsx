@@ -66,7 +66,8 @@ const PatientLogin = () => {
           <input type="password" className="ani-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button className="ani-login-button" onClick={handleGetOTP}>Get OTP</button>
           <button className="ani-login-button" onClick={handleLogin}>Login</button>
-          <a className="linkin-login" href="/signup">Don't have an account? Register.</a>
+          <a className="linkin-login" href="/patientsignup">Don't have an account? Register.</a><br />
+          <a className="linkin-login" href="/pforgotpassword">Forgot Password?</a>
         </div>
       </div>
       <Footer />

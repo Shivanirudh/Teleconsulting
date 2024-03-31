@@ -37,12 +37,12 @@ function TopNavigationBar({ patientName, onSignOut }) {
         <span className="welcome-text">Welcome, {patientName}</span>
       </div>
       <div className="right-links">
-        <Link to="/patienteditdetails" className="edit-details-link">
+        <Link to="/patienteditdetails" className="edit-details-button">
           Edit Details
         </Link>
-        <span className="signout-link" onClick={handleSignOut}>
+        <button className="signout-button" onClick={handleSignOut}>
           Sign Out
-        </span>
+        </button>
       </div>
     </div>
   );

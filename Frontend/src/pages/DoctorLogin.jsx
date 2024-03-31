@@ -65,6 +65,7 @@ const DoctorLogin = () => {
           <input type="password" className="dc-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button className="dc-login-button" onClick={handleGetOTP}>Get OTP</button>
           <button className="dc-login-button" onClick={handleLogin}>Login</button>
+          <a className="linkin-login" href="/dforgotpassword">Forgot Password?</a>
         </div>
       </div>
       <Footer />
