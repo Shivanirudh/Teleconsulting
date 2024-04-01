@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface PatientMapper {
     PatientMapper INSTANCE = Mappers.getMapper(PatientMapper.class);
@@ -15,4 +17,6 @@ public interface PatientMapper {
 
     @Mapping(target = "password", source = "password")
     Patient toEntity(PatientDTO patientDTO);
+
+    List<PatientDTO> toDTOList(List<Patient> patient);
 }

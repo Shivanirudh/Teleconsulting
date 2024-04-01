@@ -82,4 +82,14 @@ public class AdminController {
     public ResponseEntity<?> unblockHospital(Principal principal, @RequestBody String hospitalId){
         return adminService.unblockHospital(principal, hospitalId);
     }
+  
+    @GetMapping("/patients")
+    public ResponseEntity<?> getPatients(Principal principal) {
+        return adminService.getPatients(principal);
+    }
+
+    @GetMapping("/doctors")
+    public ResponseEntity<?> getDoctors(Principal principal) {
+        return adminService.getDoctors(principal);
+    }
 }
