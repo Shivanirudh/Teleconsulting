@@ -44,6 +44,8 @@ const DoctorLogin = () => {
     })
       .then(response => {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('firstname', response.data.firstName);
+        localStorage.setItem('lastname', response.data.lastName);
         alert('Login successful!');
         navigate('/ddashboard');
       })

@@ -42,6 +42,8 @@ const PatientLogin = () => {
     })
       .then(response => {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('firstname', response.data.firstName);
+        localStorage.setItem('lastname', response.data.lastName);
         alert('Login successful!');
         navigate('/patientdashboard');
       })
@@ -49,10 +51,6 @@ const PatientLogin = () => {
         console.error('Error:', error);
         alert('Invalid email, password, or OTP');
       });
-  };
-
-  const handleSignUp = () => {
-    navigate('/signup');
   };
 
   return (

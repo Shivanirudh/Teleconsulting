@@ -1,18 +1,16 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './../../css/Patient/TopNavigationBar.css';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
-// Create Axios instance with baseURL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+  baseURL: 'http://localhost:8081/api/v1',
 });
 
 function TopNavigationBar({ patientName, onSignOut }) {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    // Send request to backend to logout using Axios
     axiosInstance.post('/auth/logout', null, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -20,10 +18,10 @@ function TopNavigationBar({ patientName, onSignOut }) {
       },
     })
     .then(response => {
-      console.log(response.data.message); // Log the response from backend
-      // Clear token from local storage
+      console.log(response.data.message);
       localStorage.removeItem('token');
-      // Redirect to the home page
+      localStorage.removeItem('firstname');
+      localStorage.removeItem('lastname');
       navigate('/');
     })
     .catch(error => {
@@ -31,10 +29,16 @@ function TopNavigationBar({ patientName, onSignOut }) {
     });
   };
 
+  const firstName = localStorage.getItem('firstname');
+  const lastName = localStorage.getItem('lastname');
+
+  console.log('First Name:', firstName);
+  console.log('Last Name:', lastName);
+
   return (
     <div className="top-navbar">
       <div className="center-links">
-        <span className="welcome-text">Welcome, {patientName}</span>
+        <span className="welcome-text">Welcome, {firstName} {lastName}</span>
       </div>
       <div className="right-links">
         <Link to="/patienteditdetails" className="edit-details-button">
