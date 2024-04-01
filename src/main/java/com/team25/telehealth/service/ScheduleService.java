@@ -1,10 +1,13 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.ScheduleDTO;
+import com.team25.telehealth.dto.response.DoctorScheduleDetailsDTO;
 import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Schedule;
 import com.team25.telehealth.helpers.generators.ScheduleIdGenerator;
+import com.team25.telehealth.mappers.AppointmentMapper;
 import com.team25.telehealth.repo.AppointmentRepo;
 import com.team25.telehealth.repo.ScheduleRepo;
 import jakarta.transaction.Transactional;
@@ -25,6 +28,7 @@ public class ScheduleService {
     private final ScheduleIdGenerator scheduleIdGenerator;
     private final AppointmentRepo appointmentRepo;
     private final MailService mailService;
+    private final AppointmentMapper appointmentMapper;
 
     @Transactional
     public ResponseEntity<?> uploadSchedule(Principal principal, ScheduleDTO scheduleDTO) {
@@ -81,15 +85,33 @@ public class ScheduleService {
 
     public ResponseEntity<?> fetchSchedule(Principal principal) {
         Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
-        List<Schedule> schedules = scheduleRepo.findAllByDoctorAndActive(doctor, true);
-        ScheduleDTO response = new ScheduleDTO();
-        List<LocalDateTime> slots = new ArrayList<>();
 
+        List<Schedule> schedules = scheduleRepo.findAllByDoctorAndActive(doctor, true);
+        List<LocalDateTime> slots = new ArrayList<>();
         for (Schedule schedule : schedules) {
             slots.add(schedule.getSlot());
         }
 
-        response.setSlot(slots.toArray(new LocalDateTime[0]));
-        return ResponseEntity.ok(response);
+        List<Appointment> appointmentList = appointmentRepo.getAllByDoctorAndActiveAndSlotDateBetween(
+                doctor,
+                true,
+                LocalDateTime.now().toLocalDate(),
+                LocalDateTime.now().toLocalDate().plusDays(6)
+        );
+
+        List<AppointmentDTO> appointmentDTOS = appointmentMapper.toDTOList(appointmentList);
+        Map<LocalDateTime, AppointmentDTO> m= new HashMap<>();
+        for(AppointmentDTO appointmentDTO : appointmentDTOS) {
+            m.put(appointmentDTO.getSlot(), appointmentDTO);
+        }
+
+        slots.removeIf(m::containsKey);
+
+        DoctorScheduleDetailsDTO doctorScheduleDetailsDTO = DoctorScheduleDetailsDTO.builder()
+                .slots(slots.toArray(new LocalDateTime[0]))
+                .appointments(appointmentDTOS.toArray(new AppointmentDTO[0]))
+                .build();
+
+        return ResponseEntity.ok(doctorScheduleDetailsDTO);
     }
 }
