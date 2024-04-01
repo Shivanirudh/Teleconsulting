@@ -4,6 +4,7 @@ import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.ConsentRequest;
+import com.team25.telehealth.dto.request.DoctorSearchLDTO;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
@@ -101,8 +102,8 @@ public class PatientController {
     }
 
     @GetMapping("/list-doctors")
-    public List<Doctor> listDoctors(Principal principal, String email, Specialization specialization){
-        return patientService.getDoctorsByHospital(principal, email, specialization);
+    public List<Doctor> listDoctors(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
+        return patientService.getDoctorsByHospital(principal, doctorSearchLDTO.getEmail(), doctorSearchLDTO.getSpecialization());
     }
   
     @GetMapping("/list-appointments")
