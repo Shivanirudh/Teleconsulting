@@ -32,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.security.Principal;
 import java.util.List;
 
@@ -50,10 +51,12 @@ public class AdminService {
     private final AdminMapper adminMapper;
     private final HospitalMapper hospitalMapper;
     private final HospitalService hospitalService;
+    private final PatientService patientService;
     private final PatientRepo patientRepo;
+    private final DoctorRepo doctorRepo;
+    private final HospitalRepo hospitalRepo;
     private final PatientMapper patientMapper;
     private final DoctorMapper doctorMapper;
-    private final DoctorRepo doctorRepo;
 
     @Transactional
     public Admin addAdmin(Admin admin) {
@@ -108,6 +111,65 @@ public class AdminService {
         return doctorService.addDoctor(principal, doctorDTO, hospital);
     }
 
+    public ResponseEntity<?> blockPatient(Principal principal, String patientId){
+        Patient patient = patientService.getPatientByPatientId(patientId);
+        if(!patient.getActive()){
+            return ResponseEntity.badRequest().body("Patient already blocked");
+        }
+        patient.setActive(false);
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Patient blocked Successfully");
+    }
+
+    public ResponseEntity<?> unblockPatient(Principal principal, String patientId){
+        Patient patient = patientService.getPatientByPatientId(patientId);
+        if(patient.getActive()){
+            return ResponseEntity.badRequest().body("Patient already unblocked");
+        }
+        patient.setActive(true);
+        patientRepo.save(patient);
+        return ResponseEntity.ok("Patient unblocked Successfully");
+    }
+
+    public ResponseEntity<?> blockDoctor(Principal principal, String doctorId){
+        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
+        if(!doctor.getActive()){
+            return ResponseEntity.badRequest().body("Doctor already blocked");
+        }
+        doctor.setActive(false);
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Doctor blocked Successfully");
+    }
+
+    public ResponseEntity<?> unblockDoctor(Principal principal, String doctorId){
+        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
+        if(doctor.getActive()){
+            return ResponseEntity.badRequest().body("Doctor already unblocked");
+        }
+        doctor.setActive(true);
+        doctorRepo.save(doctor);
+        return ResponseEntity.ok("Doctor unblocked Successfully");
+    }
+
+    public ResponseEntity<?> blockHospital(Principal principal, String hospitalId) {
+        Hospital hospital = hospitalService.findByHospitalId(hospitalId);
+        if (!hospital.getActive()) {
+            return ResponseEntity.badRequest().body("Hospital already blocked");
+        }
+        hospital.setActive(false);
+        hospitalRepo.save(hospital);
+        return ResponseEntity.ok("Hospital blocked Successfully");
+    }
+
+    public ResponseEntity<?> unblockHospital(Principal principal, String hospitalId) {
+        Hospital hospital = hospitalService.findByHospitalId(hospitalId);
+        if (hospital.getActive()) {
+            return ResponseEntity.badRequest().body("Hospital already unblocked");
+        }
+        hospital.setActive(true);
+        hospitalRepo.save(hospital);
+        return ResponseEntity.ok("Hospital unblocked Successfully");
+    }
     public ResponseEntity<?> getPatients(Principal principal) {
         List<Patient> patients = patientRepo.findAll();
         List<PatientDTO> res = patientMapper.toDTOList(patients);
