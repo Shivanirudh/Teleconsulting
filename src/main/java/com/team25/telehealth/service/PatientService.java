@@ -3,6 +3,7 @@ package com.team25.telehealth.service;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.helpers.EncryptionService;
 import com.team25.telehealth.helpers.FileStorageService;
@@ -10,6 +11,9 @@ import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.PatientMapper;
+import com.team25.telehealth.model.Specialization;
+import com.team25.telehealth.repo.DoctorRepo;
+import com.team25.telehealth.repo.HospitalRepo;
 import com.team25.telehealth.repo.PatientRepo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -28,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.Doc;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +52,9 @@ public class PatientService {
     private final FileStorageService fileStorageService;
     private final EncryptionService encryptionService;
     private final PatientMapper patientMapper;
-    private final  EntityManager entityManager;
+    private final EntityManager entityManager;
+    private final HospitalService hospitalService;
+    private final DoctorRepo doctorRepo;
 
     private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Patient_Data\\";
 
@@ -237,5 +244,12 @@ public class PatientService {
         patient.setActive(false);
         patientRepo.save(patient);
         return ResponseEntity.ok("Patient deleted Successfully");
+    }
+
+    public List<Doctor> getDoctorsByHospital(Principal principal, String email, Specialization specialization){
+        Hospital hospital = hospitalService.getHospitalByEmail(email);
+        if(specialization == null)
+            return doctorRepo.getByHospitalAndActiveAndSpecialization(hospital, true, specialization);
+        return doctorRepo.getByHospitalAndActive(hospital, true);
     }
 }
