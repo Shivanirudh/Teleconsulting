@@ -52,4 +52,14 @@ public class AdminController {
     public ResponseEntity<?> changePassword(Principal principal, @RequestBody AuthenticationRequest req) {
         return adminService.changePassword(principal, req);
     }
+
+    @GetMapping("/patients")
+    public ResponseEntity<?> getPatients(Principal principal) {
+        return adminService.getPatients(principal);
+    }
+
+    @GetMapping("/doctors")
+    public ResponseEntity<?> getDoctors(Principal principal) {
+        return adminService.getDoctors(principal);
+    }
 }
