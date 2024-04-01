@@ -8,6 +8,8 @@ import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.model.Specialization;
+import com.team25.telehealth.entity.Appointment;
+
 import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.HospitalService;
@@ -101,5 +103,10 @@ public class PatientController {
     @GetMapping("/list-doctors")
     public List<Doctor> listDoctors(Principal principal, String email, Specialization specialization){
         return patientService.getDoctorsByHospital(principal, email, specialization);
+    }
+  
+    @GetMapping("/list-appointments")
+    public List<Appointment> listAppointments(Principal principal){
+        return appointmentService.viewAppointments(principal);
     }
 }

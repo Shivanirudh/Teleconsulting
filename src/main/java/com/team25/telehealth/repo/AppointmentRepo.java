@@ -38,4 +38,20 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Integer> {
             @Param("patient") Patient patient,
             @Param("date") LocalDate date,
             @Param("active") boolean active);
+
+    @Query("SELECT a FROM Appointment a WHERE a.doctor = :doctor AND a.active = :active AND DATE(a.slot) = :date")
+    List<Appointment> getAllByDoctorAndSlotDateAndActive(
+            @Param("doctor") Doctor doctor,
+            @Param("date") LocalDate date,
+            @Param("active") boolean active);
+
+    @Query("SELECT a FROM Appointment a WHERE a.doctor = :doctor AND a.active = :active")
+    List<Appointment> getAllByDoctorAndActive(
+            @Param("doctor") Doctor doctor,
+            @Param("active") boolean active);
+
+    @Query("SELECT a FROM Appointment a WHERE a.patient = :patient AND a.active = :active")
+    List<Appointment> getAllByPatientAndActive(
+            @Param("doctor") Patient patient,
+            @Param("active") boolean active);
 }

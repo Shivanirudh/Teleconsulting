@@ -9,6 +9,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+/*
+    FOR APPOINTMENT CLASS ACTIVE FIELD MEANS THAT WHETHER THAT APPOINTMENT IS CANCELLED OR NOT
+    IF IT IS TRUE THEN IT MEANS IT IS NOT CANCELLED
+    IF IT IS FALSE THEN IT MEANS IT IS CANCELLED.
+ */
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder

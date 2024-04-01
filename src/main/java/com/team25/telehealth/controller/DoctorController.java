@@ -6,7 +6,9 @@ import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.ScheduleDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.DoctorService;
 import com.team25.telehealth.service.ScheduleService;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/doctor")
@@ -25,6 +28,7 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final ConsentService consentService;
     private final ScheduleService scheduleService;
+    private final AppointmentService appointmentService;
 
     @GetMapping("/")
     public ResponseEntity<?> getDoctor(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -79,5 +83,10 @@ public class DoctorController {
     @GetMapping("/schedule")
     public ResponseEntity<?> fetchSchedule(Principal principal) {
         return scheduleService.fetchSchedule(principal);
+    }
+
+    @GetMapping("/list-appointments")
+    public List<Appointment> listAppointments(Principal principal){
+        return appointmentService.viewAppointments(principal);
     }
 }
