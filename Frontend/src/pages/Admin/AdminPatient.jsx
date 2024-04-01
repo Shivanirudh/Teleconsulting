@@ -6,28 +6,68 @@ import SideNavbar from '../../components/Admin/sidenavbar';
 const AdminPatient = () => {
     const [patients, setPatients] = useState([]);
 
+    const fetchPatients = async () => {
+        try {
+            // Retrieve token from local storage
+            const token = localStorage.getItem('token');
+
+            // Set up headers with the token
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+
+            // Make request with headers
+            const response = await axios.get('http://localhost:8081/api/v1/admin/patients', { headers });
+            setPatients(response.data);
+        } catch (error) {
+            console.error('Error fetching patients:', error);
+        }
+    };
+
     useEffect(() => {
         // Fetch patients data from the backend when the component mounts
-        const fetchPatients = async () => {
-            try {
-                // Retrieve token from local storage
-                const token = localStorage.getItem('token');
-
-                // Set up headers with the token
-                const headers = {
-                    Authorization: `Bearer ${token}`
-                };
-
-                // Make request with headers
-                const response = await axios.get('http://localhost:8081/api/v1/admin/patients', { headers });
-                setPatients(response.data);
-            } catch (error) {
-                console.error('Error fetching patients:', error);
-            }
-        };
-
         fetchPatients();
     }, []);
+
+    const blockPatient = async (patientId) => {
+        try {
+            // Retrieve token from local storage
+            const token = localStorage.getItem('token');
+
+            // Set up headers with the token
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+
+            // Make request to block patient
+            await axios.put(`http://localhost:8081/api/v1/admin/block-patient`, patientId, { headers });
+
+            // Optionally, you can refresh the patients data after blocking
+            fetchPatients();
+        } catch (error) {
+            console.error('Error blocking patient:', error);
+        }
+    };
+
+    const unblockPatient = async (patientId) => {
+        try {
+            // Retrieve token from local storage
+            const token = localStorage.getItem('token');
+
+            // Set up headers with the token
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+
+            // Make request to unblock patient
+            await axios.put(`http://localhost:8081/api/v1/admin/unblock-patient`, patientId, { headers });
+
+            // Optionally, you can refresh the patients data after unblocking
+            fetchPatients();
+        } catch (error) {
+            console.error('Error unblocking patient:', error);
+        }
+    };
 
     return (
         <div className='dashboard-container'>
@@ -51,6 +91,8 @@ const AdminPatient = () => {
                                     <th>DOB</th>
                                     <th>Height</th>
                                     <th>Weight</th>
+                                    <th>Block</th>
+                                    <th>Unblock</th>
                                     {/* Add more columns as needed */}
                                 </tr>
                             </thead>
@@ -68,6 +110,12 @@ const AdminPatient = () => {
                                         <td>{patient.dob.filter((_, index) => index < 3).join('-')}</td>
                                         <td>{patient.height}</td>
                                         <td>{patient.weight}</td>
+                                        <td>
+                                            <button className="btn btn-danger" onClick={() => blockPatient(patient.patient_id)}>Block</button>
+                                        </td>
+                                        <td>
+                                            <button className="btn btn-success" onClick={() => unblockPatient(patient.patient_id)}>Unblock</button>
+                                        </td>
                                         {/* Add more columns as needed */}
                                     </tr>
                                 ))}
