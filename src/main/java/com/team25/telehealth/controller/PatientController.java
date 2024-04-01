@@ -5,6 +5,7 @@ import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.ConsentRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.ConsentService;
 import com.team25.telehealth.service.PatientService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/patient")
@@ -84,5 +86,10 @@ public class PatientController {
     @PostMapping("/cancel-appointment")
     public ResponseEntity<?> cancelAppointment(Principal principal, @RequestBody AppointmentDTO appointmentDTO) {
         return appointmentService.cancelAppointment(principal, appointmentDTO);
+    }
+
+    @GetMapping("/list-appointments")
+    public List<Appointment> listAppointments(Principal principal){
+        return appointmentService.viewAppointments(principal);
     }
 }

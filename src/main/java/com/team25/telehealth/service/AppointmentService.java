@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.StringTokenizer;
 
 @Service
 @AllArgsConstructor
@@ -115,5 +116,19 @@ public class AppointmentService {
                         appointment.getSlot().toString()
         );
         return ResponseEntity.ok("Appointment canceled successfully");
+    }
+
+    public List<Appointment> viewAppointments(Principal principal){
+        Patient patient = patientService.getPatientByEmail(principal.getName());
+        if(patient != null){
+            return appointmentRepo.getAllByPatientAndActive(patient, true);
+        }
+        else{
+            Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+            if(doctor == null){
+                throw new ResourceNotFoundException("Doctor", "email", principal.getName());
+            }
+            return appointmentRepo.getAllByDoctorAndActive(doctor, true);
+        }
     }
 }
