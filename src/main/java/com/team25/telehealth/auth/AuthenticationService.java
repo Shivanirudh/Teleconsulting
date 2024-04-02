@@ -4,16 +4,16 @@ import com.team25.telehealth.config.JwtService;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.dto.request.PatientRegistrationDTO;
 import com.team25.telehealth.dto.response.AuthenticationResponse;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.entity.Token;
+import com.team25.telehealth.entity.Validate;
 import com.team25.telehealth.helpers.OtpHelper;
+import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.model.*;
-import com.team25.telehealth.repo.AdminRepo;
-import com.team25.telehealth.repo.DoctorRepo;
-import com.team25.telehealth.repo.PatientRepo;
-import com.team25.telehealth.repo.TokenRepo;
+import com.team25.telehealth.repo.*;
 import com.team25.telehealth.service.AdminService;
 import com.team25.telehealth.service.DoctorService;
 import com.team25.telehealth.service.MailService;
@@ -43,6 +43,7 @@ public class AuthenticationService {
     private final MailService mailService;
     private final PatientMapper patientMapper;
     private final PasswordEncoder passwordEncoder;
+    private final ValidateRepo validateRepo;
 
 //    public AuthenticationResponse registerPatient(Patient req) {
 //        var patient = patientService.addPatient(req);
@@ -54,12 +55,19 @@ public class AuthenticationService {
 //    }
 
     @Transactional
-    public ResponseEntity<?> registerPatient(PatientDTO req) {
-        var patient = patientService.addPatient(patientMapper.toEntity(req));
-        if(patient == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't create the user.");
+    public ResponseEntity<?> registerPatient(PatientRegistrationDTO req) {
+        Validate validate = validateRepo.findById(req.getPatientDTO().getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", "Email", req.getPatientDTO().getEmail()));
+
+        if(otpHelper.otpCheck(req.getOtp(), validate.getOtp(), validate.getOtpExpiry())) {
+            var patient = patientService.addPatient(patientMapper.toEntity(req.getPatientDTO()));
+            if(patient == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Couldn't create the user.");
+            }
+            return ResponseEntity.ok("User created Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("OTP is wrong or expired");
         }
-        return ResponseEntity.ok("User created Successfully");
     }
 
     public ResponseEntity<?> authenticatePatient(AuthenticationRequest req) {
@@ -220,5 +228,30 @@ public class AuthenticationService {
         patient.setPassword(passwordEncoder.encode(req.getPassword()));
         patientRepo.save(patient);
         return ResponseEntity.ok("Password updated successfully");
+    }
+
+    public ResponseEntity<?> registerPatientOTP(EmailRequest req) {
+        Validate validate;
+        try {
+            var patient = patientService.getPatientByEmail(req.getEmail());
+            return ResponseEntity.badRequest().body("Patient with given Email id is already present");
+        } catch(Exception e) {
+             validate = validateRepo.findById(req.getEmail()).orElse(null);
+             if(validate != null) {
+                 validate.setOtp(otpHelper.generateOtp());
+                 validate.setOtpExpiry(otpHelper.generateExpirationTime(15));
+             } else {
+                 validate = Validate.builder()
+                         .email(req.getEmail())
+                         .otp(otpHelper.generateOtp())
+                         .otpExpiry(otpHelper.generateExpirationTime(15))
+                         .build();
+             }
+            validateRepo.save(validate);
+        }
+        mailService.sendEmail(validate.getEmail(),
+                "OTP For TeleHealth Website",
+                validate.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 15 minutes.");
+        return ResponseEntity.ok("Otp Generated Successfully");
     }
 }

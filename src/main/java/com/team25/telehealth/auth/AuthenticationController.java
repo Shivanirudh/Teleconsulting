@@ -1,6 +1,7 @@
 package com.team25.telehealth.auth;
 
 import com.team25.telehealth.dto.PatientDTO;
+import com.team25.telehealth.dto.request.PatientRegistrationDTO;
 import com.team25.telehealth.entity.Patient;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
@@ -19,8 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     private final AuthenticationService service;
 
+    @PostMapping("/patient/register/otp")
+    public ResponseEntity<?> registerPatientOTP(@Valid @RequestBody EmailRequest req) {
+        return service.registerPatientOTP(req);
+    }
+
     @PostMapping("/patient/register")
-    public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientDTO req) {
+    public ResponseEntity<?> registerPatient(@Valid @RequestBody PatientRegistrationDTO req) {
         return service.registerPatient(req);
     }
 
