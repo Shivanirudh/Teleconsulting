@@ -1,0 +1,32 @@
+/* DoctorList.css */
+
+.search-form {
+  margin-bottom: 20px;
+  width: 80%; /* Set the width to 80% */
+  margin: 0 auto; /* Center the form horizontally */
+}
+
+.search-form input[type="text"] {
+  padding: 8px;
+  width: calc(100% - 120px); /* Make the input field 100% width minus space for the button */
+  margin-right: 10px;
+}
+
+.search-wala-but {
+  display: inline-block; /* Display the button inline with the input field */
+  width: 100px; /* Set the width of the button */
+  padding: 12px 0;
+  background-color: #53a8b6; /* Blue button */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.search-wala-but:hover {
+  background-color: #79c2d0; /* Darker blue on hover */
+}
