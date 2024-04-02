@@ -134,6 +134,7 @@ public class ScheduleService {
         List<AppointmentDTO> appointmentDTOS = appointmentMapper.toDTOList(appointmentList);
         Map<LocalDateTime, AppointmentDTO> m= new HashMap<>();
         for(AppointmentDTO appointmentDTO : appointmentDTOS) {
+            appointmentDTO.setPatient(null);
             m.put(appointmentDTO.getSlot(), appointmentDTO);
         }
 
