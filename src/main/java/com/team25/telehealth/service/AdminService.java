@@ -181,4 +181,10 @@ public class AdminService {
         List<DoctorDTO> res = doctorMapper.toDTOList(doctors);
         return ResponseEntity.ok(res);
     }
+
+    public ResponseEntity<?> getHospitals(Principal principal) {
+        List<Hospital> hospitals = hospitalRepo.findAll();
+        List<HospitalDTO> res = hospitalMapper.toDTOList(hospitals);
+        return ResponseEntity.ok(res);
+    }
 }

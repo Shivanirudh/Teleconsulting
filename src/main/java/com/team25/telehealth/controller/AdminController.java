@@ -92,4 +92,9 @@ public class AdminController {
     public ResponseEntity<?> getDoctors(Principal principal) {
         return adminService.getDoctors(principal);
     }
+
+    @GetMapping("/hospitals")
+    public ResponseEntity<?> getHospitals(Principal principal) {
+        return adminService.getHospitals(principal);
+    }
 }

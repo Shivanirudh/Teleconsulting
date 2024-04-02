@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface HospitalMapper {
     HospitalMapper INSTANCE = Mappers.getMapper(HospitalMapper.class);
@@ -14,4 +16,6 @@ public interface HospitalMapper {
 
     @Mapping(source = "address", target = "address")
     Hospital toEntity(HospitalDTO hospitalDTO);
+
+    List<HospitalDTO> toDTOList(List<Hospital> hospitals);
 }

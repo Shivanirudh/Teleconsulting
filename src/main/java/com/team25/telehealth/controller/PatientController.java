@@ -11,10 +11,7 @@ import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.model.Specialization;
 import com.team25.telehealth.entity.Appointment;
 
-import com.team25.telehealth.service.AppointmentService;
-import com.team25.telehealth.service.ConsentService;
-import com.team25.telehealth.service.HospitalService;
-import com.team25.telehealth.service.PatientService;
+import com.team25.telehealth.service.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,7 @@ public class PatientController {
     private final ConsentService consentService;
     private final AppointmentService appointmentService;
     private final HospitalService hospitalService;
+    private final ScheduleService scheduleService;
 
     @GetMapping("/")
     public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
@@ -104,6 +102,11 @@ public class PatientController {
     @GetMapping("/list-doctors")
     public List<Doctor> listDoctors(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
         return patientService.getDoctorsByHospital(principal, doctorSearchLDTO.getEmail(), doctorSearchLDTO.getSpecialization());
+    }
+
+    @GetMapping("/list-doctors-schedule")
+    public ResponseEntity<?> fetchSchedule(Principal principal, @Valid @RequestBody String doctorID){
+        return scheduleService.fetchSchedule(principal, doctorID);
     }
   
     @GetMapping("/list-appointments")

@@ -114,4 +114,36 @@ public class ScheduleService {
 
         return ResponseEntity.ok(doctorScheduleDetailsDTO);
     }
+
+    public ResponseEntity<?> fetchSchedule(Principal principal, String doctorId) {
+        Doctor doctor = doctorService.getDoctorByDoctorId(doctorId);
+
+        List<Schedule> schedules = scheduleRepo.findAllByDoctorAndActive(doctor, true);
+        List<LocalDateTime> slots = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            slots.add(schedule.getSlot());
+        }
+
+        List<Appointment> appointmentList = appointmentRepo.getAllByDoctorAndActiveAndSlotDateBetween(
+                doctor,
+                true,
+                LocalDateTime.now().toLocalDate(),
+                LocalDateTime.now().toLocalDate().plusDays(6)
+        );
+
+        List<AppointmentDTO> appointmentDTOS = appointmentMapper.toDTOList(appointmentList);
+        Map<LocalDateTime, AppointmentDTO> m= new HashMap<>();
+        for(AppointmentDTO appointmentDTO : appointmentDTOS) {
+            m.put(appointmentDTO.getSlot(), appointmentDTO);
+        }
+
+        slots.removeIf(m::containsKey);
+
+        DoctorScheduleDetailsDTO doctorScheduleDetailsDTO = DoctorScheduleDetailsDTO.builder()
+                .slots(slots.toArray(new LocalDateTime[0]))
+                .appointments(appointmentDTOS.toArray(new AppointmentDTO[0]))
+                .build();
+
+        return ResponseEntity.ok(doctorScheduleDetailsDTO);
+    }
 }
