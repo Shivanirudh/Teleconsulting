@@ -19,6 +19,7 @@ import PrivateRoutes from './components/PrivateRoutes';
 import PForgotPassword from './pages/Patient/PForgotPassword';
 import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
+import AdminHospital from './pages/Admin/AdminHospital';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
+            <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
           </Route>
         </Routes>
       </Router>

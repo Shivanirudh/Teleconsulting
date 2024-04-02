@@ -21,6 +21,7 @@ export default function SideNavbar() {
         <li onClick={() => handleNavigation('/admindashboard')}>Home</li>
         <li onClick={() => handleNavigation('/adminpatient')}>Patient</li>                               
         <li onClick={() => handleNavigation('/admindoctor')}>Doctor</li>
+        <li onClick={() => handleNavigation('/adminhospital')}>Hospital</li>
        
       </ul>
     </div>

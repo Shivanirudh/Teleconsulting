@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
-import '/home/somya/Desktop/had/Teleconsulting/Frontend/src/css/Admin/Navbar.css'
+import '../../css/Admin/Navbar.css'
 
 // Create Axios instance with baseURL
 const axiosInstance = axios.create({
