@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Navbar from '../../components/Admin/Navbar';
 import SideNavbar from '../../components/Admin/sidenavbar';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/Admin/searchbar.css';
 
@@ -9,48 +9,26 @@ const AdminHospital = () => {
     const [hospitals, setHospitals] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredHospitals, setFilteredHospitals] = useState([]);
+    const [showAddHospitalForm, setShowAddHospitalForm] = useState(false);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
-        fetchHospitals();
+        const storedToken = localStorage.getItem('token');
+        setToken(storedToken);
+        fetchHospitals(storedToken);
     }, []);
 
-    const fetchHospitals = async () => {
+    const fetchHospitals = async (token) => {
         try {
-            const token = localStorage.getItem('token');
             const headers = {
                 Authorization: `Bearer ${token}`
             };
+
             const response = await axios.get('http://localhost:8081/api/v1/admin/hospitals', { headers });
             setHospitals(response.data);
             setFilteredHospitals(response.data);
         } catch (error) {
             console.error('Error fetching hospitals:', error);
-        }
-    };
-
-    const blockHospital = async (hospitalId) => {
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-            await axios.put(`http://localhost:8081/api/v1/admin/block-hospital`, hospitalId , { headers });
-            fetchHospitals();
-        } catch (error) {
-            console.error('Error blocking hospital:', error);
-        }
-    };
-
-    const unblockHospital = async (hospitalId) => {
-        try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-            await axios.put(`http://localhost:8081/api/v1/admin/unblock-hospital`, hospitalId , { headers });
-            fetchHospitals();
-        } catch (error) {
-            console.error('Error unblocking hospital:', error);
         }
     };
 
@@ -60,6 +38,39 @@ const AdminHospital = () => {
         );
         setFilteredHospitals(filtered);
     };
+
+    const handleAddHospital = () => {
+        setShowAddHospitalForm(true);
+    };
+
+    const handleCancelAddHospital = () => {
+        setShowAddHospitalForm(false);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const newHospitalData = {
+            name: formData.get('name'),
+            address: formData.get('address'),
+            phone_number: formData.get('phone_number'), // No need to convert to string
+            email: formData.get('email')
+        };
+        console.log(newHospitalData);
+
+        try {
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+            await axios.post('http://localhost:8081/api/v1/admin/hospital', JSON.stringify(newHospitalData), { headers });
+            setShowAddHospitalForm(false);
+            fetchHospitals(token);
+        } catch (error) {
+            console.error('Error adding hospital:', error);
+        }
+    };
+    
 
     return (
         <div className='dashboard-container'>
@@ -93,8 +104,6 @@ const AdminHospital = () => {
                                     <th>Address</th>
                                     <th>Phone Number</th>
                                     <th>Email</th>
-                                    <th>Block</th>
-                                    <th>Unblock</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,16 +114,34 @@ const AdminHospital = () => {
                                         <td>{hospital.address}</td>
                                         <td>{hospital.phone_number}</td>
                                         <td>{hospital.email}</td>
-                                        <td>
-                                            <button className="btn btn-danger" onClick={() => blockHospital(hospital.hospital_id)}>Block</button>
-                                        </td>
-                                        <td>
-                                            <button className="btn btn-success" onClick={() => unblockHospital(hospital.hospital_id)}>Unblock</button>
-                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                        {showAddHospitalForm ? (
+                            <form onSubmit={handleSubmit}>
+                                <div>
+                                    <label>Name:</label>
+                                    <input type="text" name="name" required />
+                                </div>
+                                <div>
+                                    <label>Address:</label>
+                                    <input type="text" name="address" required />
+                                </div>
+                                <div>
+                                    <label>Phone Number:</label>
+                                    <input type="tel" name="phone_number" required />
+                                </div>
+                                <div>
+                                    <label>Email:</label>
+                                    <input type="text" name="email" required />
+                                </div>
+                                <button type="submit">Add Hospital</button> &nbsp;
+                                <button type="button" onClick={handleCancelAddHospital}>Cancel</button>
+                            </form>
+                        ) : (
+                            <button className='add-admin-button' onClick={handleAddHospital}>Add Hospital</button>
+                        )}
                     </div>
                 </div>
             </div>
