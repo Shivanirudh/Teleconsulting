@@ -12,7 +12,6 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
         phone_number: '',
         email: '',
         roll:'',
-        // Add more fields as needed
     });
 
     // Function to handle form field changes

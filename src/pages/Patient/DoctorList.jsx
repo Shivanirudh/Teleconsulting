@@ -1,159 +1,223 @@
 import React, { useState } from 'react';
 import './../../css/Patient/DoctorList.css';
-import SearchBar from './../../components/Patient/SearchBar';
 
 function DoctorList() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedHospital, setSelectedHospital] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isBookingMode, setIsBookingMode] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [lockedSlots, setLockedSlots] = useState([]);
+  const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
 
-  const doctors = [
+  const hospitals = [
     {
       id: 1,
-      name: 'Dr. John Doe',
-      specialty: 'Cardiologist',
-      schedule: [
-        { date: '2024-04-01', availability: ['busy', 'booked', 'available', 'busy', 'available', 'available', 'busy', 'booked', 'available', 'available','busy','booked'] },
-        { date: '2024-04-02', availability: ['booked','busy','available','busy','available','busy','busy','available','booked','booked','booked','booked'] },
-        { date: '2024-04-03', availability: ['available','busy','booked','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-04', availability: ['available','available','busy','busy','busy','available','available','booked','available','busy','available','available'] },
-        { date: '2024-04-05', availability: ['busy','booked','available','busy','available','busy','busy','available','booked','booked','busy','booked'] },
-        { date: '2024-04-06', availability: ['available','busy','booked','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-07', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy','booked'] }
+      name: 'Hospital 1',
+      doctors: [
+        {
+          id: 1,
+          name: 'Dr. John Doe',
+          specialty: 'Cardiologist',
+          schedule: {
+            slots: [
+              [2024, 4, 1, 11, 15],
+              [2024, 4, 3, 15, 45],
+              [2024, 4, 4, 15, 0],
+              [2024, 4, 2, 15, 45],
+              [2024, 4, 5, 15, 0]
+            ]
+          },
+          appointments: []
+        },
+        {
+          id: 2,
+          name: 'Dr. Jane Smith',
+          specialty: 'Dermatologist',
+          schedule: {
+            slots: [
+              [2024, 4, 1, 11, 15],
+              [2024, 4, 3, 15, 45],
+              [2024, 4, 4, 15, 0],
+              [2024, 4, 2, 15, 45],
+              [2024, 4, 5, 15, 0]
+            ]
+          },
+          appointments: []
+        }
       ]
-    },
-    {
-      id: 2,
-      name: 'Dr. Jane Smith',
-      specialty: 'Dermatologist',
-      schedule: [
-        { date: '2024-04-01', availability: ['available', 'available', 'booked', 'available', 'busy', 'busy', 'booked', 'available', 'available', 'available', 'booked', 'busy'] },
-        { date: '2024-04-02', availability: ['booked','busy','available','busy','available','busy','busy','available','booked','booked','booked','booked'] },
-        { date: '2024-04-03', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-04', availability: ['available','available','busy','busy','busy','available','available','booked','available','busy','available','available'] },
-        { date: '2024-04-05', availability: ['busy','booked','available','busy','available','busy','busy','available','booked','booked','busy','booked'] },
-        { date: '2024-04-06', availability: ['available','busy','booked','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-07', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy','booked'] }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Dr. Michael Brown',
-      specialty: 'Pediatrician',
-      schedule: [
-        { date: '2024-04-01', availability: ['busy', 'busy', 'booked', 'busy', 'busy', 'busy', 'booked', 'available', 'available', 'booked', 'available', 'available'] },
-        { date: '2024-04-02', availability: ['booked','busy','available','busy','available','busy','busy','available','booked','booked','booked','booked'] },
-        { date: '2024-04-03', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-04', availability: ['available','available','busy','busy','busy','available','available','booked','available','busy','available','available'] },
-        { date: '2024-04-05', availability: ['busy','booked','available','busy','available','busy','busy','available','booked','booked','busy','booked'] },
-        { date: '2024-04-06', availability: ['available','busy','booked','busy','available','available','busy','booked','available','available','busy','available'] },
-        { date: '2024-04-07', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy','booked'] }
-      ]
-    },
+    }
   ];
 
-  const renderAvailability = (availability, date) => {
-    return availability.map((slot, index) => {
-      let className = '';
-      if (slot === 'available') {
-        className = 'available-new';
-      } else if (slot === 'booked') {
-        className = 'booked-new';
-      } else if (slot === 'busy') {
-        className = 'busy-new';
+  const filteredHospitals = hospitals.filter((hospital) =>
+    hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleViewDoctors = (hospitalId) => {
+    setSelectedHospital(hospitalId);
+    setSelectedDoctor(null);
+    setIsScheduleCollapsed(false);
+  };
+
+  const handleViewSchedule = (doctorId) => {
+    setSelectedDoctor(doctorId);
+    setIsBookingMode(false);
+  };
+
+  const handleCellClick = (date, index) => {
+    if (isBookingMode) {
+      const selectedHospitalData = hospitals.find(hospital => hospital.id === selectedHospital);
+      if (selectedHospitalData) {
+        const selectedDoctorData = selectedHospitalData.doctors.find(doctor => doctor.id === selectedDoctor);
+        if (selectedDoctorData) {
+          const isGreen = selectedDoctorData.schedule.slots.find(slot => {
+            const [year, month, day, hour, minute] = slot;
+            return year === date.getFullYear() && month === date.getMonth() + 1 && day === date.getDate() && Math.floor(index * 0.75) + 9 === hour && (index * 45) % 60 === minute;
+          });
+          if (isGreen && !lockedSlots.includes(`${date}_${index}`)) {
+            setSelectedSlot({ date, index });
+          }
+        }
       }
+    }
+  };
+
+  const handleLockSlot = () => {
+    if (selectedSlot) {
+      const slotKey = `${selectedSlot.date}_${selectedSlot.index}`;
+      setLockedSlots([...lockedSlots, slotKey]);
+      setSelectedSlot(null);
+    }
+  };
+
+  const handleToggleBookingMode = () => {
+    setIsBookingMode(!isBookingMode);
+    setSelectedSlot(null);
+  };
+
+  const renderAvailability = (schedule, date) => {
+    // Create a map to check if a specific slot is available
+    const availableSlotsMap = {};
+    schedule.slots.forEach(slot => {
+      const [year, month, day, hour, minute] = slot;
+      const slotKey = `${year}-${month}-${day}_${hour}_${minute}`;
+      availableSlotsMap[slotKey] = true;
+    });
+
+    // Generate the time slots for the day
+    const slots = Array.from({ length: 10 }, (_, i) => {
+      const hour = Math.floor(i * 0.75) + 9;
+      const minute = (i * 45) % 60;
+      const slotKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}_${hour}_${minute}`;
+      return availableSlotsMap[slotKey] ? 'available' : 'busy';
+    });
+
+    // Render each slot with appropriate class
+    return slots.map((slot, index) => {
+      let className = '';
+      switch (slot) {
+        case 'available':
+          className = 'available-new';
+          break;
+        case 'booked':
+          className = 'booked-new';
+          break;
+        case 'busy':
+          className = 'busy-new';
+          break;
+        default:
+          className = '';
+      }
+
+      const slotKey = `${date}_${index}`;
+      const isLocked = lockedSlots.includes(slotKey);
+
       return (
         <td
           key={index}
-          className={className}
-          onClick={() => handleSlotClick(date, index)}
-          style={{ cursor: isBookingMode && slot === 'available' ? 'pointer' : 'default' }}
+          className={isBookingMode && slot === 'available' && !isLocked ? 'available-new clickable' : className}
+          onClick={() => handleCellClick(date, index)}
         >
-          {slot}
+          {isBookingMode && slot === 'available' && !isLocked && selectedSlot && selectedSlot.date === date && selectedSlot.index === index && 'Selected'}
+          {isLocked && 'Locked'}
         </td>
       );
     });
   };
 
-  const handleViewSchedule = (doctorId) => {
-    setSelectedDoctor(doctorId);
-  };
-
-  const handleSlotClick = (date, index) => {
-    if (isBookingMode) {
-      setSelectedSlot({ date, index });
-    }
-  };
-
-
-  const handleLockAppointment = () => {
-    if (selectedSlot) {
-      const { date, index } = selectedSlot;
-      console.log('Book appointment for date:', date, 'slot index:', index);
-      setSelectedSlot(null);
-      setIsBookingMode(false);
-    }
-  };
-
-  const toggleBookingMode = () => {
-    setIsBookingMode(!isBookingMode);
-    setSelectedSlot(null); // Reset selected slot when toggling booking mode
-  };
-
-  const filteredDoctors = doctors.filter((doctor) =>
-    doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="doctor-list-container-new">
-      <SearchBar onSearch={setSearchTerm} />
-      <h2 style={{ textAlign: 'center' }}>Available Doctors</h2>
+      <div className="search-form">
+        <input
+          type="text"
+          placeholder="Search by Hospital..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <h2 style={{textAlign: 'center'}}>Available Hospitals</h2>
       <ul>
-        {filteredDoctors.map((doctor, index) => (
+        {filteredHospitals.map((hospital, index) => (
           <li key={index}>
-            <h3>{doctor.name}</h3>
-            <p>{doctor.specialty}</p>
-            {selectedDoctor === doctor.id && (
-              <div>
-                <table className="availability-table-new">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '150px' }}>Date</th>
-                      {Array.from({ length: 12 }, (_, i) => i + 8).map((hour) => (
-                        <th key={hour}>{hour}:00 - {hour + 1}:00</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {doctor.schedule.map((day, idx) => (
-                      <tr key={idx}>
-                        <td>{day.date}</td>
-                        {renderAvailability(day.availability, day.date)}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {selectedSlot && (
-                  <button className= "doc-list-wala-button-new" onClick={handleLockAppointment}>Lock Appointment</button>
-                )}
-              </div>
+            <h3>{hospital.name}</h3>
+            {selectedHospital === hospital.id && (
+              <>
+                <h4>Doctors:</h4>
+                <ul>
+                  {hospital.doctors.map((doctor, idx) => (
+                    <li key={idx}>
+                      <h5>{doctor.name}</h5>
+                      <p>{doctor.specialty}</p>
+                      {selectedDoctor === doctor.id && (
+                        <>
+                          <table className="availability-table-new">
+                            <thead>
+                              <tr>
+                                <th style={{ width: '150px' }}>Date</th>
+                                {Array.from({ length: 10 }, (_, i) => i).map((index) => {
+                                  const hour = Math.floor(index * 0.75) + 9;
+                                  const minute = (index * 45) % 60;
+                                  return (
+                                    <th key={index}>
+                                      {hour < 10 ? '0' + hour : hour}:{minute === 0 ? '00' : minute}
+                                    </th>
+                                  );
+                                })}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {doctor.schedule.slots.map((slot, idx) => (
+                                <tr key={idx}>
+                                  <td>{`${slot[2]}-${slot[1]}-${slot[0]}`}</td>
+                                  {renderAvailability(doctor.schedule, new Date(slot[0], slot[1] - 1, slot[2]))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          <button className="doc-list-wala-button-new" onClick={handleToggleBookingMode}>
+                            {isBookingMode ? 'Cancel Booking' : 'Book Appointment'}
+                          </button>
+                          {selectedSlot && (
+                            <button className="doc-list-wala-button-new" onClick={handleLockSlot}>
+                              Lock Slot
+                            </button>
+                          )}
+                        </>
+                      )}
+                      {selectedDoctor !== doctor.id && (
+                        <button className='doc-list-wala-button-new busy-new' onClick={() => handleViewSchedule(doctor.id)}>
+                          View Schedule
+                        </button>
+                      )}
+                      <br />
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
-            {selectedDoctor === doctor.id && (
-              <button
-                className="doc-list-wala-button-new"
-                onClick={toggleBookingMode}
-                disabled={selectedSlot !== null} // Disable button if a slot is already selected
-              >
-                {isBookingMode ? 'Cancel Booking' : 'Book Appointment'}
-              </button>
-            )}
-            {selectedDoctor !== doctor.id && (
-              <button
-                className="doc-list-wala-button-new"
-                onClick={() => handleViewSchedule(doctor.id)}
-              >
-                View Schedule
+            {selectedHospital !== hospital.id && (
+              <button className="doc-list-wala-button-new" onClick={() => handleViewDoctors(hospital.id)}>
+                View Doctors
               </button>
             )}
             <br />

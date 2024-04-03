@@ -44,13 +44,15 @@
 
 .upload-section input[type="file"] {
   margin-bottom: 10px;
-  width: 200px; /* Adjust as needed */
-  
+  width: 250px; /* Adjust as needed */
 }
+
+/* Clear float */
+
 
 /* Adjusted styles for upload button */
 .doc-wala-but {
-  width: 200px; /* Adjust as needed */
+  width: 250px; /* Adjust as needed */
   padding: 8px 16px;
   font-size: 12px;
   padding: 12px 0;
