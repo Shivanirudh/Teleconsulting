@@ -114,7 +114,7 @@ public class PatientController {
   
     @GetMapping("/list-appointments")
     public List<AppointmentDTO> listAppointments(Principal principal){
-        return appointmentService.viewAppointments(principal);
+        return appointmentService.viewAppointmentsPatient(principal);
     }
 
     @GetMapping("/fetch-prescription")

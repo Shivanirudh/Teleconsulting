@@ -86,7 +86,7 @@ public class DoctorController {
 
     @GetMapping("/list-appointments")
     public List<AppointmentDTO> listAppointments(Principal principal){
-        return appointmentService.viewAppointments(principal);
+        return appointmentService.viewAppointmentsDoctor(principal);
     }
 
     @PostMapping("/upload-prescription")

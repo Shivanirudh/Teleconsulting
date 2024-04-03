@@ -139,18 +139,14 @@ public class AppointmentService {
         return ResponseEntity.ok("Appointment canceled successfully");
     }
 
-    public List<AppointmentDTO> viewAppointments(Principal principal){
+    public List<AppointmentDTO> viewAppointmentsPatient(Principal principal){
         Patient patient = patientService.getPatientByEmail(principal.getName());
-        if(patient != null){
-            return appointmentMapper.toDTOList(appointmentRepo.getAllByPatientAndActive(patient, true));
-        }
-        else{
-            Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
-            if(doctor == null){
-                throw new ResourceNotFoundException("User", "email", principal.getName());
-            }
-            return appointmentMapper.toDTOList(appointmentRepo.getAllByDoctorAndActive(doctor, true));
-        }
+        return appointmentMapper.toDTOList(appointmentRepo.getAllByPatientAndActive(patient, true));
+    }
+
+    public List<AppointmentDTO> viewAppointmentsDoctor(Principal principal){
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        return appointmentMapper.toDTOList(appointmentRepo.getAllByDoctorAndActive(doctor, true));
     }
 
     @Transactional

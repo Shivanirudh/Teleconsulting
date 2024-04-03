@@ -3,14 +3,16 @@ package com.team25.telehealth.mappers;
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.entity.Appointment;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DoctorMapper.class, PatientMapper.class})
 public interface AppointmentMapper {
     AppointmentMapper INSTANCE = Mappers.getMapper(AppointmentMapper.class);
 
+    @Mapping(target = "prescription", ignore = true)
     AppointmentDTO toDTO(Appointment appointment);
 
     Appointment toEntity(AppointmentDTO appointmentDTO);
