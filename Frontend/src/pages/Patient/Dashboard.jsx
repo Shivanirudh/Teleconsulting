@@ -47,7 +47,7 @@ function Dashboard() {
 
   return (
     <div className="patient-dashboard-container">
-      <TopNavigationBar patientName="First Name Last Name" />
+      <TopNavigationBar />
       <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
         <div className="patiient-main-content">

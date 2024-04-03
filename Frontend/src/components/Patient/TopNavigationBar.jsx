@@ -32,9 +32,6 @@ function TopNavigationBar({ patientName, onSignOut }) {
   const firstName = localStorage.getItem('firstname');
   const lastName = localStorage.getItem('lastname');
 
-  console.log('First Name:', firstName);
-  console.log('Last Name:', lastName);
-
   return (
     <div className="top-navbar">
       <div className="center-links">
