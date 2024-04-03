@@ -8,6 +8,7 @@ import com.team25.telehealth.dto.request.DoctorSearchLDTO;
 import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
+import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.model.Specialization;
 import com.team25.telehealth.entity.Appointment;
 
@@ -33,10 +34,12 @@ public class PatientController {
     private final AppointmentService appointmentService;
     private final HospitalService hospitalService;
     private final ScheduleService scheduleService;
+    private final PatientMapper patientMapper;
 
     @GetMapping("/")
     public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientByEmail(email.getEmail()));
+        PatientDTO patientDTO = patientMapper.toDTO(patientService.getPatientByEmail(email.getEmail()));
+        return ResponseEntity.status(HttpStatus.OK).body(patientDTO);
     }
 
     @PostMapping("/upload")
@@ -110,7 +113,7 @@ public class PatientController {
     }
   
     @GetMapping("/list-appointments")
-    public List<Appointment> listAppointments(Principal principal){
+    public List<AppointmentDTO> listAppointments(Principal principal){
         return appointmentService.viewAppointments(principal);
     }
 }

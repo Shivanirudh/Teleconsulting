@@ -1,11 +1,9 @@
 package com.team25.telehealth.controller;
 
-import com.team25.telehealth.dto.ConsentDTO;
-import com.team25.telehealth.dto.DoctorDTO;
-import com.team25.telehealth.dto.PatientDTO;
-import com.team25.telehealth.dto.ScheduleDTO;
+import com.team25.telehealth.dto.*;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.dto.request.EmailRequest;
+import com.team25.telehealth.dto.request.PrescriptionRequest;
 import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.service.AppointmentService;
@@ -18,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -86,7 +85,13 @@ public class DoctorController {
     }
 
     @GetMapping("/list-appointments")
-    public List<Appointment> listAppointments(Principal principal){
+    public List<AppointmentDTO> listAppointments(Principal principal){
         return appointmentService.viewAppointments(principal);
+    }
+
+    @PostMapping("/upload-prescription")
+    public ResponseEntity<?> uploadPrescription(@RequestBody PrescriptionRequest prescriptionRequest, Principal principal)
+            throws IOException {
+        return appointmentService.uploadPrescription(prescriptionRequest, principal);
     }
 }

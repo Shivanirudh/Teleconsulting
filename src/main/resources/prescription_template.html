@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <title>Prescription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .section-heading {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .data {
+            font-size: 14px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="section-heading">Hospital Details:</div>
+<div class="data">
+    <p><strong>Hospital Name:</strong> ${hospitalName}</p>
+    <p><strong>Hospital Address:</strong> ${hospitalAddress}</p>
+</div>
+
+<div class="section-heading">Patient Details:</div>
+<div class="data">
+    <p><strong>ID:</strong> ${patientId}</p>
+    <p><strong>Name:</strong> ${patientName}</p>
+    <p><strong>Email:</strong> ${patientEmail}</p>
+    <p><strong>Age:</strong> ${patientAge}</p>
+    <p><strong>Gender:</strong> ${patientGender}</p>
+    <p><strong>Blood Type:</strong> ${patientBloodType}</p>
+</div>
+
+<div class="section-heading">Doctor Details:</div>
+<div class="data">
+    <p><strong>Name:</strong> ${doctorName}</p>
+    <p><strong>Specialization:</strong> ${doctorSpecialization}</p>
+</div>
+
+<div class="section-heading">Prescription Details:</div>
+<div class="data">
+    <p><strong>Symptoms:</strong> ${symptoms}</p>
+    <p><strong>Medicines and Dosage:</strong> ${medicinesAndDosage}</p>
+    <p><strong>Advice:</strong> ${advice}</p>
+    <p><strong>Prescription Upload Date:</strong> ${uploadDate}</p>
+</div>
+</body>
+</html>
