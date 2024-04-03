@@ -3,51 +3,180 @@
 <head>
     <meta charset="UTF-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-    <title>Prescription</title>
+    <title>TeleHealth Consultation Prescription</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
         }
+        .container {
+            max-width: 800px;
+            flex:1;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .right-align {
+            float: right;
+        }
+
+        .prescription-item {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .logo {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 3cm;
+            height: 3cm;
+        }
+
+        .center-align {
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+        }
+
+        .heading {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+        .hospital-info {
+            margin-bottom: 10px;
+        }
+        .hospital-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        .hospital-address {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .data p span {
+            margin-right: 10px;
+        }/* Adjust this value as needed */
         .section-heading {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
             margin-top: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
         }
+        .patient-info {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .patient-info p {
+            margin: 5px 0;
+        }
+
         .data {
-            font-size: 14px;
-            margin-left: 20px;
+            margin-bottom: 20px;
+            text-align: left;
         }
+        .data p {
+            margin: 5px 0;
+        }
+        .data p strong {
+            display: inline-block;
+            width: 120px;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+        .doctor-info {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-info p {
+            margin: 5px 0;
+        }
+
     </style>
 </head>
 <body>
-<div class="section-heading">Hospital Details:</div>
-<div class="data">
-    <p><strong>Hospital Name:</strong> ${hospitalName}</p>
-    <p><strong>Hospital Address:</strong> ${hospitalAddress}</p>
+<div class="container">
+    <img class="logo" src="./logo.jpg" alt="Logo"></img>
+    <div class="heading">TeleHealth Consultation Prescription</div>
+
+    <div class="hospital-info">
+        <div class="hospital-name">Hospital Name: ${hospitalName}</div>
+        <div class="hospital-address">${hospitalAddress}</div>
+    </div>
+
+    <div class="section-heading">Patient Details</div>
+    <div class="data">
+        <div class="patient-info">
+            <p><strong>Name:</strong> <span>${patientName}</span></p>
+            <p><strong>Email:</strong> <span>${patientEmail}</span></p>
+        </div>
+        <div class="patient-info">
+            <p><strong>Age:</strong> ${patientAge}</p>
+            <p><strong>Gender:</strong> ${patientGender}</p>
+            <p><strong>Blood Type:</strong> ${patientBloodType}</p>
+        </div>
+    </div>
+
+
+    <div class="section-heading">Doctor's Details</div>
+    <div class="data">
+        <div class="doctor-info">
+            <p><strong>Name:</strong> <span>${doctorName}</span></p>
+            <p><strong>Specialization:</strong> <span>${doctorSpecialization}</span></p>
+        </div>
+    </div>
+
+    <div class="section-heading">Prescription Details</div>
+    <div class="data">
+        <div class="prescription-item">
+            <p><strong>Symptoms:</strong> ${symptoms}</p>
+        </div>
+        <div class="prescription-item">
+            <p><strong>Medication:</strong> ${medicinesAndDosage}</p>
+        </div>
+        <div class="prescription-item">
+            <p><strong>Advice:</strong> ${advice}</p>
+        </div>
+    </div>
+
+
+    <div class="section-heading"></div>
+    <div class="footer">This document is a auto-generated PDF. Generated using predefined template and prescription data provided by doctor.
+        <p><strong>Prescription Upload Date:</strong> ${uploadDate}</p>
+    </div>
 </div>
 
-<div class="section-heading">Patient Details:</div>
-<div class="data">
-    <p><strong>ID:</strong> ${patientId}</p>
-    <p><strong>Name:</strong> ${patientName}</p>
-    <p><strong>Email:</strong> ${patientEmail}</p>
-    <p><strong>Age:</strong> ${patientAge}</p>
-    <p><strong>Gender:</strong> ${patientGender}</p>
-    <p><strong>Blood Type:</strong> ${patientBloodType}</p>
-</div>
-
-<div class="section-heading">Doctor Details:</div>
-<div class="data">
-    <p><strong>Name:</strong> ${doctorName}</p>
-    <p><strong>Specialization:</strong> ${doctorSpecialization}</p>
-</div>
-
-<div class="section-heading">Prescription Details:</div>
-<div class="data">
-    <p><strong>Symptoms:</strong> ${symptoms}</p>
-    <p><strong>Medicines and Dosage:</strong> ${medicinesAndDosage}</p>
-    <p><strong>Advice:</strong> ${advice}</p>
-    <p><strong>Prescription Upload Date:</strong> ${uploadDate}</p>
-</div>
 </body>
 </html>

@@ -2,22 +2,30 @@ package com.team25.telehealth.service;
 
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.PrescriptionRequest;
-import com.team25.telehealth.entity.Appointment;
-import com.team25.telehealth.entity.Doctor;
-import com.team25.telehealth.entity.Patient;
-import com.team25.telehealth.entity.Schedule;
+import com.team25.telehealth.entity.*;
+import com.team25.telehealth.helpers.EncryptionService;
+import com.team25.telehealth.helpers.FileStorageService;
 import com.team25.telehealth.helpers.PdfGenerator;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.AppointmentIdGenerator;
+import com.team25.telehealth.helpers.generators.PrescriptionIdGenerator;
 import com.team25.telehealth.mappers.AppointmentMapper;
+import com.team25.telehealth.model.Role;
 import com.team25.telehealth.repo.AppointmentRepo;
+import com.team25.telehealth.repo.PrescriptionRepo;
 import com.team25.telehealth.repo.ScheduleRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,9 +40,15 @@ public class AppointmentService {
     private final AppointmentRepo appointmentRepo;
     private final ScheduleRepo scheduleRepo;
     private final AppointmentIdGenerator appointmentIdGenerator;
+    private final PrescriptionIdGenerator prescriptionIdGenerator;
     private final MailService mailService;
     private final AppointmentMapper appointmentMapper;
     private final PdfGenerator pdfGenerator;
+    private final PrescriptionRepo prescriptionRepo;
+    private final FileStorageService fileStorageService;
+    private final EncryptionService encryptionService;
+
+    private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Appointment_Data\\";
 
     @Transactional
     public ResponseEntity<?> bookAppointment(Principal principal, AppointmentDTO appointmentDTO) {
@@ -139,6 +153,7 @@ public class AppointmentService {
         }
     }
 
+    @Transactional
     public ResponseEntity<?> uploadPrescription(PrescriptionRequest prescriptionRequest, Principal principal) throws IOException {
         Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
         Appointment appointment = appointmentRepo.findByAppointmentId(prescriptionRequest.getAppointmentId())
@@ -146,8 +161,68 @@ public class AppointmentService {
         if(!Objects.equals(doctor.getId(), appointment.getDoctor().getId())) {
             return ResponseEntity.badRequest().body("This Doctor can not perform this action for this appointment");
         }
+
+        if(appointment.getPrescription() != null && appointment.getPrescription().getPrescriptionId().isEmpty() == false) {
+            return ResponseEntity.badRequest().body("Prescription is already present. Not allowed to change it");
+        }
         Patient patient = patientService.getPatientByPatientId(appointment.getPatient().getPatientId());
         pdfGenerator.generatePrescriptionPdfFromHTML(patient, doctor, prescriptionRequest, appointment.getAppointmentId());
-        return ResponseEntity.ok("Created");
+
+        Prescription prescription = Prescription.builder()
+                .prescriptionId(prescriptionIdGenerator.generateNextId())
+                .appointment(appointment)
+                .documentLink(appointment.getAppointmentId())
+                .build();
+
+        prescriptionRepo.save(prescription);
+
+        return ResponseEntity.ok("Prescription uploaded successfully");
+    }
+
+    public ResponseEntity<?> fetchPrescriptionPatient(Principal principal, String appointmentId) {
+        Patient patient = patientService.getPatientByEmail(principal.getName());
+        Appointment appointment = appointmentRepo.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", appointmentId));
+        if(patient.getId() == appointment.getPatient().getId()) {
+            return fetchDocument(appointment.getAppointmentId());
+        } else {
+            return ResponseEntity.badRequest().body("Not allowed to access this document");
+        }
+    }
+
+    public ResponseEntity<?> fetchPrescriptionDoctor(Principal principal, String appointmentId) {
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        Appointment appointment = appointmentRepo.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", appointmentId));
+        if((doctor.getId() == appointment.getDoctor().getId()) ||
+                (appointment.getDoctor().getHospital().getId() == doctor.getHospital().getId() && doctor.getRole().equals(Role.SENIORDOCTOR))) {
+            return fetchDocument(appointment.getAppointmentId());
+        } else {
+            return ResponseEntity.badRequest().body("Not allowed to access this document");
+        }
+    }
+
+    public ResponseEntity<?> fetchDocument(String fileName) {
+        try {
+            fileName = fileName+".pdf";
+            String filePath = STORAGE_PATH + fileName;
+            File file = fileStorageService.getFile(filePath);
+            if (file.exists()) {
+                // Fetch encryption key and decrypt file
+                // Assuming you have a method to fetch the key based on user ID
+//                byte[] decryptedContent = encryptionService.decryptFile(filePath);
+
+                // Set response headers to trigger download in Postman
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.setContentDispositionFormData(fileName, fileName);
+                return  new ResponseEntity<>(Files.readAllBytes(Paths.get(filePath)), headers, HttpStatus.OK);
+//                return new ResponseEntity<>(decryptedContent, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

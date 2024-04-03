@@ -116,4 +116,9 @@ public class PatientController {
     public List<AppointmentDTO> listAppointments(Principal principal){
         return appointmentService.viewAppointments(principal);
     }
+
+    @GetMapping("/fetch-prescription")
+    public ResponseEntity<?> fetchPrescription(Principal principal, @RequestBody String appointmentId) {
+        return appointmentService.fetchPrescriptionPatient(principal, appointmentId);
+    }
 }

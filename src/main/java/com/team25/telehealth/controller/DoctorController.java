@@ -94,4 +94,9 @@ public class DoctorController {
             throws IOException {
         return appointmentService.uploadPrescription(prescriptionRequest, principal);
     }
+
+    @GetMapping("/fetch-prescription")
+    public ResponseEntity<?> fetchPrescription(Principal principal, @RequestBody String appointmentId) {
+        return appointmentService.fetchPrescriptionDoctor(principal, appointmentId);
+    }
 }
