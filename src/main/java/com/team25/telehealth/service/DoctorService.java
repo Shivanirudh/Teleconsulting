@@ -53,6 +53,12 @@ public class DoctorService {
         return ResponseEntity.ok("Doctor Saved Successfully");
     }
 
+    public DoctorDTO getDoctor(Principal principal) {
+        Doctor doctor = doctorRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor", "Email", principal.getName()));
+        return doctorMapper.toDTO(doctor);
+    }
+
     public Doctor getDoctorByEmail(String email) {
         if (email == null || email.isEmpty()) return null;
         return doctorRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Doctor", "email", email));

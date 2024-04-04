@@ -1,5 +1,6 @@
 package com.team25.telehealth.service;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
 import com.team25.telehealth.entity.Doctor;
@@ -10,6 +11,7 @@ import com.team25.telehealth.helpers.FileStorageService;
 import com.team25.telehealth.helpers.OtpHelper;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
 import com.team25.telehealth.helpers.generators.PatientIdGenerator;
+import com.team25.telehealth.mappers.DoctorMapper;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.model.Specialization;
 import com.team25.telehealth.repo.DoctorRepo;
@@ -52,6 +54,7 @@ public class PatientService {
     private final FileStorageService fileStorageService;
     private final EncryptionService encryptionService;
     private final PatientMapper patientMapper;
+    private final DoctorMapper doctorMapper;
     private final EntityManager entityManager;
     private final HospitalService hospitalService;
     private final DoctorRepo doctorRepo;
@@ -66,6 +69,12 @@ public class PatientService {
         patient.setActive(true);
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         return patientRepo.save(patient);
+    }
+
+    public PatientDTO getPatient(Principal principal) {
+        Patient patient = patientRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", "Email", principal.getName()));
+        return patientMapper.toDTO(patient);
     }
 
     public Patient getPatientByEmail(String email) {
@@ -246,10 +255,17 @@ public class PatientService {
         return ResponseEntity.ok("Patient deleted Successfully");
     }
 
-    public List<Doctor> getDoctorsByHospital(Principal principal, String email, Specialization specialization){
+    public List<DoctorDTO> getDoctorsByHospital(Principal principal, String email){
         Hospital hospital = hospitalService.getHospitalByEmail(email);
-        if(specialization == null)
-            return doctorRepo.getByHospitalAndActiveAndSpecialization(hospital, true, specialization);
-        return doctorRepo.getByHospitalAndActive(hospital, true);
+        return doctorMapper.toDTOList(doctorRepo.getByHospitalAndActive(hospital, true));
+    }
+
+    public List<DoctorDTO> getDoctorsBySpecialization(Principal principal, Specialization specialization) {
+        return doctorMapper.toDTOList(doctorRepo.getByActiveAndSpecialization(true, specialization));
+    }
+
+    public List<DoctorDTO> getDoctorsByHospitalAndSpecialization(Principal principal, String email, Specialization specialization) {
+        Hospital hospital = hospitalService.getHospitalByEmail(email);
+        return doctorMapper.toDTOList(doctorRepo.getByHospitalAndActiveAndSpecialization(hospital, true, specialization));
     }
 }

@@ -25,4 +25,9 @@ public interface DoctorRepo extends JpaRepository<Doctor, Integer> {
             @Param("hospital") Hospital hospital,
             @Param("active") boolean active,
             @Param("specialization") Specialization specialization);
+
+    @Query("SELECT d FROM Doctor d WHERE d.active=:active and d.specialization=:specialization")
+    public List<Doctor> getByActiveAndSpecialization(
+            @Param("active") boolean active,
+            @Param("specialization") Specialization specialization);
 }

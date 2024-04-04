@@ -1,5 +1,6 @@
 package com.team25.telehealth.controller;
 
+import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
@@ -38,7 +39,7 @@ public class PatientController {
 
     @GetMapping("/")
     public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
-        PatientDTO patientDTO = patientMapper.toDTO(patientService.getPatientByEmail(email.getEmail()));
+        PatientDTO patientDTO = patientService.getPatient(principal);
         return ResponseEntity.status(HttpStatus.OK).body(patientDTO);
     }
 
@@ -102,15 +103,26 @@ public class PatientController {
         return hospitalService.listHospitals(principal);
     }
 
+    @GetMapping("/list-doctors-hospital")
+    public List<DoctorDTO> listDoctorsByHospital(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
+        return patientService.getDoctorsByHospital(principal, doctorSearchLDTO.getEmail());
+    }
+
+    @GetMapping("/list-doctors-specialization")
+    public List<DoctorDTO> listDoctorsBySpecialization(Principal principal, @RequestBody DoctorSearchLDTO doctorSearchLDTO){
+        return patientService.getDoctorsBySpecialization(principal, doctorSearchLDTO.getSpecialization());
+    }
+
     @GetMapping("/list-doctors")
-    public List<Doctor> listDoctors(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
-        return patientService.getDoctorsByHospital(principal, doctorSearchLDTO.getEmail(), doctorSearchLDTO.getSpecialization());
+    public List<DoctorDTO> listDoctors(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
+        return patientService.getDoctorsByHospitalAndSpecialization(principal, doctorSearchLDTO.getEmail(), doctorSearchLDTO.getSpecialization());
     }
 
     @GetMapping("/list-doctors-schedule")
     public ResponseEntity<?> fetchSchedule(Principal principal, @Valid @RequestBody String doctorID){
         return scheduleService.fetchSchedule(principal, doctorID);
     }
+
   
     @GetMapping("/list-appointments")
     public List<AppointmentDTO> listAppointments(Principal principal){

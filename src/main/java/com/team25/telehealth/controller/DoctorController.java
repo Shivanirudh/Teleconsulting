@@ -30,8 +30,8 @@ public class DoctorController {
     private final AppointmentService appointmentService;
 
     @GetMapping("/")
-    public ResponseEntity<?> getDoctor(@Valid @RequestBody EmailRequest email, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(doctorService.getDoctorByEmail(email.getEmail()));
+    public ResponseEntity<?> getDoctor(Principal principal) {
+        return ResponseEntity.status(HttpStatus.OK).body(doctorService.getDoctor(principal));
     }
 
 //    @PostMapping("/")
