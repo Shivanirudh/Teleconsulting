@@ -26,7 +26,7 @@
 }
 
 .availability-table-new td.busy-new {
-  background-color: rgba(218, 218, 61, 0.836); /* Yellow for busy slots */
+  background-color: rgba(94, 94, 85, 0.836); /* Yellow for busy slots */
 }
 
 .availability-table-new td.booked-new {

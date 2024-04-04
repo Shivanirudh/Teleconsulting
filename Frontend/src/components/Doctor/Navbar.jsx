@@ -33,8 +33,6 @@ const axiosInstance = axios.create({
   const firstName = localStorage.getItem('firstname');
   const lastName = localStorage.getItem('lastname');
 
-  console.log('First Name:', firstName);
-  console.log('Last Name:', lastName);
 
 
   return (

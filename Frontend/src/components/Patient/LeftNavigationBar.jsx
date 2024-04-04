@@ -13,8 +13,6 @@ function LeftNavigationBar({ navigateTo }) {
 
 
         <li onClick={() => navigateTo('audio-video-channel')}>Audio Video Channel</li>
-
-        <li onClick={() => navigateTo('previous-appointments')}>Previous Appointments</li>
       </ul>
     </div>
   );

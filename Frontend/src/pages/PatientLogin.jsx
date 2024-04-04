@@ -17,6 +17,7 @@ const PatientLogin = () => {
   const navigate = useNavigate();
 
   const handleGetOTP = () => {
+    console.log(JSON.stringify({ email: email }));
     axiosInstance.post('/auth/generate/patient/otp', JSON.stringify({ email: email }), {
       headers: {
         'Content-Type': 'application/json'
@@ -44,6 +45,7 @@ const PatientLogin = () => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('firstname', response.data.firstName);
         localStorage.setItem('lastname', response.data.lastName);
+        localStorage.setItem('email', response.data.email);
         alert('Login successful!');
         navigate('/patientdashboard');
       })
