@@ -14,7 +14,7 @@ import Contactus from './pages/Contactus';
 import Ddashboard from './pages/Doctor/Ddashboard';
 import PreviousAppointments from './pages/Doctor/Appointment';
 import UploadSchedule from './pages/Doctor/uploadschedule';
-import EditDetails from './pages/Patient/EditDetails';
+import EditDetails from './pages/Doctor/EditDetails';
 import PrivateRoutes from './components/PrivateRoutes';
 import PForgotPassword from './pages/Patient/PForgotPassword';
 import DForgotPassword from './pages/Doctor/DForgotPassword';
