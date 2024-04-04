@@ -1,0 +1,95 @@
+/* AdminLogin.css */
+.admin-login-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the content vertically */
+  background-image: url('../Animation/back.jpg'); /* Same background image as PatientLogin */
+  background-size: cover; /* Ensure the background image covers the entire container */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.login-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the entire container */
+  z-index: -1; /* Move the video background to the back */
+}
+
+.login-content-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  max-width: 400px; /* Adjust maximum width as needed */
+  width: 90%; /* Adjust width as needed */
+  background-color: rgba(61, 63, 70, 0.7); /* Background color similar to PatientLogin */
+  padding: 20px; /* Reduced padding */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.admin-logo {
+  width: 100px; /* Adjust size as needed */
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.login-input,
+.login-button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid transparent; /* Transparent border */
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.login-button {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6; /* Button background color similar to PatientLogin */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.login-button:hover {
+  background-color: #79c2d0; /* Button hover color similar to PatientLogin */
+}
+
+@media (max-width: 600px) {
+  .login-content-container {
+    width: 80%; /* Adjust width as needed */
+  }
+}
+
+/* Add the styles for the link similar to PatientLogin.css */
+.linkin-login {
+  color: rgb(217, 242, 243);
+}
+
+.linkin-login:hover {
+  color: rgb(173, 236, 238);
+}

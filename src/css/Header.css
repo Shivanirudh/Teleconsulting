@@ -1,0 +1,31 @@
+/* Header container */
+/* Header container */
+.header-big-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+  background: linear-gradient(to bottom, #79c2d0ef, #4a91a80a); /* Gradient background */
+  text-align: center;
+  z-index: 2;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Adding background shadow to the text */
+}
+
+
+/* Header title */
+/* Header title */
+.header-title {
+  font-size: 28px; /* Adjust font size */
+  font-weight: bold;
+  font-family: serif;
+  color: white; /* Change text color to white */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect */
+.header-title:hover {
+  background-color: #66a7b8; /* Lighter blue on hover */
+}
