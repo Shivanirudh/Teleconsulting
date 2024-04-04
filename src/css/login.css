@@ -1,0 +1,49 @@
+.center-login-container {
+  width: calc(50% - 20px); /* Adjust width to take half of the container's width */
+  padding: 30px;
+  background-color: rgba(61, 63, 70, 0.7); /* Translucent grey background */
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 10px; /* Add some margin */
+  position: relative; /* Ensure relative positioning for absolute children */
+  z-index: 1; /* Ensure the login content is behind the header and footer */
+}
+
+.mp-login-button {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.mp-login-button:hover {
+  background-color: #79c2d0;
+}
+
+.LOGIN {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url('../Animation/back.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #f0f0f0; /* Change background color */
+}
+
+.doctor-patient-container {
+  display: flex;
+  justify-content: space-between;
+  width: 500px; /* Adjust width as needed */
+}
+
