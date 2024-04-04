@@ -38,7 +38,7 @@ public class PatientController {
     private final PatientMapper patientMapper;
 
     @GetMapping("/")
-    public ResponseEntity<?> getPatient(@Valid @RequestBody EmailRequest email, Principal principal) {
+    public ResponseEntity<?> getPatient(Principal principal) {
         PatientDTO patientDTO = patientService.getPatient(principal);
         return ResponseEntity.status(HttpStatus.OK).body(patientDTO);
     }
