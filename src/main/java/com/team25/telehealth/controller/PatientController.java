@@ -103,23 +103,23 @@ public class PatientController {
         return hospitalService.listHospitals(principal);
     }
 
-    @GetMapping("/list-doctors-hospital")
-    public List<DoctorDTO> listDoctorsByHospital(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
-        return patientService.getDoctorsByHospital(principal, doctorSearchLDTO.getEmail());
+    @GetMapping("/list-doctors-hospital/{email}")
+    public List<DoctorDTO> listDoctorsByHospital(Principal principal, @PathVariable String email){
+        return patientService.getDoctorsByHospital(principal, email);
     }
 
-    @GetMapping("/list-doctors-specialization")
-    public List<DoctorDTO> listDoctorsBySpecialization(Principal principal, @RequestBody DoctorSearchLDTO doctorSearchLDTO){
-        return patientService.getDoctorsBySpecialization(principal, doctorSearchLDTO.getSpecialization());
+    @GetMapping("/list-doctors-specialization/{specialization}")
+    public List<DoctorDTO> listDoctorsBySpecialization(Principal principal, @PathVariable Specialization specialization){
+        return patientService.getDoctorsBySpecialization(principal, specialization);
     }
 
-    @GetMapping("/list-doctors")
-    public List<DoctorDTO> listDoctors(Principal principal, @Valid @RequestBody DoctorSearchLDTO doctorSearchLDTO){
-        return patientService.getDoctorsByHospitalAndSpecialization(principal, doctorSearchLDTO.getEmail(), doctorSearchLDTO.getSpecialization());
+    @GetMapping("/list-doctors/{email}/{specialization}")
+    public List<DoctorDTO> listDoctors(Principal principal, @PathVariable String email, @PathVariable Specialization specialization){
+        return patientService.getDoctorsByHospitalAndSpecialization(principal, email, specialization);
     }
 
-    @GetMapping("/list-doctors-schedule")
-    public ResponseEntity<?> fetchSchedule(Principal principal, @Valid @RequestBody String doctorID){
+    @GetMapping("/list-doctors-schedule/{doctorID}")
+    public ResponseEntity<?> fetchSchedule(Principal principal, @PathVariable String doctorID){
         return scheduleService.fetchSchedule(principal, doctorID);
     }
 
@@ -129,8 +129,8 @@ public class PatientController {
         return appointmentService.viewAppointmentsPatient(principal);
     }
 
-    @GetMapping("/fetch-prescription")
-    public ResponseEntity<?> fetchPrescription(Principal principal, @RequestBody String appointmentId) {
+    @GetMapping("/fetch-prescription/{appointmentId}")
+    public ResponseEntity<?> fetchPrescription(Principal principal, @PathVariable String appointmentId) {
         return appointmentService.fetchPrescriptionPatient(principal, appointmentId);
     }
 }

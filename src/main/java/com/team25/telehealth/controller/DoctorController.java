@@ -95,8 +95,8 @@ public class DoctorController {
         return appointmentService.uploadPrescription(prescriptionRequest, principal);
     }
 
-    @GetMapping("/fetch-prescription")
-    public ResponseEntity<?> fetchPrescription(Principal principal, @RequestBody String appointmentId) {
+    @GetMapping("/fetch-prescription/{appointmentId}")
+    public ResponseEntity<?> fetchPrescription(Principal principal, @PathVariable String appointmentId) {
         return appointmentService.fetchPrescriptionDoctor(principal, appointmentId);
     }
 }
