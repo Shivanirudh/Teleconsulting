@@ -26,7 +26,6 @@ function TopNavigationBar({ onSignOut }) {
         });
   
         const data = response.data;
-        console.log(data);
         const { first_name, last_name } = data;
   
         // Update first name and last name

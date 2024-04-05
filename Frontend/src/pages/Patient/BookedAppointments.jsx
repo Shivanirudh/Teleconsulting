@@ -29,7 +29,6 @@ function BookedAppointments() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         const currentDateTime = new Date(); // Get current date and time
         const currentTime = currentDateTime.getTime(); // Get current time in milliseconds
 
@@ -96,17 +95,15 @@ function BookedAppointments() {
             </thead>
             <tbody>
               {bookedAppointments.map((appointment) => (
-  <tr key={appointment.id}>
-<td>{appointment.doctor_id.first_name} {appointment.doctor_id.last_name}</td>
-                  
-    <td>{appointment.slot[2]}/{appointment.slot[1]}/{appointment.slot[0]}</td>
-    <td>{appointment.slot[3]}:{appointment.slot[4]}</td>
-    <td>
-      <button className='bas-aps-but' onClick={() => handleGoToMeeting(appointment.appointmentId)}>Go to Meeting</button>
-    </td>
-  </tr>
-))}
-
+                <tr key={appointment.id}>
+                  <td>{appointment.doctor_id.first_name} {appointment.doctor_id.last_name}</td>
+                  <td>{appointment.slot[2]}/{appointment.slot[1]}/{appointment.slot[0]}</td>
+                  <td>{appointment.slot[3]}:{appointment.slot[4]}</td>
+                  <td>
+                    <button className='bas-aps-but' onClick={() => handleGoToMeeting(appointment.appointmentId)}>Go to Meeting</button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
