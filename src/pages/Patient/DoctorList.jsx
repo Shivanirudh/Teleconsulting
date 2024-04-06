@@ -1,76 +1,137 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './../../css/Patient/DoctorList.css';
+import axios from 'axios';
 
 function DoctorList() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchDoctorTerm, setSearchDoctorTerm] = useState('');
+  const [hospitals, setHospitals] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isBookingMode, setIsBookingMode] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [lockedSlots, setLockedSlots] = useState([]);
-  const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
+  const [token, setToken] = useState('');
 
-  const hospitals = [
-    {
-      id: 1,
-      name: 'Hospital 1',
-      doctors: [
-        {
-          id: 1,
-          name: 'Dr. John Doe',
-          specialty: 'Cardiologist',
-          schedule: {
-            slots: [
-              [2024, 4, 1, 11, 15],
-              [2024, 4, 3, 15, 45],
-              [2024, 4, 4, 15, 0],
-              [2024, 4, 4, 12, 45],
-              [2024, 4, 5, 15, 0],
-              [2024, 4, 5, 12, 45]
-            ]
-          },
-          appointments: []
-        },
-        {
-          id: 2,
-          name: 'Dr. Jane Smith',
-          specialty: 'Dermatologist',
-          schedule: {
-            slots: [
-              [2024, 4, 3, 11, 15],
-              [2024, 4, 3, 15, 45],
-              [2024, 4, 4, 15, 0],
-              [2024, 4, 2, 15, 45],
-              [2024, 4, 5, 15, 0]
-            ]
-          },
-          appointments: []
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      const token = localStorage.getItem('token');
+      setToken(token);
+      try {
+        const response = await fetch('http://localhost:8081/api/v1/patient/view-hospitals', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setHospitals(data);
+        } else {
+          console.error('Failed to fetch hospitals');
         }
-      ]
+      } catch (error) {
+        console.error('Error fetching hospitals:', error);
+      }
+    };
+
+    fetchHospitals();
+  }, []);
+
+  const handleViewDoctors = async (hospitalId) => {
+    setSelectedHospital(hospitalId);
+    setSelectedDoctor(null);
+    const hospital = hospitals.find((hospital) => hospital.id === hospitalId);
+    if (hospital) {
+      const email = hospital.email; // Extract hospital email
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/api/v1/patient/list-doctors-hospital/${email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const doctorsData = response.data;
+          setHospitals((prevHospitals) => {
+            return prevHospitals.map((prevHospital) => {
+              if (prevHospital.id === hospitalId) {
+                return { ...prevHospital, doctors: doctorsData };
+              } else {
+                return prevHospital;
+              }
+            });
+          });
+        } else {
+          console.error("Failed to fetch doctors for this hospital");
+        }
+      } catch (error) {
+        console.error("Error fetching doctors for this hospital:", error);
+      }
     }
-  ];
+  };
+  
+  const handleViewSchedule = async (doctor, hospitalId) => {
+    const { doctor_id } = doctor;
+    setSelectedDoctor(doctor_id);
+    setIsBookingMode(false);
+  
+    try {
+      const response = await axios.get(
+        `http://localhost:8081/api/v1/patient/list-doctors-schedule/${doctor_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        const slotsData = response.data.slots;
+        const formattedSlots = transformSlotsData(slotsData);
+        console.log(formattedSlots); // Log formatted slots
+
+
+        setHospitals(prevHospitals => {
+          return prevHospitals.map(prevHospital => {
+            if (prevHospital.id === hospitalId) {
+              return {
+                ...prevHospital,
+                doctors: prevHospital.doctors.map(prevDoctor => {
+                  if (prevDoctor.id === doctor_id) {
+                    const updatedDoctor = { ...prevDoctor, schedule: { slots: formattedSlots } };
+                    renderAvailability(updatedDoctor.schedule.slots); // Pass formatted slots to renderAvailability
+                    return updatedDoctor;
+                  } else {
+                    return prevDoctor;
+                  }
+                })
+              };
+            } else {
+              return prevHospital;
+            }
+          });
+        });
+      } else {
+        console.error('Failed to fetch doctor schedule');
+      }
+    } catch (error) {
+      console.error('Error fetching doctor schedule:', error);
+    }
+  };
+  
+  const transformSlotsData = (slotsData) => {
+    const formattedSlots = slotsData.map(slot => {
+      const [year, month, day, hour, minute] = slot;
+      return [year, month, day, hour, minute];
+    });
+    return formattedSlots;
+  };  
+  
 
   const filteredHospitals = hospitals.filter((hospital) =>
     hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const filterDoctors = (doctors) => {
-    return doctors.filter((doctor) =>
-      doctor.name.toLowerCase().includes(searchDoctorTerm.toLowerCase())
-    );
-  };
-
-  const handleViewDoctors = (hospitalId) => {
-    setSelectedHospital(hospitalId);
-    setSelectedDoctor(null);
-    setIsScheduleCollapsed(false);
-  };
-
-  const handleViewSchedule = (doctorId) => {
-    setSelectedDoctor(doctorId);
-    setIsBookingMode(false);
-  };
 
   const handleCellClick = (year, month, day, time) => {
     if (isBookingMode) {
@@ -94,49 +155,38 @@ function DoctorList() {
     setSelectedSlot(null);
   };
 
-  const renderAvailability = (schedule) => {
-    // Collect unique dates from slots
-    const uniqueDates = [];
-    schedule.slots.forEach(slot => {
-      const [year, month, day] = slot;
-      const formattedDate = `${day}-${month}-${year}`;
-      if (!uniqueDates.includes(formattedDate)) {
-        uniqueDates.push(formattedDate);
+  const renderAvailability = (slotsData) => {
+    if (!slotsData) {
+      return null;
+    }
+  
+    const slotsByDate = {};
+    slotsData.forEach(slot => {
+      const [year, month, day, hour, minute] = slot;
+      const dateKey = `${year}-${month}-${day}`;
+      if (!slotsByDate[dateKey]) {
+        slotsByDate[dateKey] = [];
       }
+      slotsByDate[dateKey].push([hour, minute]);
     });
-
-    // Render each date along with its availability
-    return uniqueDates.map((date, dateIndex) => {
-      const slotsForDate = schedule.slots.filter(slot => {
-        const [slotYear, slotMonth, slotDay] = slot;
-        const formattedDate = `${slotDay}-${slotMonth}-${slotYear}`;
-        return formattedDate === date;
-      });
-
+  
+    return Object.entries(slotsByDate).map(([date, slotsForDate]) => {
       return (
-        <tr key={dateIndex}>
+        <tr key={date}>
           <td>{date}</td>
           {Array.from({ length: 10 }, (_, i) => i).map((index) => {
             const hour = Math.floor(index * 0.75) + 9;
             const minute = (index * 45) % 60;
-            const formattedTime = `${hour < 10 ? '0' + hour : hour}:${minute === 0 ? '00' : minute}`;
             const isAvailable = slotsForDate.some(slot => {
-              const [, , , slotHour, slotMinute] = slot;
-              return slotHour === hour && slotMinute === minute;
+              return slot[0] === hour && slot[1] === minute;
             });
-            const isLocked = lockedSlots.includes(`${slotsForDate[0][0]}_${slotsForDate[0][1]}_${slotsForDate[0][2]}_${formattedTime}`);
-
-            // Check if the slot is locked
-            const isBusy = isLocked ? true : !isAvailable;
-
             return (
               <td
                 key={index}
-                className={isBusy ? 'busy-new' : (isBookingMode && isAvailable ? 'available-new clickable' : 'available-new')}
-                onClick={() => handleCellClick(slotsForDate[0][0], slotsForDate[0][1], slotsForDate[0][2], formattedTime)}
+                className={isAvailable ? 'available-new clickable' : 'busy-new'}
+                onClick={() => handleCellClick(date, hour, minute)}
               >
-                {isBookingMode && isAvailable && !isLocked && selectedSlot && selectedSlot.year === slotsForDate[0][0] && selectedSlot.month === slotsForDate[0][1] && selectedSlot.day === slotsForDate[0][2] && selectedSlot.time === formattedTime && 'Selected'}
-                {isLocked && 'Locked'}
+                {isAvailable ? 'Available' : 'Busy'}
               </td>
             );
           })}
@@ -144,6 +194,7 @@ function DoctorList() {
       );
     });
   };
+  
 
   return (
     <div className="doctor-list-container-new">
@@ -163,17 +214,11 @@ function DoctorList() {
             {selectedHospital === hospital.id && (
               <>
                 <h4>Doctors:</h4>
-                <input
-                  type="text"
-                  placeholder="Search by Doctor Name..."
-                  value={searchDoctorTerm}
-                  onChange={(e) => setSearchDoctorTerm(e.target.value)}
-                />
                 <ul>
-                  {filterDoctors(hospital.doctors).map((doctor, idx) => (
+                  {hospital.doctors?.map((doctor, idx) => (
                     <li key={idx}>
-                      <h5>{doctor.name}</h5>
-                      <p>{doctor.specialty}</p>
+                      <h5>{doctor.first_name + " " + doctor.last_name}</h5>
+                      <p>{doctor.specialization}</p>
                       {selectedDoctor === doctor.id && (
                         <>
                           <table className="availability-table-new">
@@ -192,7 +237,7 @@ function DoctorList() {
                               </tr>
                             </thead>
                             <tbody>
-                              {doctor.schedule.slots && renderAvailability(doctor.schedule)}
+                              {doctor.schedule && renderAvailability(doctor.schedule.slots)}
                             </tbody>
                           </table>
                           <button className="doc-list-wala-button-new" onClick={handleToggleBookingMode}>
@@ -206,7 +251,7 @@ function DoctorList() {
                         </>
                       )}
                       {selectedDoctor !== doctor.id && (
-                        <button className='doc-list-wala-button-new busy-new' onClick={() => handleViewSchedule(doctor.id)}>
+                        <button className='doc-list-wala-button-new busy-new' onClick={() => handleViewSchedule(doctor, hospital.id)}>
                           View Schedule
                         </button>
                       )}

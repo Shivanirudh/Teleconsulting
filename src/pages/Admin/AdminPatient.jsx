@@ -5,12 +5,19 @@ import SideNavbar from '../../components/Admin/sidenavbar';
 
 const AdminPatient = () => {
     const [patients, setPatients] = useState([]);
+    const [token, setToken] = useState('');
 
-    const fetchPatients = async () => {
+    useEffect(() => {
+        // Fetch token from local storage when component mounts
+        const storedToken = localStorage.getItem('token');
+        setToken(storedToken);
+        
+        // Fetch patients data from the backend when the component mounts
+        fetchPatients(storedToken);
+    }, []);
+
+    const fetchPatients = async (token) => {
         try {
-            // Retrieve token from local storage
-            const token = localStorage.getItem('token');
-
             // Set up headers with the token
             const headers = {
                 Authorization: `Bearer ${token}`
@@ -24,16 +31,8 @@ const AdminPatient = () => {
         }
     };
 
-    useEffect(() => {
-        // Fetch patients data from the backend when the component mounts
-        fetchPatients();
-    }, []);
-
     const blockPatient = async (patientId) => {
         try {
-            // Retrieve token from local storage
-            const token = localStorage.getItem('token');
-
             // Set up headers with the token
             const headers = {
                 Authorization: `Bearer ${token}`
@@ -43,7 +42,7 @@ const AdminPatient = () => {
             await axios.put(`http://localhost:8081/api/v1/admin/block-patient`, patientId, { headers });
 
             // Optionally, you can refresh the patients data after blocking
-            fetchPatients();
+            fetchPatients(token);
         } catch (error) {
             console.error('Error blocking patient:', error);
         }
@@ -51,9 +50,6 @@ const AdminPatient = () => {
 
     const unblockPatient = async (patientId) => {
         try {
-            // Retrieve token from local storage
-            const token = localStorage.getItem('token');
-
             // Set up headers with the token
             const headers = {
                 Authorization: `Bearer ${token}`
@@ -63,7 +59,7 @@ const AdminPatient = () => {
             await axios.put(`http://localhost:8081/api/v1/admin/unblock-patient`, patientId, { headers });
 
             // Optionally, you can refresh the patients data after unblocking
-            fetchPatients();
+            fetchPatients(token);
         } catch (error) {
             console.error('Error unblocking patient:', error);
         }

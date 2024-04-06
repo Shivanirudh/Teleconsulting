@@ -85,10 +85,3 @@
   background-color: rgba(61, 63, 70, 0.556); /* Translucent black background */
   color: #ffffff;
 }
-/* Updated DoctorList.css */
-.search-form input[type="text"] {
-  width: 100%; /* Set width to 100% to match parent width */
-  padding: 8px; /* Adjust padding */
-  margin-bottom: 10px; /* Add margin bottom for spacing */
-  box-sizing: border-box; /* Ensure padding is included in width calculation */
-}

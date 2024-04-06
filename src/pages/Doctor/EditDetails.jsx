@@ -35,13 +35,10 @@ function EditDetails() {
     const payload = {
       first_name: userDetails.first_name,
       last_name: userDetails.last_name,
-      gender: userDetails.gender,
-      height: userDetails.height,
-      weight: userDetails.weight
     };
 
     // Send PUT request to update user details
-    fetch('http://localhost:8081/api/v1/patient/update', {
+    fetch('http://localhost:8081/api/v1/doctor/update', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -55,13 +52,10 @@ function EditDetails() {
         // Reset the form fields after successful update
         setUserDetails({
           first_name: '',
-          last_name: '',
-          weight: '',
-          height: '',
-          gender: '',
+          last_name: ''
         });
         // Navigate to /patientdashboard
-        navigate('/patientdashboard');
+        navigate('/ddashboard');
       } else {
         console.error('Failed to update user details');
       }
@@ -95,7 +89,7 @@ function EditDetails() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="edit-form-group">
+        {/* <div className="edit-form-group">
           <label htmlFor="gender">Gender:</label>
           <select
             id="gender"
@@ -127,7 +121,7 @@ function EditDetails() {
             value={userDetails.height}
             onChange={handleInputChange}
           />
-        </div>
+        </div> */}
         <button className='edit-det-wala-but' type="submit">Save</button>
       </form>
     </div>

@@ -7,6 +7,7 @@ import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
+import Consent from './Consent';
 // Import other components as needed
 
 function Dashboard() {
@@ -29,7 +30,10 @@ function Dashboard() {
             <DoctorList searchTerm={searchTerm} />
           </>
         );
-     
+      case 'previous-appointments':
+        return <PreviousAppointments />;
+        case 'consent':
+        return <Consent />;
       case 'my-documents':
         return <MyDocuments />;
       case 'booked-appointments':
@@ -46,7 +50,7 @@ function Dashboard() {
 
   return (
     <div className="patient-dashboard-container">
-      <TopNavigationBar patientName="First Name Last Name" />
+      <TopNavigationBar />
       <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
         <div className="patiient-main-content">

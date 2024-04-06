@@ -3,18 +3,36 @@ import axios from 'axios';
 import Navbar from '../../components/Admin/Navbar';
 import SideNavbar from '../../components/Admin/sidenavbar';
 
-// Separate component for the Add Doctor form
 const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
-    // State for form fields
     const [doctorData, setDoctorData] = useState({
         first_name: '',
         last_name: '',
         phone_number: '',
         email: '',
-        roll:'',
+        role: '',
+        specialization: '',
+        hospital_id: ''
     });
+    const [hospitals, setHospitals] = useState([]);
+    const token = localStorage.getItem('token');
 
-    // Function to handle form field changes
+    useEffect(() => {
+        fetchHospitals();
+    }, []);
+
+    const fetchHospitals = async () => {
+        try {
+            const response = await axios.get('http://localhost:8081/api/v1/admin/hospitals', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setHospitals(response.data);
+        } catch (error) {
+            console.error('Error fetching hospitals:', error);
+        }
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDoctorData(prevData => ({
@@ -23,40 +41,34 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
         }));
     };
 
-    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData(e.target);
+        const newDoctorData = {
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            phone_number: formData.get('phone_number'),
+            email: formData.get('email'),
+            role: formData.get('role'),
+            specialization: formData.get('specialization'),
+            hospital: {
+                hospital_id: formData.get('hospital_id')
+            }
+        };
+        console.log(newDoctorData);
+    
         try {
-            // Retrieve token from local storage
-            const token = localStorage.getItem('token');
-
-            // Set up headers with the token
             const headers = {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
             };
-
-            // Make request to add doctor
-            await axios.post('http://localhost:8081/api/v1/admin/add-doctor', doctorData , { headers });
-
-            // Refresh the doctors data after adding
-            fetchDoctors();
-
-            // Reset form fields
-            setDoctorData({
-                first_name: '',
-                last_name: '',
-                phone_number: '',
-                email: '',
-                roll:'',
-                // Reset other fields as needed
-            });
-
-            // Close the form
-            onCancel();
+            await axios.post('http://localhost:8081/api/v1/admin/doctor', JSON.stringify(newDoctorData), { headers });
+            fetchDoctors(token);
         } catch (error) {
             console.error('Error adding doctor:', error);
         }
     };
+    
 
     return (
         <form onSubmit={handleSubmit}>
@@ -70,54 +82,51 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
             </div>
             <div>
                 <label>Phone Number:</label>
-                <input type="text" name="phone_number" value={doctorData.phone_number} onChange={handleChange} required />
+                <input type="tel" name="phone_number" value={doctorData.phone_number} onChange={handleChange} required />
             </div>
             <div>
                 <label>Email:</label>
                 <input type="email" name="email" value={doctorData.email} onChange={handleChange} required />
             </div>
             <div>
-                <label>ROLL</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <select name="roll" value={doctorData.roll} onChange={handleChange} required>
-                <option value="DOCTOR">DOCTOR</option>
-                <option value="SENIOR DOCTOR">SENIOR DOCTOR</option>
-                
+    <label>Role:</label>
+    <select name="role" value={doctorData.role} onChange={handleChange} required>
+        <option value="">Select Role</option>
+        <option value="DOCTOR">Doctor</option>
+        <option value="SENIORDOCTOR">Senior Doctor</option>
+    </select>
+</div>
+
+            <div>
+                <label>Hospital:</label>
+                <select name="hospital_id" value={doctorData.hospital_id} onChange={handleChange} required>
+                    <option value="">Select Hospital</option>
+                    {hospitals.map(hospital => (
+                        <option key={hospital.hospital_id} value={hospital.hospital_id}>{hospital.hospital_id}</option>
+                    ))}
                 </select>
             </div>
-            <br/>
             <div>
-            <label>Specialization</label>&nbsp;&nbsp;&nbsp;&nbsp;
-            <select name="specialization" value={doctorData.specialization} onChange={handleChange} required>
-                <option value="">Select Specialization</option>
-                <option value="CARDIOLOGIST">Cardiologist</option>
-                <option value="AUDIOLOGIST">Audiologist</option>
-                <option value="DENTIST">Dentist</option>
-                <option value="ENT_SPECIALIST">ENT Specialist</option>
-                <option value="GYNECOLOGIST">Gynecologist</option>
-                <option value="ORTHOPEDIC_SURGEON">Orthopedic Surgeon</option>
-                <option value="PAEDIATRICIAN">Paediatrician</option>
-                <option value="PSYCHIATRIST">Psychiatrist</option>
-                <option value="VETERINARIAN">Veterinarian</option>
-                <option value="RADIOLOGIST">Radiologist</option>
-                <option value="PULMONOLOGIST">Pulmonologist</option>
-                <option value="ENDOCRINOLOGIST">Endocrinologist</option>
-                <option value="ONCOLOGIST">Oncologist</option>
-                <option value="NEUROLOGIST">Neurologist</option>
-                <option value="CARDIOTHORACIC_SURGEON">Cardiothoracic Surgeon</option>
-            </select>
-            </div><br/>
-            <div>
-                <label>Hospital</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <select name="roll" value={doctorData.roll} onChange={handleChange} required>
-                <option value="h1123212">hospita 1</option>
-                <option value="h2133122">hoppita 2</option>
-                
+                <label>Specialization:</label>
+                <select name="specialization" value={doctorData.specialization} onChange={handleChange} required>
+                    <option value="">Select Specialization</option>
+                    <option value="CARDIOLOGIST">Cardiologist</option>
+                    <option value="AUDIOLOGIST">Audiologist</option>
+                    <option value="DENTIST">Dentist</option>
+                    <option value="ENT SPECIALIST">ENT Specialist</option>
+                    <option value="GYNECOLOGIST">Gynecologist</option>
+                    <option value="ORTHOPEDIC SURGEON">Orthopedic Surgeon</option>
+                    <option value="PAEDIATRICIAN">Paediatrician</option>
+                    <option value="PSYCHIATRIST">Psychiatrist</option>
+                    <option value="VETERINARIAN">Veterinarian</option>
+                    <option value="RADIOLOGIST">Radiologist</option>
+                    <option value="PULMONOLOGIST">Pulmonologist</option>
+                    <option value="ENDOCRINOLOGIST">Endocrinologist</option>
+                    <option value="ONCOLOGIST">Oncologist</option>
+                    <option value="NEUROLOGIST">Neurologist</option>
+                    <option value="CARDIOTHORACIC SURGEON">Cardiothoracic Surgeon</option>
                 </select>
             </div>
-            <br/>
-
-
-            {/* Add more fields as needed */}
             <button type="submit" className='add-admin-button'>Add Doctor</button>
         </form>
     );
@@ -127,31 +136,32 @@ const AdminDoctor = () => {
     const [doctors, setDoctors] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [showAddDoctorForm, setShowAddDoctorForm] = useState(false);
+    const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        fetchDoctors();
+    }, []);
 
     const fetchDoctors = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-            const response = await axios.get('http://localhost:8081/api/v1/admin/doctors', { headers });
+            const response = await axios.get('http://localhost:8081/api/v1/admin/doctors', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setDoctors(response.data);
         } catch (error) {
             console.error('Error fetching doctors:', error);
         }
     };
 
-    useEffect(() => {
-        fetchDoctors();
-    }, []);
-
     const blockDoctor = async (doctorId) => {
         try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-            await axios.put(`http://localhost:8081/api/v1/admin/block-doctor`, doctorId , { headers });
+            await axios.put(`http://localhost:8081/api/v1/admin/block-doctor`, doctorId, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             fetchDoctors();
         } catch (error) {
             console.error('Error blocking doctor:', error);
@@ -160,11 +170,11 @@ const AdminDoctor = () => {
 
     const unblockDoctor = async (doctorId) => {
         try {
-            const token = localStorage.getItem('token');
-            const headers = {
-                Authorization: `Bearer ${token}`
-            };
-            await axios.put(`http://localhost:8081/api/v1/admin/unblock-doctor`,  doctorId , { headers });
+            await axios.put(`http://localhost:8081/api/v1/admin/unblock-doctor`, doctorId, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             fetchDoctors();
         } catch (error) {
             console.error('Error unblocking doctor:', error);

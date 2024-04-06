@@ -1,30 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './../../css/Patient/MyDocuments.css';
+import axios from 'axios';
 
 function MyDocuments() {
-  // Dummy data for patient's documents
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [documents] = useState([
-    { id: 1, date: '2023-01-15', name: 'Previous Blood Test Results', file: 'blood_test_results.pdf' },
-    { id: 2, date: '2023-02-28', name: 'Prescription - Dr. Smith', file: 'prescription.pdf' },
-    { id: 3, date: '2023-03-10', name: 'MRI Scan Report', file: 'mri_scan_report.pdf' },
-    // Add more dummy data as needed
-  ]);
+  const [selectedFile, setSelectedFile] = useState([]);
+  const [documents, setDocuments] = useState([]);
 
-  // Function to handle file selection
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  useEffect(() => {
+    // Fetch documents from the API
+    fetchDocuments();
+  }, []);
+
+  const fetchDocuments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found in localStorage.');
+        return;
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+
+      const response = await axios.get('http://localhost:8081/api/v1/patient/files', {
+        headers
+      });
+
+      setDocuments(response.data);
+    } catch (error) {
+      console.error('Error fetching documents:', error);
+    }
   };
 
-  // Function to handle file upload
-  const handleFileUpload = () => {
-    if (selectedFile) {
-      // Perform file upload logic here
-      console.log('Uploading file:', selectedFile.name);
-      // Reset selected file after upload
-      setSelectedFile(null);
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files);
+  };
+
+  const handleFileUpload = async () => {
+    if (selectedFile && selectedFile.length > 0) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('Token not found in localStorage.');
+          return;
+        }
+
+        const formData = new FormData();
+        // Append each selected file to FormData
+        for (let i = 0; i < selectedFile.length; i++) {
+          formData.append('files', selectedFile[i]);
+        }
+
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        };
+
+        const response = await axios.post('http://localhost:8081/api/v1/patient/upload', formData, {
+          headers,
+        });
+
+        console.log('Files uploaded successfully:', response.data);
+        // Clear selected files after successful upload
+        setSelectedFile([]);
+        // Refetch documents after upload
+        fetchDocuments();
+      } catch (error) {
+        console.error('Error uploading files:', error);
+      }
     } else {
-      console.log('Please select a file to upload.');
+      console.log('Please select one or more files to upload.');
+    }
+  };
+
+  const handleDownload = async (fileName) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found in localStorage.');
+        return;
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+
+      // Append filename to the download URL
+      const downloadUrl = `http://localhost:8081/api/v1/patient/fetch/${fileName}`;
+
+      // Make GET request to download the file
+      const response = await axios.get(downloadUrl, {
+        headers,
+        responseType: 'blob' // Specify the response type as blob
+      });
+
+      // Create a temporary link element to trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error downloading file:', error);
     }
   };
 
@@ -36,19 +115,15 @@ function MyDocuments() {
         <table className="patient-documents-table">
           <thead>
             <tr>
-              <th>Sl. No.</th>
-              <th>Date</th>
               <th>Document Name</th>
               <th>Download</th>
             </tr>
           </thead>
           <tbody>
-            {documents.map((document, index) => (
-              <tr key={document.id}>
-                <td>{index + 1}</td>
-                <td>{document.date}</td>
-                <td>{document.name}</td>
-                <td><a href={document.file} download>Download</a></td>
+            {documents.map((fileName, index) => (
+              <tr key={index}>
+                <td>{fileName}</td>
+                <td><button onClick={() => handleDownload(fileName)}>Download</button></td>
               </tr>
             ))}
           </tbody>
@@ -57,7 +132,7 @@ function MyDocuments() {
       <div className="patient-upload-section">
         <h3>Upload New Document</h3>
         <div className="upload-section">
-          <input type="file" id="fileInput" onChange={handleFileChange} />
+          <input type="file" id="fileInput" multiple onChange={handleFileChange} />
           <label htmlFor="fileInput"></label>
         </div>
         <button className='doc-wala-but' onClick={handleFileUpload}>Upload</button>
