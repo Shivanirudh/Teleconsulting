@@ -20,6 +20,7 @@ import PForgotPassword from './pages/Patient/PForgotPassword';
 import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
 import AdminHospital from './pages/Admin/AdminHospital';
+import PConsent from './pages/Patient/Consent';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route exact path="/adminpatient" element={<AdminPatient />} />
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
+            <Route exact path="/pconsent" element={<PConsent />} />
             <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>

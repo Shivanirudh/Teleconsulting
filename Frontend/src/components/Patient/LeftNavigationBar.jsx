@@ -13,6 +13,7 @@ function LeftNavigationBar({ navigateTo }) {
 
 
         <li onClick={() => navigateTo('audio-video-channel')}>Audio Video Channel</li>
+        <li onClick={() => navigateTo('consent')}>Consent</li>
       </ul>
     </div>
   );

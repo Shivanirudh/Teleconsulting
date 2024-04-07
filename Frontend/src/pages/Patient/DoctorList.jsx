@@ -11,6 +11,9 @@ function DoctorList() {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [lockedSlots, setLockedSlots] = useState([]);
   const [token, setToken] = useState('');
+  const [doctorSlots, setDoctorSlots] = useState([]);
+  const [doctorAppointments, setDoctorAppointments] = useState([]);
+  const [selectedAppointmentID, setselectedAppointmentID] = useState(null);
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -70,12 +73,11 @@ function DoctorList() {
       }
     }
   };
-  
+
   const handleViewSchedule = async (doctor, hospitalId) => {
     const { doctor_id } = doctor;
     setSelectedDoctor(doctor_id);
     setIsBookingMode(false);
-  
     try {
       const response = await axios.get(
         `http://localhost:8081/api/v1/patient/list-doctors-schedule/${doctor_id}`,
@@ -85,33 +87,12 @@ function DoctorList() {
           },
         }
       );
-  
+
       if (response.status === 200) {
         const slotsData = response.data.slots;
-        const formattedSlots = transformSlotsData(slotsData);
-        console.log(formattedSlots); // Log formatted slots
-
-
-        setHospitals(prevHospitals => {
-          return prevHospitals.map(prevHospital => {
-            if (prevHospital.id === hospitalId) {
-              return {
-                ...prevHospital,
-                doctors: prevHospital.doctors.map(prevDoctor => {
-                  if (prevDoctor.id === doctor_id) {
-                    const updatedDoctor = { ...prevDoctor, schedule: { slots: formattedSlots } };
-                    renderAvailability(updatedDoctor.schedule.slots); // Pass formatted slots to renderAvailability
-                    return updatedDoctor;
-                  } else {
-                    return prevDoctor;
-                  }
-                })
-              };
-            } else {
-              return prevHospital;
-            }
-          });
-        });
+        const slotsAppointments = response.data.appointments;
+        setDoctorSlots(slotsData); // Update state with slots data
+        setDoctorAppointments(slotsAppointments);
       } else {
         console.error('Failed to fetch doctor schedule');
       }
@@ -119,47 +100,133 @@ function DoctorList() {
       console.error('Error fetching doctor schedule:', error);
     }
   };
-  
-  const transformSlotsData = (slotsData) => {
-    const formattedSlots = slotsData.map(slot => {
-      const [year, month, day, hour, minute] = slot;
-      return [year, month, day, hour, minute];
-    });
-    return formattedSlots;
-  };  
-  
 
-  const filteredHospitals = hospitals.filter((hospital) =>
-    hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleCellClick = (year, month, day, time) => {
+  const handleCellClick = (date, hour, minute) => {
     if (isBookingMode) {
-      const isLocked = lockedSlots.includes(`${year}_${month}_${day}_${time}`);
+      const isLocked = lockedSlots.includes(`${date}_${hour}_${minute}`);
       if (!isLocked) {
-        setSelectedSlot({ year, month, day, time });
+        setSelectedSlot({ date, hour, minute });
+      } 
+
+      const appointment = doctorAppointments.find(appointment => {
+        const [year, month, day] = date.split('-').map(Number); // Parsing to numbers
+        const [appointmentYear, appointmentMonth, appointmentDay, appointmentHour, appointmentMinute] = appointment.slot.map(Number); // Parsing to numbers
+        return (
+          appointmentYear === year &&
+          appointmentMonth === month &&
+          appointmentDay === day &&
+          appointmentHour === hour &&
+          appointmentMinute === minute
+        );
+      });
+      // If appointment is found, extract appointment_id and set selectedAppointmentID
+      if (appointment) {
+        setselectedAppointmentID(appointment.appointment_id);
+      } else {
+        // Handle case when appointment is not found
+        console.log('Appointment not found for the selected slot.');
       }
     }
   };
-
-  const handleLockSlot = () => {
-    if (selectedSlot) {
-      const slotKey = `${selectedSlot.year}_${selectedSlot.month}_${selectedSlot.day}_${selectedSlot.time}`;
-      setLockedSlots([...lockedSlots, slotKey]);
-      setSelectedSlot(null);
-    }
-  };
+  
 
   const handleToggleBookingMode = () => {
     setIsBookingMode(!isBookingMode);
     setSelectedSlot(null);
   };
 
+  
+
+  const handleCancelAppointment = async () => {
+      try {
+  
+        if (selectedAppointmentID) {
+  
+          const response = await axios.post(
+            'http://localhost:8081/api/v1/patient/cancel-appointment',
+            { appointment_id: selectedAppointmentID },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+            }
+          );
+  
+          if (response.status === 200) {
+            console.log('Appointment canceled successfully');
+            setSelectedSlot(null);
+            setIsBookingMode(false);
+          } else {
+            console.error('Failed to cancel appointment');
+          }
+        } else {
+          console.error('Appointment not found in doctorAppointments');
+        }
+      } catch (error) {
+        console.error('Error canceling appointment:', error);
+      }
+  };
+  
+
+
+  const handleBookAppointment = async () => {
+    if (selectedSlot && selectedDoctor) { 
+      try {
+        const slotDate = new Date(selectedSlot.date);
+        const year = slotDate.getFullYear();
+        const month = String(slotDate.getMonth() + 1).padStart(2, '0');
+        const day = String(slotDate.getDate()).padStart(2, '0');
+        const hour = String(selectedSlot.hour).padStart(2, '0');
+        const minute = String(selectedSlot.minute).padStart(2, '0');
+        
+        const formattedSlot = {
+            slot: `${year}-${month}-${day}T${hour}:${minute}:00`,
+            doctor_id: {
+              doctor_id: selectedDoctor
+            }
+        };
+        console.log(formattedSlot);
+        const response = await axios.post(
+          'http://localhost:8081/api/v1/patient/appointment',
+          formattedSlot,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          // Handle success, maybe show a success message
+          console.log('Appointment booked successfully');
+          // Reset state to original state
+          setSelectedSlot(null);
+          setIsBookingMode(false);
+        } else {
+          // Handle error response
+          console.error('Failed to book appointment');
+        }
+      } catch (error) {
+        console.error('Error booking appointment:', error);
+      }
+    } else {
+      console.error('Please select a slot and doctor');
+    }
+  };
+  
+  
+
+  const filteredHospitals = hospitals.filter((hospital) =>
+    hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const renderAvailability = (slotsData) => {
     if (!slotsData) {
       return null;
     }
-  
+
     const slotsByDate = {};
     slotsData.forEach(slot => {
       const [year, month, day, hour, minute] = slot;
@@ -169,8 +236,12 @@ function DoctorList() {
       }
       slotsByDate[dateKey].push([hour, minute]);
     });
-  
-    return Object.entries(slotsByDate).map(([date, slotsForDate]) => {
+
+    // Sort dates
+    const sortedDates = Object.keys(slotsByDate).sort((a, b) => new Date(a) - new Date(b));
+
+    return sortedDates.map((date) => {
+      const slotsForDate = slotsByDate[date];
       return (
         <tr key={date}>
           <td>{date}</td>
@@ -184,7 +255,8 @@ function DoctorList() {
               <td
                 key={index}
                 className={isAvailable ? 'available-new clickable' : 'busy-new'}
-                onClick={() => handleCellClick(date, hour, minute)}
+                onClick={() =>
+                  handleCellClick(date, hour, minute)}
               >
                 {isAvailable ? 'Available' : 'Busy'}
               </td>
@@ -194,7 +266,6 @@ function DoctorList() {
       );
     });
   };
-  
 
   return (
     <div className="doctor-list-container-new">
@@ -219,7 +290,7 @@ function DoctorList() {
                     <li key={idx}>
                       <h5>{doctor.first_name + " " + doctor.last_name}</h5>
                       <p>{doctor.specialization}</p>
-                      {selectedDoctor === doctor.id && (
+                      {selectedDoctor === doctor.doctor_id && (
                         <>
                           <table className="availability-table-new">
                             <thead>
@@ -237,15 +308,20 @@ function DoctorList() {
                               </tr>
                             </thead>
                             <tbody>
-                              {doctor.schedule && renderAvailability(doctor.schedule.slots)}
+                              {doctorSlots && renderAvailability(doctorSlots)}
                             </tbody>
                           </table>
                           <button className="doc-list-wala-button-new" onClick={handleToggleBookingMode}>
-                            {isBookingMode ? 'Cancel Booking' : 'Book Appointment'}
+                            {isBookingMode ? 'Go Back?' : 'Book Appointment'}
                           </button>
                           {selectedSlot && (
-                            <button className="doc-list-wala-button-new" onClick={handleLockSlot}>
+                            <button className="doc-list-wala-button-new" onClick={handleBookAppointment}>
                               Lock Slot
+                            </button>
+                          )}
+                          {selectedAppointmentID && (
+                            <button className="doc-list-wala-button-new" onClick={handleCancelAppointment}>
+                              Cancel Slot
                             </button>
                           )}
                         </>
