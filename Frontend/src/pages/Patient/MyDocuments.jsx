@@ -74,6 +74,29 @@ function MyDocuments() {
     }
   };
 
+  const handleDelete = async (fileName) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found in localStorage.');
+        return;
+      }
+  
+      const headers = {
+        Authorization: `Bearer ${token}`
+      };
+  
+      const response = await axios.post(`http://localhost:8081/api/v1/patient/delete-file/${fileName}`, null, {
+        headers: headers
+      });
+  
+      alert(response.data);
+  
+    } catch (error) {
+      console.error('Error deleting file:', error);
+    }
+  };
+
   const handleDownload = async (fileName) => {
     try {
       const token = localStorage.getItem('token');
@@ -117,6 +140,7 @@ function MyDocuments() {
             <tr>
               <th>Document Name</th>
               <th>Download</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -124,6 +148,7 @@ function MyDocuments() {
               <tr key={index}>
                 <td>{fileName}</td>
                 <td><button onClick={() => handleDownload(fileName)}>Download</button></td>
+                <td><button onClick={() => handleDelete(fileName)}>Delete</button></td>
               </tr>
             ))}
           </tbody>
