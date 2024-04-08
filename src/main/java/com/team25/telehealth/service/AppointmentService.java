@@ -228,4 +228,26 @@ public class AppointmentService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    public ResponseEntity<?> fetchAppointmentDoctor(Principal principal, String appointmentId) {
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        Appointment appointment = appointmentRepo.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", appointmentId));
+        if(appointment.getDoctor() == null || appointment.getDoctor().getId() != doctor.getId())
+            return ResponseEntity.badRequest().body("You are not Authorized to access this");
+
+        AppointmentDTO appointmentDTO = appointmentMapper.toDTO(appointment);
+        return ResponseEntity.status(HttpStatus.OK).body(appointmentDTO);
+    }
+
+    public ResponseEntity<?> fetchAppointmentPatient(Principal principal, String appointmentId) {
+        Patient patient = patientService.getPatientByEmail(principal.getName());
+        Appointment appointment = appointmentRepo.findByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", appointmentId));
+        if(appointment.getPatient() == null || appointment.getPatient().getId() != patient.getId())
+            return ResponseEntity.badRequest().body("You are not Authorized to access this");
+
+        AppointmentDTO appointmentDTO = appointmentMapper.toDTO(appointment);
+        return ResponseEntity.status(HttpStatus.OK).body(appointmentDTO);
+    }
 }

@@ -99,4 +99,9 @@ public class DoctorController {
     public ResponseEntity<?> fetchPrescription(Principal principal, @PathVariable String appointmentId) {
         return appointmentService.fetchPrescriptionDoctor(principal, appointmentId);
     }
+
+    @GetMapping("/appointment/{appointmentId}")
+    public ResponseEntity<?> fetchAppointment(Principal principal, @PathVariable String appointmentId) {
+        return appointmentService.fetchAppointmentDoctor(principal, appointmentId);
+    }
 }
