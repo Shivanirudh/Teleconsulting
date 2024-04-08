@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TokenRepo extends JpaRepository<Token, Integer> {
-
+    List<Token> findAllByExpiredOrRevoked(boolean expired, boolean revoked);
 }
