@@ -5,6 +5,8 @@ import com.team25.telehealth.dto.request.PrescriptionRequest;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Patient;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,9 +22,10 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PdfGenerator {
-    private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Appointment_Data\\";
+    @Value("${PRESCRIPTION_DATA_PATH}")
+    private String STORAGE_PATH;
     private final EncryptionService encryptionService;
 
     public String loadPrescriptionTemplate() throws IOException {

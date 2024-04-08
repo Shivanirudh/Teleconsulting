@@ -16,6 +16,8 @@ import com.team25.telehealth.repo.PrescriptionRepo;
 import com.team25.telehealth.repo.ScheduleRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +35,7 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppointmentService {
     private final DoctorService doctorService;
     private final PatientService patientService;
@@ -48,7 +50,8 @@ public class AppointmentService {
     private final FileStorageService fileStorageService;
     private final EncryptionService encryptionService;
 
-    private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Appointment_Data\\";
+    @Value("${PRESCRIPTION_DATA_PATH}")
+    private String STORAGE_PATH;
 
     @Transactional
     public ResponseEntity<?> bookAppointment(Principal principal, AppointmentDTO appointmentDTO) {
@@ -61,6 +64,10 @@ public class AppointmentService {
         Doctor doctor = doctorService.getDoctorByDoctorId(appointmentDTO.getDoctor().getDoctorId());
         Schedule schedule = scheduleRepo.findByDoctorAndActiveAndSlot(doctor, true, appointmentDTO.getSlot())
                 .orElseThrow(() -> new ResourceNotFoundException("Slot", "time", appointmentDTO.getSlot().toString()));
+
+        if(appointmentDTO.getSlot().isBefore(LocalDateTime.now()))
+            return ResponseEntity.badRequest().body("You cannot book appointment in past.");
+
         Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
                 appointmentDTO.getSlot(),
                 true

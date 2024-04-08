@@ -25,6 +25,8 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,7 +46,7 @@ import java.util.List;
 import static com.team25.telehealth.model.Role.PATIENT;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PatientService {
     private final PatientRepo patientRepo;
     private final PasswordEncoder passwordEncoder;
@@ -59,7 +61,8 @@ public class PatientService {
     private final HospitalService hospitalService;
     private final DoctorRepo doctorRepo;
 
-    private final String STORAGE_PATH = "D:\\Prashant Jain\\MTech\\Semester 2\\HAD\\Project\\Patient_Data\\";
+    @Value("${PATIENT_DATA_PATH}")
+    private String STORAGE_PATH;
 
     @Transactional
     public Patient addPatient(Patient patient) {
