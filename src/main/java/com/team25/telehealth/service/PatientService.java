@@ -100,6 +100,9 @@ public class PatientService {
         Patient patient = getPatientByEmail(principal.getName());
         try {
             String folderPath = STORAGE_PATH + patient.getPatientId();
+            int totalFiles = fileStorageService.getAllFileNames(folderPath).size() + files.length;
+            if(totalFiles > 30)
+                return ResponseEntity.badRequest().body("You can't keep more than 30 files on our server");
             for (MultipartFile file : files) {
                 String filePath = folderPath + File.separator + file.getOriginalFilename();
                 fileStorageService.storeFile(folderPath, file);
@@ -267,5 +270,26 @@ public class PatientService {
     public List<DoctorDTO> getDoctorsByHospitalAndSpecialization(Principal principal, String email, Specialization specialization) {
         Hospital hospital = hospitalService.getHospitalByEmail(email);
         return doctorMapper.toDTOList(doctorRepo.getByHospitalAndActiveAndSpecialization(hospital, true, specialization));
+    }
+
+    public ResponseEntity<?> deleteFile(Principal principal, String fileName) {
+        Patient patient = getPatientByEmail(principal.getName());
+        try {
+            String filePath = STORAGE_PATH + patient.getPatientId() + File.separator + fileName;
+            File file = fileStorageService.getFile(filePath);
+            if (file.exists()) {
+                // Delete the file
+                if (file.delete()) {
+                    return ResponseEntity.ok().body("File deleted successfully");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Failed to delete the file.");
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
