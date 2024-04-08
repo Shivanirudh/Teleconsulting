@@ -48,6 +48,11 @@ public class PatientController {
         return patientService.uploadFile(files, principal);
     }
 
+    @PostMapping("/delete-file/{fileName}")
+    public ResponseEntity<?> deleteFile(Principal principal, @PathVariable String fileName) {
+        return patientService.deleteFile(principal, fileName);
+    }
+
     @GetMapping("/fetch/{fileName}")
     public ResponseEntity<?> fetchFile(Principal principal, @PathVariable String fileName) {
         return patientService.fetchFile(principal, fileName);

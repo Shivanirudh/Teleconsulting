@@ -6,13 +6,13 @@ import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Patient;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -74,5 +74,29 @@ public class PdfGenerator {
 //        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
+
+        try {
+            // Read the file from the system
+            File file = new File(outputPath);
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+
+            // Convert the file bytes to a multipart file
+            MultipartFile multipartFile = new MockMultipartFile("file", file.getName(),
+                    MediaType.APPLICATION_OCTET_STREAM_VALUE, fileBytes);
+
+            // Create a ByteArrayInputStream using the file bytes
+            try (InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes())) {
+                // Encrypt and store the file
+                encryptionService.encryptAndStoreFile(outputPath, inputStream);
+            }
+        } catch (IOException e) {
+            // Handle file reading or conversion errors
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            // Handle other exceptions
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -206,14 +206,14 @@ public class AppointmentService {
             if (file.exists()) {
                 // Fetch encryption key and decrypt file
                 // Assuming you have a method to fetch the key based on user ID
-//                byte[] decryptedContent = encryptionService.decryptFile(filePath);
+                byte[] decryptedContent = encryptionService.decryptFile(filePath);
 
                 // Set response headers to trigger download in Postman
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_PDF);
                 headers.setContentDispositionFormData(fileName, fileName);
-                return  new ResponseEntity<>(Files.readAllBytes(Paths.get(filePath)), headers, HttpStatus.OK);
-//                return new ResponseEntity<>(decryptedContent, headers, HttpStatus.OK);
+//                return  new ResponseEntity<>(Files.readAllBytes(Paths.get(filePath)), headers, HttpStatus.OK);
+                return new ResponseEntity<>(decryptedContent, headers, HttpStatus.OK);
             } else {
                 return ResponseEntity.notFound().build();
             }
