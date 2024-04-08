@@ -31,29 +31,32 @@ const PatientLogin = () => {
       });
   };
 
-  const handleLogin = () => {
-    axiosInstance.post('/auth/patient/authenticate', JSON.stringify({
-      email: email,
-      otp: otp,
-      password: password,
-    }), {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+// PatientLogin.jsx
+const handleLogin = () => {
+  axiosInstance.post('/auth/patient/authenticate', JSON.stringify({
+    email: email,
+    otp: otp,
+    password: password,
+  }), {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('token-type', 'patient'); // Store token type
+      localStorage.setItem('firstname', response.data.firstName);
+      localStorage.setItem('lastname', response.data.lastName);
+      localStorage.setItem('email', response.data.email);
+      alert('Login successful!');
+      navigate('/patientdashboard');
     })
-      .then(response => {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('firstname', response.data.firstName);
-        localStorage.setItem('lastname', response.data.lastName);
-        localStorage.setItem('email', response.data.email);
-        alert('Login successful!');
-        navigate('/patientdashboard');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Invalid email, password, or OTP');
-      });
-  };
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Invalid email, password, or OTP');
+    });
+};
+
 
   return (
     <div>

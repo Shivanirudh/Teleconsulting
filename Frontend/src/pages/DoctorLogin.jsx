@@ -44,6 +44,7 @@ const DoctorLogin = () => {
     })
       .then(response => {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token-type', 'doctor'); // Store token type
         localStorage.setItem('firstname', response.data.firstName);
         localStorage.setItem('lastname', response.data.lastName);
         alert('Login successful!');

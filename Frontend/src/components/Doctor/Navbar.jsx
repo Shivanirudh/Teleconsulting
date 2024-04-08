@@ -56,6 +56,7 @@ const axiosInstance = axios.create({
         localStorage.removeItem('token');
         localStorage.removeItem('firstname');
         localStorage.removeItem('lastname');
+        localStorage.removeItem('token-type');
         navigate('/');
       })
       .catch(error => {

@@ -23,6 +23,7 @@ export default function Navbar() {
       console.log(response.data.message); // Log the response from backend
       // Clear token from local storage
       localStorage.removeItem('token');
+      localStorage.removeItem('token-type');
       // Redirect to the home page
       navigate('/');
     })

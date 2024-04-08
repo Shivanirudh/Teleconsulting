@@ -41,6 +41,7 @@ const AdminLogin = () => {
     })
       .then(response => {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token-type', 'admin'); // Store token type
         alert('Login successful!');
         navigate('/admindashboard');
       })

@@ -37,18 +37,26 @@ function App() {
           <Route exact path="/pforgotpassword" element={<PForgotPassword />} />
           <Route exact path="/aforgotpassword" element={<AForgotPassword />} />
           <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
-          <Route element = {<PrivateRoutes/>}>
+
+          <Route element={<PrivateRoutes tokenType="admin" />} >
+            {/* Admin Routes */}
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />
             <Route exact path="/adminpatient" element={<AdminPatient />} />
+            <Route exact path="/adminhospital" element={<AdminHospital />} />
+          </Route>
+          <Route element={<PrivateRoutes tokenType="patient" />} >
+            {/* Patient Routes */}
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
             <Route exact path="/pconsent" element={<PConsent />} />
+          </Route>
+          <Route element={<PrivateRoutes tokenType="doctor" />} >
+            {/* Doctor Routes */}
             <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
-            <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
           </Route>
         </Routes>
       </Router>
