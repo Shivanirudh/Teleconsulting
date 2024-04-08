@@ -68,6 +68,9 @@ public class AppointmentService {
         if(appointmentDTO.getSlot().isBefore(LocalDateTime.now()))
             return ResponseEntity.badRequest().body("You cannot book appointment in past.");
 
+        if(appointmentDTO.getSlot().isAfter(LocalDateTime.now().plusDays(6)))
+            return ResponseEntity.badRequest().body("Appointments cannot be scheduled more than 6 days in advance");
+
         Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
                 appointmentDTO.getSlot(),
                 true
@@ -77,16 +80,29 @@ public class AppointmentService {
             return ResponseEntity.badRequest().body("Time slot is not available");
         }
 
-        List<Appointment> appointmentsWithSameDoctor = appointmentRepo
-                .getAllByDoctorAndPatientAndSlotDateAndActive(doctor, patient, appointmentDTO.getSlot().toLocalDate(), true);
-        if(appointmentsWithSameDoctor.size() >= 2)
-            return ResponseEntity.badRequest().body("You cannot book more than two appointments with the same doctor for a day");
+        List<Appointment> appointmentsForWeek = appointmentRepo.getAllByPatientAndActiveAndSlotDateBetween(
+                patient,
+                true,
+                LocalDateTime.now().toLocalDate(),
+                LocalDateTime.now().plusDays(6).toLocalDate()
+        );
+        if(appointmentsForWeek.size() >= 7)
+            return ResponseEntity.badRequest().body("You cannot book more than seven appointments for a week");
 
-        // Check if patient has already booked more than five appointments for the date
-        List<Appointment> appointmentsForTheDay = appointmentRepo
-                .getAllByPatientAndSlotDateAndActive(patient, appointmentDTO.getSlot().toLocalDate(), true);
-        if(appointmentsForTheDay.size() >= 5)
-            return ResponseEntity.badRequest().body("You cannot book more than five appointments for a day");
+        int countWithSameDoctorSameDay = 0;
+        int countWithSameDay = 0;
+        for(Appointment appointment: appointmentsForWeek) {
+            if(appointment.getSlot().toLocalDate().equals(appointmentDTO.getSlot().toLocalDate())) {
+                if(appointment.getDoctor().getId() == doctor.getId()) countWithSameDoctorSameDay++;
+                countWithSameDay++;
+            }
+        }
+
+        if(countWithSameDay >= 3)
+            return ResponseEntity.badRequest().body("You cannot book more than three appointments for a day");
+
+        if(countWithSameDoctorSameDay >= 2)
+            return ResponseEntity.badRequest().body("You cannot book more than two appointments with the same doctor for a day");
 
         Appointment appointment = Appointment.builder()
                 .appointmentId(appointmentIdGenerator.generateNextId())

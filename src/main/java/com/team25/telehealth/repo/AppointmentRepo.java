@@ -61,4 +61,11 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Integer> {
             @Param("active") Boolean active,
             @Param("start_date") LocalDate startDate,
             @Param("end_date") LocalDate endDate);
+
+    @Query("SELECT a FROM Appointment a WHERE a.patient = :patient AND a.active = :active AND DATE(a.slot) BETWEEN :start_date AND :end_date")
+    List<Appointment> getAllByPatientAndActiveAndSlotDateBetween(
+            @Param("patient") Patient patient,
+            @Param("active") Boolean active,
+            @Param("start_date") LocalDate startDate,
+            @Param("end_date") LocalDate endDate);
 }
