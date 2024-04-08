@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Specialization {
+    GENERAL,
     CARDIOLOGIST,
     AUDIOLOGIST,
     DENTIST,
