@@ -1,0 +1,76 @@
+/* BookedAppointments.css */
+
+/* Container styles */
+.booked-appointments-container {
+  margin: 20px;
+  text-align: center; /* Aligning content center */
+}
+
+/* Table styles */
+.booked-appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table header styles */
+.booked-appointments-table th {
+  background-color: #f2f2f2;
+  padding: 12px 8px;
+  text-align: left;
+}
+
+/* Table row styles */
+.booked-appointments-table td, .appointments-table th {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 8px;
+}
+
+/* Button styles */
+.bas-aps-but {
+  display: block;
+  width: 60%;
+  padding: 12px 0;
+  background-color: #53a8b6; /* Blue button */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.bas-aps-but:hover {
+  background-color: #79c2d0; /* Darker blue on hover */
+}
+
+/* Tab button styles */
+/* Tab button styles */
+.tab-buttons {
+  margin-bottom: 20px;
+  display: flex; /* Use flexbox */
+}
+
+.tab-buttons button {
+  flex: 1; /* Equal width for both buttons */
+  padding: 12px 0;
+  background-color: #53a8b6; /* Blue button */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 10px;
+  transition: background-color 0.6s;
+}
+
+.tab-buttons button.active {
+  background-color: #79c2d0; /* Darker blue */
+}
+
+.tab-buttons button:hover {
+  background-color: #79c2d0; /* Darker blue on hover */
+}

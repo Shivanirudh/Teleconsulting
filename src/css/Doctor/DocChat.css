@@ -1,0 +1,85 @@
+.doc-chat-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-details-container {
+  display: flex;
+  width: 100%;
+}
+
+.video-container {
+  width: 60%;
+}
+
+.big-video {
+  width: 100%;
+  background-color: #ccc;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  margin-bottom: 20px;
+}
+
+.small-video {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  padding-top: 10%; /* Aspect ratio 4:3 */
+  background-color: #ddd;
+}
+
+.details-section {
+  width: 40%;
+  margin-left: 20px;
+}
+
+.patient-details {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.upload-prescription {
+  margin-top: 20px;
+  width: 60%;
+}
+
+.document-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.rambo-but {
+  width: 100px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+}
+
+.rambo-but:hover {
+  background-color: #79c2d0;
+}
