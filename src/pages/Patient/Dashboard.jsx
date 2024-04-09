@@ -7,7 +7,7 @@ import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
-import Consent from './Consent';
+import VideoChatPage from './VideoChannel';
 // Import other components as needed
 
 function Dashboard() {
@@ -32,8 +32,8 @@ function Dashboard() {
         );
       case 'previous-appointments':
         return <PreviousAppointments />;
-        case 'consent':
-        return <Consent />;
+        case 'video-channel':
+          return <VideoChatPage />;
       case 'my-documents':
         return <MyDocuments />;
       case 'booked-appointments':
