@@ -7,6 +7,7 @@ import DoctorList from './DoctorList';
 import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
+import VideoChatPage from './VideoChannel';
 // Import other components as needed
 
 function Dashboard() {
@@ -31,19 +32,25 @@ function Dashboard() {
         );
       case 'previous-appointments':
         return <PreviousAppointments />;
+        case 'video-channel':
+          return <VideoChatPage />;
       case 'my-documents':
         return <MyDocuments />;
       case 'booked-appointments':
         return <BookedAppointments/>
       // Add cases for other navigation items
-      default:
+      default: return (
+        <>
+          <DoctorList searchTerm={searchTerm} />
+        </>
+      );
         return null;
     }
   };
 
   return (
     <div className="patient-dashboard-container">
-      <TopNavigationBar patientName="First Name Last Name" />
+      <TopNavigationBar />
       <div className="patient-dashboard-content">
         <LeftNavigationBar navigateTo={handleNavigation} />
         <div className="patiient-main-content">

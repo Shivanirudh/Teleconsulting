@@ -26,7 +26,7 @@
 }
 
 .availability-table-new td.busy-new {
-  background-color: rgba(218, 218, 61, 0.836); /* Yellow for busy slots */
+  background-color: rgba(94, 94, 85, 0.836); /* Yellow for busy slots */
 }
 
 .availability-table-new td.booked-new {
@@ -73,6 +73,15 @@
   align-items: center;
 }
 
+
 .doc-list-wala-button-new:hover {
   background-color: #79c2d0; /* Darker blue on hover */
+}
+.availability-table-new th {
+  background-color: rgba(61, 63, 70, 0.556);/* Translucent black background */
+  color: #ffffff; /* Set text color to white */
+}
+.availability-table-new td {
+  background-color: rgba(61, 63, 70, 0.556); /* Translucent black background */
+  color: #ffffff;
 }

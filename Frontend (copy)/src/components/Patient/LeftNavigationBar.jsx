@@ -1,6 +1,6 @@
 // LeftNavigationBar.js
 import React from 'react';
-import './../../css/Patient/LeftNavigationBar.css'; 
+
 
 function LeftNavigationBar({ navigateTo }) {
   return (
@@ -12,9 +12,8 @@ function LeftNavigationBar({ navigateTo }) {
         <li onClick={() => navigateTo('my-documents')}>My Documents</li>
 
 
-        <li onClick={() => navigateTo('audio-video-channel')}>Audio Video Channel</li>
-
-        <li onClick={() => navigateTo('previous-appointments')}>Previous Appointments</li>
+        <li onClick={() => navigateTo('video-channel')}>Video Channel</li>
+        
       </ul>
     </div>
   );

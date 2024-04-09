@@ -1,0 +1,46 @@
+/* AdminHospital.css */
+
+.admin-search-container {
+    margin-bottom: 20px;
+    width: 100%; /* Set the width to 80% */
+    margin: 0 auto; /* Center the container horizontally */
+  }
+  
+  .admin-search-bar {
+    padding: 8px;
+    width: calc(100% - 130px); /* Make the input field 100% width minus space for the button */
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  
+  .admin-search-button {
+    width: 100px;
+    padding: 12px 0;
+    background-color: #53a8b6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.6s;
+  }
+  .add-admin-button {
+    width: 100px;
+    padding: 12px 0;
+    background-color: #53a8b6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.6s;
+    bottom: 20px;
+    right: 20px;
+  }
+  

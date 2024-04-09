@@ -17,6 +17,7 @@ const PatientLogin = () => {
   const navigate = useNavigate();
 
   const handleGetOTP = () => {
+    console.log(JSON.stringify({ email: email }));
     axiosInstance.post('/auth/generate/patient/otp', JSON.stringify({ email: email }), {
       headers: {
         'Content-Type': 'application/json'
@@ -42,6 +43,9 @@ const PatientLogin = () => {
     })
       .then(response => {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('firstname', response.data.firstName);
+        localStorage.setItem('lastname', response.data.lastName);
+        localStorage.setItem('email', response.data.email);
         alert('Login successful!');
         navigate('/patientdashboard');
       })
@@ -49,10 +53,6 @@ const PatientLogin = () => {
         console.error('Error:', error);
         alert('Invalid email, password, or OTP');
       });
-  };
-
-  const handleSignUp = () => {
-    navigate('/signup');
   };
 
   return (
@@ -66,7 +66,8 @@ const PatientLogin = () => {
           <input type="password" className="ani-login-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button className="ani-login-button" onClick={handleGetOTP}>Get OTP</button>
           <button className="ani-login-button" onClick={handleLogin}>Login</button>
-          <a className="linkin-login" href="/signup">Don't have an account? Register.</a>
+          <a className="linkin-login" href="/patientsignup">Don't have an account? Register.</a><br />
+          <a className="linkin-login" href="/pforgotpassword">Forgot Password?</a>
         </div>
       </div>
       <Footer />

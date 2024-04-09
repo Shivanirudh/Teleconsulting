@@ -1,18 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './../../css/Patient/TopNavigationBar.css';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
-// Create Axios instance with baseURL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+  baseURL: 'http://localhost:8081/api/v1',
 });
 
-function TopNavigationBar({ patientName, onSignOut }) {
+function TopNavigationBar({ onSignOut }) {
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState(localStorage.getItem('firstname'));
+  const [lastName, setLastName] = useState(localStorage.getItem('lastname'));
+  
+  useEffect(() => {
+    const fetchPatientData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        const response = await axiosInstance.get('/patient/',{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+        });
+  
+        const data = response.data;
+        const { first_name, last_name } = data;
+  
+        // Update first name and last name
+        setFirstName(first_name);
+        setLastName(last_name);
+  
+        // Store updated first name and last name in local storage
+        localStorage.setItem('firstname', first_name);
+        localStorage.setItem('lastname', last_name);
+      } catch (error) {
+        console.error('Error fetching patient data:', error);
+      }
+    };
+  
+    fetchPatientData();
+  }, []);
+  
+  
+  
   const handleSignOut = () => {
-    // Send request to backend to logout using Axios
     axiosInstance.post('/auth/logout', null, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -20,10 +53,10 @@ function TopNavigationBar({ patientName, onSignOut }) {
       },
     })
     .then(response => {
-      console.log(response.data.message); // Log the response from backend
-      // Clear token from local storage
+      console.log(response.data.message);
       localStorage.removeItem('token');
-      // Redirect to the home page
+      localStorage.removeItem('firstname');
+      localStorage.removeItem('lastname');
       navigate('/');
     })
     .catch(error => {
@@ -34,15 +67,15 @@ function TopNavigationBar({ patientName, onSignOut }) {
   return (
     <div className="top-navbar">
       <div className="center-links">
-        <span className="welcome-text">Welcome, {patientName}</span>
+        <span className="welcome-text">Welcome, {firstName} {lastName}</span>
       </div>
       <div className="right-links">
-        <Link to="/patienteditdetails" className="edit-details-link">
+        <Link to="/patienteditdetails" className="edit-details-button">
           Edit Details
         </Link>
-        <span className="signout-link" onClick={handleSignOut}>
+        <button className="signout-button" onClick={handleSignOut}>
           Sign Out
-        </span>
+        </button>
       </div>
     </div>
   );

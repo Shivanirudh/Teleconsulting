@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '../../components/Admin/Navbar';
 import SideNavbar from '../../components/Admin/sidenavbar';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import Calendar from 'react-calendar'; // Import Calendar component
+
 import 'react-calendar/dist/Calendar.css'; // Import default calendar styles
 import './../../css/Admin/AdminDashboard.css'
 
@@ -17,10 +17,11 @@ const AdminDashboard = () => {
     return (
         <div className='dashboard-container'>
             <Navbar />
-            <div className='dashboard-content'>
+            <div className='dashboard-content'  >
             <SideNavbar />
             
             <div className='main-content'>
+                <h1>Welcome Vishnu Raj</h1>
                 <Container fluid style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', color: '#333',opacity:'0.8' }}>
                     <Row className="mt-4">
                         <Col md={6} lg={3}>
@@ -60,13 +61,7 @@ const AdminDashboard = () => {
                             </Card>
                         </Col>
                     </Row>
-                    {/* Add charts and additional components here */}
-                    <div className="mt-4" style={{ maxWidth: '300px' }}>
-                        <Calendar
-                            className="react-calendar"
-                            tileClassName="react-calendar-tile"
-                        /> {/* Calendar component */}
-                    </div>
+                   
                 </Container>
             </div>
         </div>
