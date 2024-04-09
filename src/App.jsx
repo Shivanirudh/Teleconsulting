@@ -20,6 +20,7 @@ import PForgotPassword from './pages/Patient/PForgotPassword';
 import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
 import AdminHospital from './pages/Admin/AdminHospital';
+import DocChat from './pages/Doctor/DocChat';
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
           <Route exact path="/pforgotpassword" element={<PForgotPassword />} />
           <Route exact path="/aforgotpassword" element={<AForgotPassword />} />
           <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
+
+          <Route exact path="/ddashboard/docchat" element={<DocChat/>}/>
 
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />
