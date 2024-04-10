@@ -25,7 +25,6 @@
     <button id="connectBtn">Connect</button>
 </fieldset>
 <fieldset>
-    <input type="text" name="remoteId" id="remoteId" placeholder="Enter Remote ID">
     <button id="callBtn">call</button>
 </fieldset>
 <button id="testConnection">Test Connection</button>
@@ -34,7 +33,6 @@
     const remoteVideo = document.getElementById("remoteVideo");
     const localIdInp = document.getElementById("localId");
     const connectBtn = document.getElementById("connectBtn");
-    const remoteIdInp = document.getElementById("remoteId");
     const callBtn = document.getElementById("callBtn");
     const testConnection = document.getElementById("testConnection");
     const appointmentInput = document.getElementById("appointment");
@@ -43,7 +41,6 @@
     let localStream;
     let remoteStream;
     let localPeer;
-    let remoteID;
     let localID;
     let stompClient;
     let userType;
@@ -66,11 +63,6 @@
         .then(stream => {
             localStream = stream
 
-            // console.log(stream.getTracks()[0])
-            // console.log(stream.getTracks()[1])
-            // console.log(localStream.getTracks()[0])
-            // console.log(localStream.getTracks()[1])
-
             localVideo.srcObject = stream;
             // access granted, stream is the webcam stream
         })
@@ -84,14 +76,13 @@
         // Connect to Websocket Server
         var socket = new SockJS('/websocket', {debug: false, headers: {"Authorization": "Bearer " + authToken}});
         stompClient = Stomp.over(socket);
+
         localID = localIdInp.value || "P1";
         appointmentId = appointmentInput.value || "AP1";
         meetingId = meetingInput.value || "0f6f23e3-c89a-45ab-b345-a48d359ec43e";
         userType = userTypeInput.value || "PATIENT";
-        console.log("My ID: " + localID)
-        stompClient.connect({}, frame => {
 
-            console.log(frame)
+        stompClient.connect({}, frame => {
 
             // Subscribe to testing URL not very important
             stompClient.subscribe('/topic/testServer', function (test) {
@@ -99,9 +90,6 @@
             });
 
             stompClient.subscribe('/user/' + localID + "/topic/call", (call) => {
-                // console.log("Call From: " + call.body)
-                // remoteID = call.body;
-                // console.log("Remote ID: " + call.body)
 
                 localPeer.ontrack = (event) => {
                     // Setting Remote stream in remote video element
@@ -115,8 +103,6 @@
                             label: event.candidate.sdpMLineIndex,
                             id: event.candidate.candidate,
                         }
-                        console.log("Sending Candidate")
-                        console.log(candidate)
                         stompClient.send("/app/candidate", {}, JSON.stringify({
                             "meetingId": meetingId,
                             "userId": localID,
@@ -132,7 +118,6 @@
 
                 localPeer.createOffer().then(description => {
                     localPeer.setLocalDescription(description);
-                    console.log("Setting Description" + description);
                     stompClient.send("/app/offer", {}, JSON.stringify({
                         "meetingId": meetingId,
                         "userId": localID,
@@ -143,12 +128,7 @@
 
             // Subscribe to the 'offer' topic
             stompClient.subscribe('/user/' + localID + "/topic/offer", (offer) => {
-                console.log("Offer came")
                 var o = JSON.parse(offer.body)["offer"]
-                console.log(offer.body)
-                // console.log(new RTCSessionDescription(o))
-                // console.log(typeof (new RTCSessionDescription(o)))
-
                 localPeer.ontrack = (event) => {
                     remoteVideo.srcObject = event.streams[0]
                 }
@@ -159,8 +139,6 @@
                             label: event.candidate.sdpMLineIndex,
                             id: event.candidate.candidate,
                         }
-                        console.log("Sending Candidate")
-                        console.log(candidate)
                         stompClient.send("/app/candidate", {}, JSON.stringify({
                             "meetingId": meetingId,
                             "userId": localID,
@@ -177,8 +155,6 @@
                 localPeer.setRemoteDescription(new RTCSessionDescription(o))
                 localPeer.createAnswer().then(description => {
                     localPeer.setLocalDescription(description)
-                    console.log("Setting Local Description")
-                    console.log(description)
                     stompClient.send("/app/answer", {}, JSON.stringify({
                         "meetingId": meetingId,
                         "userId": localID,
@@ -190,32 +166,20 @@
 
             // Subscribe to the 'answer' topic
             stompClient.subscribe('/user/' + localID + "/topic/answer", (answer) => {
-                console.log("Answer Came")
                 var o = JSON.parse(answer.body)["answer"]
-                console.log(o)
                 localPeer.setRemoteDescription(new RTCSessionDescription(o))
-
             });
 
             // Subscribe to the 'candidate' topic
             stompClient.subscribe('/user/' + localID + "/topic/candidate", (answer) => {
-                console.log("Candidate Came")
                 var o = JSON.parse(answer.body)["candidate"]
-                console.log(o)
-                console.log(o["label"])
-                console.log(o["id"])
+
                 var iceCandidate = new RTCIceCandidate({
                     sdpMLineIndex: o["label"],
                     candidate: o["id"],
                 })
                 localPeer.addIceCandidate(iceCandidate)
             });
-
-            console.log(JSON.stringify({
-                "userId": localIdInp.value,
-                "appointmentId": appointmentId,
-                "meetingId": meetingId,
-                "userType": userType}))
 
             // Send a message to add the user
             stompClient.send("/app/addUser", {}, JSON.stringify({
@@ -230,13 +194,12 @@
 
     // Handle the call button click event
     callBtn.onclick = () => {
-        // remoteID = remoteIdInp.value
         stompClient.send("/app/call", {"Authorization": "Bearer " + authToken}, JSON.stringify({"meetingId": meetingId, "userId": localID}));
     }
 
     // Handle the test connection button click event
     testConnection.onclick = () => {
-        stompClient.send("/app/testServer", {"Authorization": "Bearer " + authToken}, "Test Server");
+        stompClient.send("/app/testServer", {"Authorization": "Bearer " + authToken}, "Testing Connectivity");
     }
 </script>
 </body>

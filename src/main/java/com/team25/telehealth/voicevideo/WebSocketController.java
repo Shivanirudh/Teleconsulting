@@ -36,15 +36,13 @@ public class WebSocketController {
 
     @MessageMapping("/testServer")
     @SendTo("/topic/testServer")
-    public String testServer(String Test){
-        System.out.println("Testing Server");
-        return Test;
+    public String testServer(String test){
+        System.out.println(test);
+        return "Testing Successful";
     }
 
     @MessageMapping("/addUser")
     public void addUser(String user){
-        System.out.println("Adding User");
-
         JSONObject jsonObject = new JSONObject(user);
         String userId = jsonObject.get("userId").toString();
         String appointmentId = jsonObject.get("appointmentId").toString();
@@ -53,6 +51,7 @@ public class WebSocketController {
 
         Appointment appointment = appointmentRepo.findByAppointmentId(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", appointmentId));
+
         if(appointment.getMeetingLink().equals(meetingId)) {
             if (!rooms.containsKey(meetingId)) {
                 rooms.put(meetingId, new Room(meetingId));
@@ -65,7 +64,6 @@ public class WebSocketController {
 
                     rooms.get(meetingId).addParticipant(userId);
                     System.out.println("User Added Successfully");
-
                 }
             }
             for (String roomId : rooms.keySet()) {
@@ -77,10 +75,7 @@ public class WebSocketController {
 
     @MessageMapping("/call")
     public void Call(String call){
-        System.out.println("Call function called");
         JSONObject jsonObject = new JSONObject(call);
-//        System.out.println("Calling to: "+jsonObject.get("callTo")+" Call from "+jsonObject.get("callFrom"));
-//        System.out.println("Calling to class: "+jsonObject.get("callTo").getClass()+" Call from class "+jsonObject.get("callFrom").getClass());
 
         String meetingId = jsonObject.get("meetingId").toString();
         String userId = jsonObject.get("userId").toString();
@@ -93,13 +88,10 @@ public class WebSocketController {
             }
         }
 
-        System.out.println("ended call function");
     }
 
     @MessageMapping("/offer")
     public void Offer(String offer){
-
-        System.out.println("Offer Came");
         JSONObject jsonObject = new JSONObject(offer);
         String meetingId = jsonObject.get("meetingId").toString();
         String userId = jsonObject.get("userId").toString();
@@ -112,13 +104,10 @@ public class WebSocketController {
             }
         }
 
-        System.out.println("Offer Sent");
     }
 
     @MessageMapping("/answer")
     public void Answer(String answer){
-        System.out.println("Answer came");
-        System.out.println(answer);
         JSONObject jsonObject = new JSONObject(answer);
         String meetingId = jsonObject.get("meetingId").toString();
         String userId = jsonObject.get("userId").toString();
@@ -130,12 +119,9 @@ public class WebSocketController {
                             .convertAndSendToUser(user,"/topic/answer",answer);
             }
         }
-
-        System.out.println("Answer Sent");
     }
     @MessageMapping("/candidate")
     public void Candidate(String candidate){
-        System.out.println("Candidate came");
         JSONObject jsonObject = new JSONObject(candidate);
         String meetingId = jsonObject.get("meetingId").toString();
         String userId = jsonObject.get("userId").toString();
@@ -147,7 +133,5 @@ public class WebSocketController {
                             .convertAndSendToUser(user,"/topic/candidate",candidate);
             }
         }
-        System.out.println("Candidate Sent");
     }
-
 }
