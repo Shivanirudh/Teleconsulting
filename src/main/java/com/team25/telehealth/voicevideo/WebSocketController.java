@@ -1,10 +1,13 @@
 package com.team25.telehealth.voicevideo;
 
 import com.team25.telehealth.entity.Appointment;
+import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.helpers.exceptions.ResourceNotFoundException;
+import com.team25.telehealth.model.Role;
 import com.team25.telehealth.model.Room;
 import com.team25.telehealth.repo.AppointmentRepo;
 import com.team25.telehealth.service.AppointmentService;
+import com.team25.telehealth.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketController {
     private final AppointmentRepo appointmentRepo;
     private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
 
     Map<String, Room> rooms = new ConcurrentHashMap<>();
 
@@ -65,7 +69,18 @@ public class WebSocketController {
                     rooms.get(meetingId).addParticipant(userId);
                     System.out.println("User Added Successfully");
                 }
+            } else if(userType.equals("DOCTOR")) {
+                Doctor doctor = doctorService.getDoctorByDoctorId(userId);
+                if(doctor.getRole().equals(Role.SENIORDOCTOR)
+                        && doctor.getHospital().getId() == appointment.getDoctor().getHospital().getId()
+                        && !rooms.get(meetingId).containsParticipant(userId)
+                        && !rooms.get(meetingId).exceedingMaxLimitOfParticipants()
+                ) {
+                    rooms.get(meetingId).addParticipant(userId);
+                    System.out.println("User Added Successfully");
+                }
             }
+
             for (String roomId : rooms.keySet()) {
                 Room room = rooms.get(roomId);
                 for (String participants : room.getParticipants()) System.out.println(participants);
