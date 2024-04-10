@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebRTC Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<style>
+    video{
+        width: 400px;
+        height: 400px;
+        background-color: black;
+    }
+</style>
+<h1>WebRTC Test</h1>
+<video id="localVideo" autoplay muted></video>
+<video id="remoteVideo" autoplay></video>
+<fieldset>
+    <input type="text" name="localId" id="localId" placeholder="Enter Your ID">
+    <input type="text" name="appointment" id="appointment" placeholder="Enter Appointment ID">
+    <input type="text" name="meeting" id="meeting" placeholder="Enter meeting Link">
+    <input type="text" name="userType" id="userType" placeholder="Enter userType ID">
+    <button id="connectBtn">Connect</button>
+</fieldset>
+<fieldset>
+    <input type="text" name="remoteId" id="remoteId" placeholder="Enter Remote ID">
+    <button id="callBtn">call</button>
+</fieldset>
+<button id="testConnection">Test Connection</button>
+<script>
+    const localVideo = document.getElementById("localVideo");
+    const remoteVideo = document.getElementById("remoteVideo");
+    const localIdInp = document.getElementById("localId");
+    const connectBtn = document.getElementById("connectBtn");
+    const remoteIdInp = document.getElementById("remoteId");
+    const callBtn = document.getElementById("callBtn");
+    const testConnection = document.getElementById("testConnection");
+    const appointmentInput = document.getElementById("appointment");
+    const meetingInput = document.getElementById("meeting");
+    const userTypeInput = document.getElementById("userType");
+    let localStream;
+    let remoteStream;
+    let localPeer;
+    let remoteID;
+    let localID;
+    let stompClient;
+    let userType;
+    let meetingId;
+    let appointmentId;
+
+    const authToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZS5wcmFzaGFudGpuQGdtYWlsLmNvbSIsImlhdCI6MTcxMjY1NjcyMiwiZXhwIjoxNzEyNzQzMTIyfQ.MnlOktvWFabiCHbeWNZX62Mfb_gnSSOey9YbGndlGAc";
+
+    // ICE Server Configurations
+    const iceServers = {
+        iceServer: {
+            urls: "stun:stun.l.google.com:19302"
+        }
+    }
+
+    localPeer = new RTCPeerConnection(iceServers)
+
+
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+        .then(stream => {
+            localStream = stream
+
+            // console.log(stream.getTracks()[0])
+            // console.log(stream.getTracks()[1])
+            // console.log(localStream.getTracks()[0])
+            // console.log(localStream.getTracks()[1])
+
+            localVideo.srcObject = stream;
+            // access granted, stream is the webcam stream
+        })
+        .catch(error => {
+            // access denied or error occurred
+            console.log(error)
+        });
+
+
+    connectBtn.onclick = () => {
+        // Connect to Websocket Server
+        var socket = new SockJS('/websocket', {debug: false, headers: {"Authorization": "Bearer " + authToken}});
+        stompClient = Stomp.over(socket);
+        localID = localIdInp.value || "P1";
+        appointmentId = appointmentInput.value || "AP1";
+        meetingId = meetingInput.value || "0f6f23e3-c89a-45ab-b345-a48d359ec43e";
+        userType = userTypeInput.value || "PATIENT";
+        console.log("My ID: " + localID)
+        stompClient.connect({}, frame => {
+
+            console.log(frame)
+
+            // Subscribe to testing URL not very important
+            stompClient.subscribe('/topic/testServer', function (test) {
+                console.log('Received: ' + test.body);
+            });
+
+            stompClient.subscribe('/user/' + localID + "/topic/call", (call) => {
+                // console.log("Call From: " + call.body)
+                // remoteID = call.body;
+                // console.log("Remote ID: " + call.body)
+
+                localPeer.ontrack = (event) => {
+                    // Setting Remote stream in remote video element
+                    remoteVideo.srcObject = event.streams[0]
+                }
+
+                localPeer.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        var candidate = {
+                            type: "candidate",
+                            label: event.candidate.sdpMLineIndex,
+                            id: event.candidate.candidate,
+                        }
+                        console.log("Sending Candidate")
+                        console.log(candidate)
+                        stompClient.send("/app/candidate", {}, JSON.stringify({
+                            "meetingId": meetingId,
+                            "userId": localID,
+                            "candidate": candidate
+                        }))
+                    }
+                }
+
+                // Adding Audio and Video Local Peer
+                localStream.getTracks().forEach(track => {
+                    localPeer.addTrack(track, localStream);
+                });
+
+                localPeer.createOffer().then(description => {
+                    localPeer.setLocalDescription(description);
+                    console.log("Setting Description" + description);
+                    stompClient.send("/app/offer", {}, JSON.stringify({
+                        "meetingId": meetingId,
+                        "userId": localID,
+                        "offer": description
+                    }))
+                })
+            });
+
+            // Subscribe to the 'offer' topic
+            stompClient.subscribe('/user/' + localID + "/topic/offer", (offer) => {
+                console.log("Offer came")
+                var o = JSON.parse(offer.body)["offer"]
+                console.log(offer.body)
+                // console.log(new RTCSessionDescription(o))
+                // console.log(typeof (new RTCSessionDescription(o)))
+
+                localPeer.ontrack = (event) => {
+                    remoteVideo.srcObject = event.streams[0]
+                }
+                localPeer.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        var candidate = {
+                            type: "candidate",
+                            label: event.candidate.sdpMLineIndex,
+                            id: event.candidate.candidate,
+                        }
+                        console.log("Sending Candidate")
+                        console.log(candidate)
+                        stompClient.send("/app/candidate", {}, JSON.stringify({
+                            "meetingId": meetingId,
+                            "userId": localID,
+                            "candidate": candidate
+                        }))
+                    }
+                }
+
+                // Adding Audio and Video Local Peer
+                localStream.getTracks().forEach(track => {
+                    localPeer.addTrack(track, localStream);
+                });
+
+                localPeer.setRemoteDescription(new RTCSessionDescription(o))
+                localPeer.createAnswer().then(description => {
+                    localPeer.setLocalDescription(description)
+                    console.log("Setting Local Description")
+                    console.log(description)
+                    stompClient.send("/app/answer", {}, JSON.stringify({
+                        "meetingId": meetingId,
+                        "userId": localID,
+                        "answer": description
+                    }));
+
+                })
+            });
+
+            // Subscribe to the 'answer' topic
+            stompClient.subscribe('/user/' + localID + "/topic/answer", (answer) => {
+                console.log("Answer Came")
+                var o = JSON.parse(answer.body)["answer"]
+                console.log(o)
+                localPeer.setRemoteDescription(new RTCSessionDescription(o))
+
+            });
+
+            // Subscribe to the 'candidate' topic
+            stompClient.subscribe('/user/' + localID + "/topic/candidate", (answer) => {
+                console.log("Candidate Came")
+                var o = JSON.parse(answer.body)["candidate"]
+                console.log(o)
+                console.log(o["label"])
+                console.log(o["id"])
+                var iceCandidate = new RTCIceCandidate({
+                    sdpMLineIndex: o["label"],
+                    candidate: o["id"],
+                })
+                localPeer.addIceCandidate(iceCandidate)
+            });
+
+            console.log(JSON.stringify({
+                "userId": localIdInp.value,
+                "appointmentId": appointmentId,
+                "meetingId": meetingId,
+                "userType": userType}))
+
+            // Send a message to add the user
+            stompClient.send("/app/addUser", {}, JSON.stringify({
+                "userId": localID,
+                "appointmentId": appointmentId,
+                "meetingId": meetingId,
+                "userType": userType}))
+
+        })
+
+    }
+
+    // Handle the call button click event
+    callBtn.onclick = () => {
+        // remoteID = remoteIdInp.value
+        stompClient.send("/app/call", {"Authorization": "Bearer " + authToken}, JSON.stringify({"meetingId": meetingId, "userId": localID}));
+    }
+
+    // Handle the test connection button click event
+    testConnection.onclick = () => {
+        stompClient.send("/app/testServer", {"Authorization": "Bearer " + authToken}, "Test Server");
+    }
+</script>
+</body>
+</html>

@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +110,7 @@ public class AppointmentService {
                 .active(true)
                 .meetingLink("Some link")
                 .doctor(doctor)
+                .meetingLink(UUID.randomUUID().toString())
                 .slot(appointmentDTO.getSlot())
                 .patient(patient)
                 .build();

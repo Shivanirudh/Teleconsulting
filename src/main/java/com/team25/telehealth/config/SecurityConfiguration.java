@@ -35,7 +35,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/api/v1/auth/**")
                                 .permitAll()
-                                .requestMatchers("/socket").permitAll()
+                                .requestMatchers("/videocall").permitAll()
+                                .requestMatchers("/websocket/**").permitAll()
                                 .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
                                 .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
                                 .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
