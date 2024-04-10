@@ -97,6 +97,8 @@ public class AppointmentService {
                 if(appointment.getDoctor().getId() == doctor.getId()) countWithSameDoctorSameDay++;
                 countWithSameDay++;
             }
+            if(appointment.getSlot().equals(appointmentDTO.getSlot()))
+                return ResponseEntity.badRequest().body("Cannot book two appointments at same time");
         }
 
         if(countWithSameDay >= 3)
