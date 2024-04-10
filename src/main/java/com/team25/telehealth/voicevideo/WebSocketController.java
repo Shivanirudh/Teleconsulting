@@ -149,4 +149,18 @@ public class WebSocketController {
             }
         }
     }
+
+    @MessageMapping("/message")
+    public void Message(String message) {
+        JSONObject jsonObject = new JSONObject(message);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        if(rooms.containsKey(meetingId)) {
+            for(String user: rooms.get(meetingId).getParticipants()) {
+                if(!user.equals(userId))
+                    simpMessagingTemplate
+                            .convertAndSendToUser(user,"/topic/message",message);
+            }
+        }
+    }
 }

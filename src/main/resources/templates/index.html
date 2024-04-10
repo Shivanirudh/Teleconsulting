@@ -13,6 +13,23 @@
         height: 400px;
         background-color: black;
     }
+    .message {
+        width: fit-content;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 10px;
+    }
+
+    .other-side {
+        background-color: #ddd;
+        align-self: flex-start;
+    }
+
+    .my-side {
+        background-color: #4caf50;
+        color: white;
+        align-self: flex-end;
+    }
 </style>
 <h1>WebRTC Test</h1>
 <video id="localVideo" autoplay muted></video>
@@ -28,6 +45,9 @@
     <button id="callBtn">call</button>
 </fieldset>
 <button id="testConnection">Test Connection</button>
+<div id="messageBox" style="width: 100%; height: 300px; overflow-y: scroll;"></div>
+<input type="text" id="messageInput" placeholder="Type your message here...">
+<button id="sendBtn">Send</button>
 <script>
     const localVideo = document.getElementById("localVideo");
     const remoteVideo = document.getElementById("remoteVideo");
@@ -181,6 +201,14 @@
                 localPeer.addIceCandidate(iceCandidate)
             });
 
+            stompClient.subscribe('/user/' + localID + '/topic/message', (message) => {
+                var msg = JSON.parse(message.body)["message"]
+                var messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'other-side');
+                messageElement.textContent = msg;
+                document.getElementById('messageBox').appendChild(messageElement);
+            });
+
             // Send a message to add the user
             stompClient.send("/app/addUser", {}, JSON.stringify({
                 "userId": localID,
@@ -191,6 +219,26 @@
         })
 
     }
+
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    sendBtn.onclick = () => {
+        var myMessage = messageInput.value;
+        if (myMessage) {
+            stompClient.send("/app/message", {}, JSON.stringify({
+                "userId": localID,
+                "meetingId": meetingId,
+                "message": myMessage
+            }));
+            var messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'my-side');
+            messageElement.textContent = myMessage;
+            document.getElementById('messageBox').appendChild(messageElement);
+            messageInput.value = '';
+        }
+    };
+
 
     // Handle the call button click event
     callBtn.onclick = () => {
