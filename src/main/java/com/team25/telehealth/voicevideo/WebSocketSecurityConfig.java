@@ -13,7 +13,7 @@ public class WebSocketSecurityConfig implements WebSocketMessageBrokerConfigurer
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
-                .setAllowedOrigins("/**")
+                .setAllowedOrigins("http://localhost:3000", "https://d854-106-51-161-196.ngrok-free.app")
                 .withSockJS(); // Enable SockJS fallback for browsers that don't support native WebSocket
     }
 
