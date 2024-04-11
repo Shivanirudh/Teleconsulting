@@ -11,7 +11,7 @@ import PatientDashboard from './pages/Patient/Dashboard';
 import PatientEditDetails from './pages/Patient/EditDetails';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
-import Ddashboard from './pages/Doctor/Ddashboard';
+
 import PreviousAppointments from './pages/Doctor/Appointment';
 import UploadSchedule from './pages/Doctor/uploadschedule';
 import EditDetails from './pages/Doctor/EditDetails';
@@ -24,7 +24,7 @@ import DocChat from './pages/Doctor/DocChat';
 import DocumentsPage from './pages/Doctor/doc';
 import PatientDetails from './pages/Doctor/patientdetails';
 
-import Dashboard from './pages/Doctor/dasnew';
+import Dashboard from './pages/Doctor/dasnew.jsx';
 
 
 function App() {
@@ -51,13 +51,13 @@ function App() {
             <Route exact path="/adminpatient" element={<AdminPatient />} />
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
-            <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
+            <Route exact path = "/ddashboard"  element ={<Dashboard/>}/>
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
             <Route exact path= "/details"           element = {<PatientDetails/>}/>
-           <Route exact path='/dash' element = {<Dashboard/>}/>
+           
         </Routes>
       </Router>
     </div>
