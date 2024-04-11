@@ -1,6 +1,6 @@
 import React from 'react';
 import SideNavbar from '../../components/Doctor/sidenavbar';
-import Navbar from '../../components/Doctor/Navbar';
+import TopNavbar from '../../components/Doctor/Navbar';
 import '../../css/Doctor/DocChat.css'; // Adjust CSS path as needed
 
 const DocChat = () => {
@@ -10,16 +10,11 @@ const DocChat = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <Navbar/>
-      <div className= "dashboard-content">
-        <SideNavbar/>
-        <div className="main-content">
-      
-    
     <div className="doc-chat-page">
-      
-      
+      <TopNavbar />
+      <div className="main-content">
+        <SideNavbar />
+        <div className="content">
           <div className="video-container">
             {/* Big video container for other side */}
             <div className="big-video">
@@ -74,12 +69,8 @@ const DocChat = () => {
             </table>
           </div>
         </div>
-        </div>
-        </div>
-        </div>
-
-      
-
+      </div>
+    </div>
   );
 };
 

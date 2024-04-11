@@ -127,11 +127,8 @@ export default function DoctorDashboard() {
   );
 
   return (
-    <div className="dashboard-container">
-      <Navbar />
-      <div className='dashboard-content'>
-        <SideNavbar />
-        <div className='main-content'>
+   
+        <div >
           <div className="appointments-list-header">
             <h2>This week's appointments</h2>
             <input
@@ -167,8 +164,9 @@ export default function DoctorDashboard() {
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
+        
+
+
       {selectedAppointment && (
         <div
           className={`modal ${modalVisible ? 'show' : ''}`}
@@ -193,9 +191,9 @@ export default function DoctorDashboard() {
                 <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
                   Join Meeting
                 </button>
-                <button type="button" className="btn btn-info custom-button2" onClick={handleViewPatientDetails}>
+                <Link to= "/details" > <button className="btn btn-info custom-button2" >
                   View Patient
-                </button>
+                </button> </Link>
                 <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
                   Cancel Appointment
                 </button>

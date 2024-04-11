@@ -5,27 +5,86 @@ import Navbar from "../../components/Doctor/Navbar";
 import "../../css/Doctor/ddashboard.css";
 
 export default function UploadSchedule() {
-  // Define dummy schedule data
-  const dummySchedule = [
-    { date: '2024-04-01', availability: ['available', 'available', 'booked', 'available', 'busy', 'busy', 'booked', 'available', 'available', 'available', 'booked'] },
-    { date: '2024-04-02', availability: ['booked','busy','available','busy','available','busy','busy','available','booked','booked','booked'] },
-    { date: '2024-04-03', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy'] },
-    { date: '2024-04-04', availability: ['available','available','busy','busy','busy','available','available','booked','available','busy','available'] },
-    { date: '2024-04-05', availability: ['busy','booked','available','busy','available','busy','busy','available','booked','booked','busy'] },
-    { date: '2024-04-06', availability: ['available','busy','booked','busy','available','available','busy','booked','available','available','busy'] },
-    { date: '2024-04-07', availability: ['busy','booked','available','busy','available','available','busy','booked','available','available','busy'] }
-  ];
+  // Function to generate time slots with 45-minute intervals
+  const generateTimeSlots = () => {
+    const startTime = 9 * 60; // 9:00 AM in minutes
+    const endTime = 17 * 60 + 15; // 5:15 PM in minutes
+    const interval = 45; // 45 minutes interval
+    const timeSlots = [];
+
+    for (let i = startTime; i <= endTime; i += interval) {
+      const hours = Math.floor(i / 60);
+      const minutes = i % 60;
+      const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes === 0 ? '00' : minutes}`;
+      timeSlots.push(formattedTime);
+    }
+
+    return timeSlots;
+  };
+
+  // Dummy schedule data (replace with your actual data source)
+  const dummySchedule = {
+    "slots": [
+      [2024, 4, 5, 11, 15],
+      [2024, 4, 6, 15, 45],
+      [2024, 4, 7, 15, 0],
+      [2024, 4, 6, 15, 45],
+      [2024, 4, 5, 15, 0]
+    ],
+    "appointments": [
+      { id: 1, datetime: [2024,4,5,9,0], patientName: 'John Doe' },
+      { id: 2, datetime: [2024,4,6,10,30], patientName: 'somebody someone' },
+      { id: 3, datetime: [2024,4,7,11,15], patientName: 'Alice Smith' },
+      { id: 5, datetime: [2024,4,6,9,0], patientName: 'John Doe' },
+    ]
+  };
+
+  const initialSchedule = () => {
+    const today = new Date();
+    const next7Days = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + index);
+      return date.toLocaleDateString('en-US');
+    });
+
+    const timeSlots = generateTimeSlots();
+
+    const schedule = next7Days.reduce((acc, date) => {
+      acc[date] = timeSlots.reduce((acc2, time) => {
+        acc2[time] = false; // All slots initially unavailable
+        return acc2;
+      }, {});
+      return acc;
+    }, {});
+
+    dummySchedule.slots.forEach(slot => {
+      const [year, month, day, hour, minute] = slot;
+      const date = new Date(year, month - 1, day);
+      const formattedDate = date.toLocaleDateString('en-US');
+      const formattedTime = `${hour < 10 ? '0' : ''}${hour}:${minute === 0 ? '00' : minute}`;
+      if (schedule[formattedDate] && schedule[formattedDate][formattedTime] !== undefined) {
+        schedule[formattedDate][formattedTime] = true; // Set slot to available
+      }
+    });
+
+    dummySchedule.appointments.forEach(appointment => {
+      const [year, month, day, hour, minute] = appointment.datetime;
+      const date = new Date(year, month - 1, day);
+      const formattedDate = date.toLocaleDateString('en-US');
+      const formattedTime = `${hour < 10 ? '0' : ''}${hour}:${minute === 0 ? '00' : minute}`;
+      if (schedule[formattedDate] && schedule[formattedDate][formattedTime] !== undefined) {
+        schedule[formattedDate][formattedTime] = 'appointment'; // Set appointment slot
+      }
+    });
+
+    return schedule;
+  };
 
   // State for schedule data
-  const [schedule, setSchedule] = useState([]);
+  const [schedule, setSchedule] = useState(initialSchedule());
 
   // State for editing mode
   const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    // Initialize schedule with dummy data
-    setSchedule(dummySchedule);
-  }, []);
 
   // Function to toggle editing mode
   const handleEdit = () => {
@@ -33,55 +92,50 @@ export default function UploadSchedule() {
   };
 
   // Function to handle cell click (toggle availability)
-  const handleCellClick = (dateIndex, timeIndex) => {
-    const updatedSchedule = [...schedule];
-    const cellValue = updatedSchedule[dateIndex].availability[timeIndex];
-
-    if (isEditing && cellValue !== 'booked') {
-      updatedSchedule[dateIndex].availability[timeIndex] =
-        cellValue === 'available' ? 'busy' : 'available';
-      setSchedule(updatedSchedule);
+  const handleCellClick = (date, time) => {
+    if (isEditing) {
+      if (schedule[date][time] === 'appointment') {
+        const confirmed = window.confirm('You are about to cancel an appointment. Are you sure?');
+        if (confirmed) {
+          setSchedule((prevSchedule) => ({
+            ...prevSchedule,
+            [date]: {
+              ...prevSchedule[date],
+              [time]: false,
+            },
+          }));
+        }
+      } else {
+        setSchedule((prevSchedule) => ({
+          ...prevSchedule,
+          [date]: {
+            ...prevSchedule[date],
+            [time]: !prevSchedule[date][time],
+          },
+        }));
+      }
     }
   };
 
-  // Function to generate schedule table rows
-  const generateScheduleRows = () => {
-    return schedule.map((item, dateIndex) => (
-      <tr key={item.date}>
-        <th scope="row">{item.date}</th>
-        {item.availability.map((availability, timeIndex) => (
-          <td
-            key={`${item.date}-${timeIndex}`}
-            className={getClassForAvailability(availability)}
-            onClick={() => handleCellClick(dateIndex, timeIndex)}
-          ></td>
-        ))}
-      </tr>
-    ));
+  // Function to generate empty schedule (for upload mode)
+  const generateEmptySchedule = () => {
+    const next7Days = Object.keys(schedule);
+    const timeSlots = generateTimeSlots();
+
+    const emptySchedule = next7Days.reduce((acc, date) => {
+      acc[date] = timeSlots.reduce((acc2, time) => {
+        acc2[time] = false; // All slots initially unavailable
+        return acc2;
+      }, {});
+      return acc;
+    }, {});
+
+    return emptySchedule;
   };
 
-  // Function to get CSS class for cell based on availability
-  const getClassForAvailability = (availability) => {
-    switch (availability) {
-      case 'available':
-        return 'table-success bg-success text-white';
-      case 'booked':
-        return 'table-warning bg-warning text-dark';
-      case 'busy':
-        return 'table-danger bg-danger text-white';
-      default:
-        return '';
-    }
-  };
-
-  // Function to handle upload new schedule
   const handleUpload = () => {
-    const newSchedule = dummySchedule.map(item => ({
-      ...item,
-      availability: Array(item.availability.length).fill('busy')
-    }));
-    setSchedule(newSchedule);
-    setIsEditing(true);
+    setSchedule(generateEmptySchedule()); // Reset schedule to empty for upload
+    setIsEditing(true); // Enable editing mode for upload
   };
 
   // Function to simulate saving the schedule (replace with actual logic)
@@ -106,36 +160,42 @@ export default function UploadSchedule() {
             <thead>
               <tr>
                 <th></th>
-                <th>9:00 AM</th>
-                <th>10:00 AM</th>
-                <th>11:00 AM</th>
-                <th>12:00 PM</th>
-                <th>01:00 PM</th>
-                <th>02:00 PM</th>
-                <th>03:00 PM</th>
-                <th>04:00 PM</th>
-                <th>05:00 PM</th>
-                <th>06:00 PM</th>
-                <th>07:00 PM</th>
+                {generateTimeSlots().map(time => (
+                  <th key={time}>{time}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {generateScheduleRows()}
+              {Object.entries(schedule).map(([date, timeslots]) => (
+                <tr key={date}>
+                  <th scope="row">{date}</th>
+                  {Object.entries(timeslots).map(([time, availability]) => (
+                    <td
+                      key={`${date}-${time}`}
+                      className={
+                        availability === true ? 'table-success bg-success text-white' :
+                        availability === 'appointment' ? 'table-danger bg-danger text-white' :
+                        'table-secondary bg-secondary'
+                      }
+                      onClick={() => (isEditing ? handleCellClick(date, time) : null)}
+                    >
+                      {isEditing ? '' : time}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
 
-          <button type="button" className="btn btn-primary custom-button" onClick={handleEdit}>
+          <button type="button" className="custom-button" onClick={handleEdit}>
             {isEditing ? 'Cancel Edit' : 'Edit Schedule'}
           </button>
           {isEditing ? (
-            <button type="button" className="btn btn-primary custom-button" onClick={handleSubmit}>
+            <button type="button" className="custom-button" onClick={handleSubmit}>
               Submit
             </button>
           ) : (
-            <button type="button" className="btn btn-success custom-button2" onClick={handleUpload}>
-              Upload New Schedule
-            </button>
-          )}
+            <div/>)}
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Patient/Dashboard.css'
+import { Link } from 'react-router-dom';
 
 export default function PreviousAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -67,17 +68,10 @@ export default function PreviousAppointments() {
   );
 
   // Function to handle viewing appointment details
-  const handleViewDetails = (appointmentId) => {
-    // Implement logic to view details, e.g., navigate to a new page or show a modal
-    alert(`Viewing details for appointment ${appointmentId}`);
-  };
-
+  
   return (
-    <div className="dashboard-container">
-      <Navbar/>
-    <div className="dashboard-content">
-      <SideNavbar/>
-    <div className="main-content">
+    <div>
+     
     
       <h2>Previous Appointments</h2>
 
@@ -111,15 +105,14 @@ export default function PreviousAppointments() {
                 <p>Time: {appointment.time}</p>
                 <p>Patient: {appointment.patientName}</p>
               </div>
-              <button className="btn btn-primary custom-button" onClick={() => handleViewDetails(appointment.id)}>
+             <Link to="/details"> <button className="btn btn-primary custom-button" >
                 View Details
-              </button>
+              </button></Link>
             </div>
           </li>
         ))}
       </ul>
     </div>
-    </div>
-    </div>
+   
   );
 }

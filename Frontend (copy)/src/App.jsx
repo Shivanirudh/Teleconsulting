@@ -21,6 +21,11 @@ import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
 import AdminHospital from './pages/Admin/AdminHospital';
 import DocChat from './pages/Doctor/DocChat';
+import DocumentsPage from './pages/Doctor/doc';
+import PatientDetails from './pages/Doctor/patientdetails';
+
+import Dashboard from './pages/Doctor/dasnew';
+
 
 function App() {
   return (
@@ -39,6 +44,7 @@ function App() {
           <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
 
           <Route exact path="/ddashboard/docchat" element={<DocChat/>}/>
+          <Route exact path="/doc" element = {<DocumentsPage/>}/>
 
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />
@@ -50,7 +56,8 @@ function App() {
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
-
+            <Route exact path= "/details"           element = {<PatientDetails/>}/>
+           <Route exact path='/dash' element = {<Dashboard/>}/>
         </Routes>
       </Router>
     </div>
