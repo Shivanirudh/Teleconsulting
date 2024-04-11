@@ -21,44 +21,23 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://d854-106-51-161-196.ngrok-free.app");
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(Arrays.asList(
-                HttpHeaders.AUTHORIZATION,
-                HttpHeaders.CONTENT_TYPE,
-                HttpHeaders.ACCEPT
-        ));
-        config.setAllowedMethods(Arrays.asList(
-                HttpMethod.GET.name(),
-                HttpMethod.POST.name(),
-                HttpMethod.DELETE.name(),
-                HttpMethod.PUT.name()
-        ));
-        config.setMaxAge(3600L);
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
-//    @Bean
-//    public FilterRegistrationBean corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.addAllowedOrigin("http://localhost:5173");
-//        config.setAllowCredentials(true);
 //        config.setAllowedHeaders(Arrays.asList(
 //                HttpHeaders.AUTHORIZATION,
 //                HttpHeaders.CONTENT_TYPE,
 //                HttpHeaders.ACCEPT
 //        ));
-//        config.setAllowedMethods(Arrays.asList(
-//                HttpMethod.GET.name(),
-//                HttpMethod.POST.name(),
-//                HttpMethod.DELETE.name(),
-//                HttpMethod.PUT.name()
-//        ));
-//        config.setMaxAge(3600L);
-//        source.registerCorsConfiguration("/**", config);
-//        FilterRegistrationBean bean = new FilterRegistrationBean(new org.springframework.web.filter.CorsFilter(source));
-//        bean.setOrder(-102);
-//        return bean;
-//    }
+        config.addAllowedHeader("*");
+        config.setAllowedMethods(Arrays.asList(
+                HttpMethod.GET.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.DELETE.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.OPTIONS.name()
+        ));
+        config.setMaxAge(3600L);
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

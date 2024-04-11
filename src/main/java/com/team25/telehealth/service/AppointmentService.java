@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +97,8 @@ public class AppointmentService {
                 if(appointment.getDoctor().getId() == doctor.getId()) countWithSameDoctorSameDay++;
                 countWithSameDay++;
             }
+            if(appointment.getSlot().equals(appointmentDTO.getSlot()))
+                return ResponseEntity.badRequest().body("Cannot book two appointments at same time");
         }
 
         if(countWithSameDay >= 3)
@@ -109,6 +112,7 @@ public class AppointmentService {
                 .active(true)
                 .meetingLink("Some link")
                 .doctor(doctor)
+                .meetingLink(UUID.randomUUID().toString())
                 .slot(appointmentDTO.getSlot())
                 .patient(patient)
                 .build();
