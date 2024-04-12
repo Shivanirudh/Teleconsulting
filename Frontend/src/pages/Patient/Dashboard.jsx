@@ -8,6 +8,7 @@ import PreviousAppointments from './PreviousAppointments';
 import MyDocuments from './MyDocuments';
 import BookedAppointments from './BookedAppointments';
 import Pconsent from './Consent'
+import Chats from './Pchats'
 // Import other components as needed
 
 function Dashboard() {
@@ -36,15 +37,16 @@ function Dashboard() {
         return <MyDocuments />;
       case 'booked-appointments':
         return <BookedAppointments/>
+      case 'chats':
+          return <Chats/>
       case 'consent':
-          return <Pconsent/>
+        return <Pconsent/>
       // Add cases for other navigation items
       default: return (
         <>
           <DoctorList searchTerm={searchTerm} />
         </>
       );
-        return null;
     }
   };
 

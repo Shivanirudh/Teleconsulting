@@ -24,7 +24,7 @@ export default function SideNavbar() {
       <ul>
         <li onClick={() => handleNavigation('/ddashboard')}>Home</li>
         <li onClick={() => handleNavigation('/ddashboard/upload')}>Upload Schedule</li>                               
-        <li onClick={() => handleNavigation('/ddashboard/chats')}>Chats</li>
+        <li onClick={() => handleNavigation('/dchats')}>Chats</li>
         <li onClick={() => handleNavigation('/ddashboard/appointment')}>PreviousAppointments</li>
       </ul>
     </div>

@@ -21,6 +21,8 @@ import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
 import AdminHospital from './pages/Admin/AdminHospital';
 import PConsent from './pages/Patient/Consent';
+import Patientchat from './pages/Patient/Pchats.jsx'
+import Doctorchat from './pages/Doctor/Dchats.jsx'
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
           <Route exact path="/pforgotpassword" element={<PForgotPassword />} />
           <Route exact path="/aforgotpassword" element={<AForgotPassword />} />
           <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
+          
+         
 
           <Route element={<PrivateRoutes tokenType="admin" />} >
             {/* Admin Routes */}
@@ -50,6 +54,7 @@ function App() {
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
             <Route exact path="/pconsent" element={<PConsent />} />
+            <Route exact path="/pchats" element={<Patientchat />} />
           </Route>
           <Route element={<PrivateRoutes tokenType="doctor" />} >
             {/* Doctor Routes */}
@@ -57,6 +62,7 @@ function App() {
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
+            <Route exact path="/dchats" element={<Doctorchat />} />
           </Route>
         </Routes>
       </Router>
