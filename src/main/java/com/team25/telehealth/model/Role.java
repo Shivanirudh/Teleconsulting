@@ -35,14 +35,7 @@ public enum Role {
             ADMIN_READ,
             ADMIN_UPDATE,
             ADMIN_CREATE,
-            ADMIN_DELETE,
-            DOCTOR_READ,
-            DOCTOR_CREATE,
-            DOCTOR_UPDATE,
-            DOCTOR_DELETE,
-            PATIENT_READ,
-            PATIENT_UPDATE,
-            PATIENT_DELETE
+            ADMIN_DELETE
     ))
     ;
 

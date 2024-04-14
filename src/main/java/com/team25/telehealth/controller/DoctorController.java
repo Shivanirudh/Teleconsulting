@@ -6,10 +6,7 @@ import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.dto.request.PrescriptionRequest;
 import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
-import com.team25.telehealth.service.AppointmentService;
-import com.team25.telehealth.service.ConsentService;
-import com.team25.telehealth.service.DoctorService;
-import com.team25.telehealth.service.ScheduleService;
+import com.team25.telehealth.service.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +25,7 @@ public class DoctorController {
     private final ConsentService consentService;
     private final ScheduleService scheduleService;
     private final AppointmentService appointmentService;
+    private final PatientService patientService;
 
     @GetMapping("/")
     public ResponseEntity<?> getDoctor(Principal principal) {
@@ -103,5 +101,10 @@ public class DoctorController {
     @GetMapping("/appointment/{appointmentId}")
     public ResponseEntity<?> fetchAppointment(Principal principal, @PathVariable String appointmentId) {
         return appointmentService.fetchAppointmentDoctor(principal, appointmentId);
+    }
+
+    @GetMapping("/fetch-files/{patientId}")
+    public ResponseEntity<?> fetchAllFileNames(Principal principal, @PathVariable String patientId) {
+        return patientService.fetchAllFileNames(patientId);
     }
 }

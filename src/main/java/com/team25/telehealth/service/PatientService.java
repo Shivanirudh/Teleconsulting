@@ -184,6 +184,18 @@ public class PatientService {
         }
     }
 
+    public ResponseEntity<?> fetchAllFileNames(String patientId) {
+        Patient patient = patientRepo.findByPatientId(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient", "Id", patientId));
+        try {
+            String folderPath = STORAGE_PATH + patient.getPatientId();
+            List<String> fileNames = fileStorageService.getAllFileNames(folderPath);
+            return ResponseEntity.ok().body(fileNames);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     private MediaType getMediaTypeForFileName(String fileName) {
         if (fileName.endsWith(".pdf")) {
             return MediaType.APPLICATION_PDF;
