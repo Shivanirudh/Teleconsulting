@@ -1,6 +1,7 @@
 package com.team25.telehealth.controller;
 
 import com.team25.telehealth.dto.DoctorDTO;
+import com.team25.telehealth.dto.HospitalDTO;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.AppointmentDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
@@ -104,7 +105,7 @@ public class PatientController {
     }
 
     @GetMapping("/view-hospitals")
-    public List<Hospital> viewHospitals(Principal principal){
+    public List<HospitalDTO> viewHospitals(Principal principal){
         return hospitalService.listHospitals(principal);
     }
 
