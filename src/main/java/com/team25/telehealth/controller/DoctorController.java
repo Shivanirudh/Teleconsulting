@@ -6,6 +6,7 @@ import com.team25.telehealth.dto.request.EmailRequest;
 import com.team25.telehealth.dto.request.PrescriptionRequest;
 import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.service.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class DoctorController {
     private final ScheduleService scheduleService;
     private final AppointmentService appointmentService;
     private final PatientService patientService;
+    private final HospitalService hospitalService;
 
     @GetMapping("/")
     public ResponseEntity<?> getDoctor(Principal principal) {
@@ -106,5 +108,15 @@ public class DoctorController {
     @GetMapping("/fetch-files/{patientId}")
     public ResponseEntity<?> fetchAllFileNames(Principal principal, @PathVariable String patientId) {
         return patientService.fetchAllFileNames(patientId);
+    }
+
+    @GetMapping("/view-hospitals")
+    public List<HospitalDTO> viewHospitals(Principal principal){
+        return hospitalService.listHospitals(principal);
+    }
+
+    @GetMapping("/list-doctors-hospital/{email}")
+    public List<DoctorDTO> listDoctorsByHospital(Principal principal, @PathVariable String email){
+        return patientService.getDoctorsByHospital(principal, email);
     }
 }

@@ -95,7 +95,7 @@ public class HospitalService {
         return ResponseEntity.ok("Hospital deleted Successfully");
     }
 
-    public List<Hospital> listHospitals(Principal principal){
-        return hospitalRepo.getAllByActive(true);
+    public List<HospitalDTO> listHospitals(Principal principal){
+        return hospitalMapper.toDTOList(hospitalRepo.getAllByActive(true));
     }
 }
