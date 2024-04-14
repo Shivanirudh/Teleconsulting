@@ -96,6 +96,7 @@ public class WebSocketController {
         String userId = jsonObject.get("userId").toString();
 
         if(rooms.containsKey(meetingId)) {
+            if(!rooms.get(meetingId).getParticipants().contains(userId)) return;
             for(String user: rooms.get(meetingId).getParticipants()) {
                 if(!user.equals(userId))
                     simpMessagingTemplate
@@ -112,6 +113,7 @@ public class WebSocketController {
         String userId = jsonObject.get("userId").toString();
 
         if(rooms.containsKey(meetingId)) {
+            if(!rooms.get(meetingId).getParticipants().contains(userId)) return;
             for(String user: rooms.get(meetingId).getParticipants()) {
                 if(!user.equals(userId))
                     simpMessagingTemplate
@@ -128,6 +130,7 @@ public class WebSocketController {
         String userId = jsonObject.get("userId").toString();
 
         if(rooms.containsKey(meetingId)) {
+            if(!rooms.get(meetingId).getParticipants().contains(userId)) return;
             for(String user: rooms.get(meetingId).getParticipants()) {
                 if(!user.equals(userId))
                     simpMessagingTemplate
@@ -142,6 +145,7 @@ public class WebSocketController {
         String userId = jsonObject.get("userId").toString();
 
         if(rooms.containsKey(meetingId)) {
+            if(!rooms.get(meetingId).getParticipants().contains(userId)) return;
             for(String user: rooms.get(meetingId).getParticipants()) {
                 if(!user.equals(userId))
                     simpMessagingTemplate
@@ -156,6 +160,7 @@ public class WebSocketController {
         String meetingId = jsonObject.get("meetingId").toString();
         String userId = jsonObject.get("userId").toString();
         if(rooms.containsKey(meetingId)) {
+            if(!rooms.get(meetingId).getParticipants().contains(userId)) return;
             for(String user: rooms.get(meetingId).getParticipants()) {
                 if(!user.equals(userId))
                     simpMessagingTemplate
