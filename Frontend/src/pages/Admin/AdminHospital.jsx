@@ -4,6 +4,7 @@ import SideNavbar from '../../components/Admin/sidenavbar';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/Admin/searchbar.css';
+import config from '../../Config';
 
 const AdminHospital = () => {
     const [hospitals, setHospitals] = useState([]);
@@ -24,7 +25,7 @@ const AdminHospital = () => {
                 Authorization: `Bearer ${token}`
             };
 
-            const response = await axios.get('http://localhost:8081/api/v1/admin/hospitals', { headers });
+            const response = await axios.get(`${config.apiUrl}/api/v1/admin/hospitals`, { headers });
             setHospitals(response.data);
             setFilteredHospitals(response.data);
         } catch (error) {
@@ -63,7 +64,7 @@ const AdminHospital = () => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             };
-            await axios.post('http://localhost:8081/api/v1/admin/hospital', JSON.stringify(newHospitalData), { headers });
+            await axios.post(`${config.apiUrl}/api/v1/admin/hospital`, JSON.stringify(newHospitalData), { headers });
             setShowAddHospitalForm(false);
             fetchHospitals(token);
         } catch (error) {

@@ -2,10 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
 import '../../css/Admin/Navbar.css'
+import config from './../../Config'
 
 // Create Axios instance with baseURL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+  baseURL: `${config.apiUrl}/api/v1`, // Adjust the URL according to your backend
 });
 
 export default function Navbar() {

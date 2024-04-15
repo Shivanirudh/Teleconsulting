@@ -4,9 +4,10 @@ import './../css/AdminLogin.css';
 import { useNavigate } from 'react-router-dom';
 import videobg from './../Animation/bg.mp4';
 import axios from 'axios';
+import config from '../Config';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1',
+  baseURL: `${config.apiUrl}/api/v1`,
 });
 
 const AdminLogin = () => {

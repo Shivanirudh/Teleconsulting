@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Patient/Dashboard.css'
+import config from './../../Config'
 
 export default function PreviousAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -22,7 +23,7 @@ export default function PreviousAppointments() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch('http://localhost:8081/api/v1/doctor/list-appointments', {
+    fetch(`${config.apiUrl}/api/v1/doctor/list-appointments`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

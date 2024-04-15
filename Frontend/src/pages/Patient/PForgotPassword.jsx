@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './../../css/ForgotPassword.css';
 import { useNavigate } from 'react-router-dom';
+import config from './../../Config'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1',
+  baseURL: `${config.apiUrl}/api/v1`,
 });
 
 const ForgotPassword = () => {

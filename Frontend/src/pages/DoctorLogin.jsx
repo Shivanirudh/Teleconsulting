@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import logo from './../images/doctor-logo.png';
 import './../css/DoctorLogin.css';
-import videobg from './../Animation/bg.mp4';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer.jsx';
 import Header from '../components/Header.jsx';
 import axios from 'axios'; // Import Axios
+import config from '../Config';
 
 // Create Axios instance with baseURL
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', // Adjust the URL according to your backend
+  baseURL: `${config.apiUrl}/api/v1`, // Adjust the URL according to your backend
 });
 
 const DoctorLogin = () => {

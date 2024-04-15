@@ -5,6 +5,7 @@ import Navbar from "../../components/Doctor/Navbar";
 import SockJS from "sockjs-client";
 import "../../css/Doctor/Dchats.css";
 import useScript from "../../components/useScript";
+import config from './../../Config'
 
 const DocChat = () => {
   useScript(
@@ -61,7 +62,7 @@ const DocChat = () => {
     // Function to handle connecting to the WebSocket server
     const connectToWebSocket = () => {
       // Connect to Websocket Server
-      const socket = new SockJS("http://localhost:8081/websocket", {
+      const socket = new SockJS(`${config.apiUrl}/websocket`, {
         debug: false,
         headers: {
           Authorization: "Bearer " + authToken,

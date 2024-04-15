@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './../../css/Signup.css';
 import logo from './../../images/signup-logo.png';
 import axios from 'axios';
+import config from './../../Config'
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState('');
@@ -22,7 +23,7 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8081/api/v1',
+    baseURL: `${config.apiUrl}/api/v1`,
   });
 
   const handleGetOTP = () => {

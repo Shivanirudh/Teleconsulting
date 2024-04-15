@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import Axios
 import "./../../css/Patient/PreviousAppointments.css";
+import config from './../../Config'
 
 function PreviousAppointments({ appointments }) {
   // Filter appointments based on current time
@@ -31,7 +32,7 @@ function PreviousAppointments({ appointments }) {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        `http://localhost:8081/api/v1/patient/fetch-prescription/${appointment_id}`,
+        `${config.apiUrl}/api/v1/patient/fetch-prescription/${appointment_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

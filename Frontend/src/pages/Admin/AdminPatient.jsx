@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/Admin/Navbar';
 import SideNavbar from '../../components/Admin/sidenavbar';
+import config from '../../Config';
 
 const AdminPatient = () => {
     const [patients, setPatients] = useState([]);
@@ -24,7 +25,7 @@ const AdminPatient = () => {
             };
 
             // Make request with headers
-            const response = await axios.get('http://localhost:8081/api/v1/admin/patients', { headers });
+            const response = await axios.get(`${config.apiUrl}/api/v1/admin/patients`, { headers });
             setPatients(response.data);
         } catch (error) {
             console.error('Error fetching patients:', error);
@@ -39,7 +40,7 @@ const AdminPatient = () => {
             };
 
             // Make request to block patient
-            await axios.put(`http://localhost:8081/api/v1/admin/block-patient`, patientId, { headers });
+            await axios.put(`${config.apiUrl}/api/v1/admin/block-patient`, patientId, { headers });
 
             // Optionally, you can refresh the patients data after blocking
             fetchPatients(token);
@@ -56,7 +57,7 @@ const AdminPatient = () => {
             };
 
             // Make request to unblock patient
-            await axios.put(`http://localhost:8081/api/v1/admin/unblock-patient`, patientId, { headers });
+            await axios.put(`${config.apiUrl}/api/v1/admin/unblock-patient`, patientId, { headers });
 
             // Optionally, you can refresh the patients data after unblocking
             fetchPatients(token);

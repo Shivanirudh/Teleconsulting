@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "../../css/Patient/Pchats.css";
 import SockJS from "sockjs-client";
 import useScript from "../../components/useScript";
+import config from './../../Config'
 
 const VideoChannel = () => {
   useScript(
@@ -58,7 +59,7 @@ const VideoChannel = () => {
     // Function to handle connecting to the WebSocket server
     const connectToWebSocket = () => {
       // Connect to Websocket Server
-      const socket = new SockJS("http://localhost:8081/websocket", {
+      const socket = new SockJS(`${config.apiUrl}/websocket`, {
         debug: false,
         headers: {
           Authorization: "Bearer " + authToken,

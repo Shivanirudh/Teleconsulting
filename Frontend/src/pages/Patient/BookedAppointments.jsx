@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./../../css/Patient/BookedAppointments.css";
 import "./../../css/Patient/PreviousAppointments.css"; // Import CSS for PreviousAppointments
 import { useNavigate } from 'react-router-dom';
+import config from './../../Config'
 
 // Import PreviousAppointments component
 import PreviousAppointments from "./PreviousAppointments";
@@ -24,7 +25,7 @@ function BookedAppointments() {
     const token = localStorage.getItem("token");
 
     // Make API request to fetch appointments
-    fetch("http://localhost:8081/api/v1/patient/list-appointments", {
+    fetch(`${config.apiUrl}/api/v1/patient/list-appointments`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

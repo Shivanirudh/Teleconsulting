@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './../../css/Patient/DoctorList.css';
 import axios from 'axios';
+import config from './../../Config'
 
 function DoctorList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,22 +20,30 @@ function DoctorList() {
     const fetchHospitals = async () => {
       const token = localStorage.getItem('token');
       setToken(token);
+      
+      console.log(`${config.apiUrl}/api/v1/patient/view-hospitals`);
+      
       try {
-        const response = await fetch('http://localhost:8081/api/v1/patient/view-hospitals', {
+        // Make the GET request using axios
+        const response = await axios.get(`${config.apiUrl}/api/v1/patient/view-hospitals`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           }
         });
-        if (response.ok) {
-          const data = await response.json();
+        
+        // Since you are using axios, the response data can be directly accessed using response.data
+        const data = response.data;
+        console.log(data);
+        if (Array.isArray(data)) {
           setHospitals(data);
-        } else {
-          console.error('Failed to fetch hospitals');
-        }
+      } else {
+          console.error('Received data is not an array:', data);
+      }
       } catch (error) {
         console.error('Error fetching hospitals:', error);
       }
     };
+    
 
     fetchHospitals();
   }, []);
@@ -47,7 +56,7 @@ function DoctorList() {
       const email = hospital.email; // Extract hospital email
       try {
         const response = await axios.get(
-          `http://localhost:8081/api/v1/patient/list-doctors-hospital/${email}`,
+          `${config.apiUrl}/api/v1/patient/list-doctors-hospital/${email}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -80,7 +89,7 @@ function DoctorList() {
     setIsBookingMode(false);
     try {
       const response = await axios.get(
-        `http://localhost:8081/api/v1/patient/list-doctors-schedule/${doctor_id}`,
+        `${config.apiUrl}/api/v1/patient/list-doctors-schedule/${doctor_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -143,7 +152,7 @@ function DoctorList() {
         if (selectedAppointmentID) {
   
           const response = await axios.post(
-            'http://localhost:8081/api/v1/patient/cancel-appointment',
+            `${config.apiUrl}/api/v1/patient/cancel-appointment`,
             { appointment_id: selectedAppointmentID },
             {
               headers: {
@@ -188,7 +197,7 @@ function DoctorList() {
         };
         console.log(formattedSlot);
         const response = await axios.post(
-          'http://localhost:8081/api/v1/patient/appointment',
+          `${config.apiUrl}/api/v1/patient/appointment`,
           formattedSlot,
           {
             headers: {

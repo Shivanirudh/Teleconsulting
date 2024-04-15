@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './../../css/Patient/TopNavigationBar.css';
 import axios from 'axios';
+import config from './../../Config'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1',
+  baseURL: `${config.apiUrl}/api/v1`,
 });
 
 function TopNavigationBar({ onSignOut }) {

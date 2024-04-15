@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './../../css/Patient/Consent.css';
+import config from './../../Config'
 
 function Consent() {
   const [activeTab, setActiveTab] = useState('allow');
@@ -19,7 +20,7 @@ function Consent() {
   const fetchConsentsRequested = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8081/api/v1/patient/consents-requested', {
+      const response = await axios.get(`${config.apiUrl}/api/v1/patient/consents-requested`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -43,7 +44,7 @@ function Consent() {
         otp: otp
       });
       console.log(data);
-      const response = await axios.put('http://localhost:8081/api/v1/patient/give-consent', data, {
+      const response = await axios.put(`${config.apiUrl}/api/v1/patient/give-consent`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

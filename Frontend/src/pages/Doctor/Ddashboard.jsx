@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
+import config from './../../Config'
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -30,7 +31,7 @@ export default function DoctorDashboard() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch('http://localhost:8081/api/v1/doctor/list-appointments', {
+    fetch(`${config.apiUrl}/api/v1/doctor/list-appointments`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -53,6 +54,10 @@ export default function DoctorDashboard() {
             appointment.slot[3],
             appointment.slot[4]
           );
+          appointment.date = `${appointment.slot[0]}-${appointment.slot[1]}-${appointment.slot[2]}`;
+          appointment.slot[4] = appointment.slot[4] === 0? '00': appointment.slot[4];
+          appointment.time = `${appointment.slot[3]}:${appointment.slot[4]}`;
+          appointment.patientName = appointment.patient_id.first_name + ' ' + appointment.patient_id.last_name;
           const slotTime = slot.getTime(); // Convert slot time to milliseconds
           const slotYear = slot.getFullYear();
           const slotMonth = slot.getMonth();
@@ -62,7 +67,7 @@ export default function DoctorDashboard() {
             newAppointments.push(appointment);
           } 
         });
-
+        console.log(newAppointments[0].patient_id.first_name);
         // Update state with new appointments
         setAppointments(newAppointments);
       })
@@ -113,6 +118,20 @@ export default function DoctorDashboard() {
   const handleViewPatientDetails = () => {
     // Implement your logic for viewing patient details
     alert('View Patient Details');
+    // <div className="modal-content">
+    //   <div className="modal-header">
+    //     <h5 className="modal-title">Patient Details</h5>
+    //     <button type="button" className="close" onClick={handleCloseModal}>
+    //       <span aria-hidden="true">&times;</span>
+    //     </button>
+    //   </div>
+    //   <div className="modal-body">
+    //     <p>Name: {appointment.patient_id.patientName}</p>
+    //     <p>Time: {selectedAppointment.time}</p>
+    //     <p>Patient: {selectedAppointment.patientName}</p>
+    //   </div>
+    // </div>
+
   };
 
 
@@ -122,9 +141,9 @@ export default function DoctorDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filter appointments based on search term
-  const filteredAppointments = appointments.filter(appointment =>
-    appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAppointments = appointments.filter(appointment => {
+    return appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="dashboard-container">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './../../css/Doctor/container.css'
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
+
 const dummyData = [
   { message: 'Hello there!', senderName: 'John Doe' },
   { message: 'Haddi kaate bina kaam kaise chalau?', senderName: 'Nitish Kumar' },

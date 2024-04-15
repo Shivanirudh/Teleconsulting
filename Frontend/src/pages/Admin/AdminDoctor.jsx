@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/Admin/Navbar';
 import SideNavbar from '../../components/Admin/sidenavbar';
+import config from '../../Config';
 
 const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
     const [doctorData, setDoctorData] = useState({
@@ -22,7 +23,7 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
 
     const fetchHospitals = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/api/v1/admin/hospitals', {
+            const response = await axios.get(`${config.apiUrl}/api/v1/admin/hospitals`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -62,7 +63,7 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             };
-            await axios.post('http://localhost:8081/api/v1/admin/doctor', JSON.stringify(newDoctorData), { headers });
+            await axios.post(`${config.apiUrl}/api/v1/admin/doctor`, JSON.stringify(newDoctorData), { headers });
             fetchDoctors(token);
         } catch (error) {
             console.error('Error adding doctor:', error);
@@ -144,7 +145,7 @@ const AdminDoctor = () => {
 
     const fetchDoctors = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/api/v1/admin/doctors', {
+            const response = await axios.get(`${config.apiUrl}/api/v1/admin/doctors`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -157,7 +158,7 @@ const AdminDoctor = () => {
 
     const blockDoctor = async (doctorId) => {
         try {
-            await axios.put(`http://localhost:8081/api/v1/admin/block-doctor`, doctorId, {
+            await axios.put(`${config.apiUrl}/api/v1/admin/block-doctor`, doctorId, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -170,7 +171,7 @@ const AdminDoctor = () => {
 
     const unblockDoctor = async (doctorId) => {
         try {
-            await axios.put(`http://localhost:8081/api/v1/admin/unblock-doctor`, doctorId, {
+            await axios.put(`${config.apiUrl}/api/v1/admin/unblock-doctor`, doctorId, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

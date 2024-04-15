@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import './../../css/Patient/EditDetails.css'; // Assuming the CSS path
+import config from './../../Config'
 
 function EditDetails() {
   // Initialize useNavigate hook
@@ -38,7 +39,7 @@ function EditDetails() {
     };
 
     // Send PUT request to update user details
-    fetch('http://localhost:8081/api/v1/doctor/update', {
+    fetch(`${config.apiUrl}/api/v1/doctor/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

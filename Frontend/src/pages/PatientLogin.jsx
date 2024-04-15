@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer.jsx';
 import Header from '../components/Header.jsx';
 import axios from 'axios';
+import config from '../Config';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081/api/v1',
+  baseURL: `${config.apiUrl}/api/v1`,
 });
 
 const PatientLogin = () => {
@@ -17,7 +18,6 @@ const PatientLogin = () => {
   const navigate = useNavigate();
 
   const handleGetOTP = () => {
-    console.log(JSON.stringify({ email: email }));
     axiosInstance.post('/auth/generate/patient/otp', JSON.stringify({ email: email }), {
       headers: {
         'Content-Type': 'application/json'

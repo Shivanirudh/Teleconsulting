@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './../../css/Patient/MyDocuments.css';
 import axios from 'axios';
+import config from './../../Config'
 
 function MyDocuments() {
   const [selectedFile, setSelectedFile] = useState([]);
@@ -23,7 +24,7 @@ function MyDocuments() {
         Authorization: `Bearer ${token}`
       };
 
-      const response = await axios.get('http://localhost:8081/api/v1/patient/files', {
+      const response = await axios.get(`${config.apiUrl}/api/v1/patient/files`, {
         headers
       });
 
@@ -57,7 +58,7 @@ function MyDocuments() {
           'Content-Type': 'multipart/form-data',
         };
 
-        const response = await axios.post('http://localhost:8081/api/v1/patient/upload', formData, {
+        const response = await axios.post(`${config.apiUrl}/api/v1/patient/upload`, formData, {
           headers,
         });
 
@@ -86,7 +87,7 @@ function MyDocuments() {
         Authorization: `Bearer ${token}`
       };
   
-      const response = await axios.post(`http://localhost:8081/api/v1/patient/delete-file/${fileName}`, null, {
+      const response = await axios.post(`${config.apiUrl}/api/v1/patient/delete-file/${fileName}`, null, {
         headers: headers
       });
   
@@ -110,7 +111,7 @@ function MyDocuments() {
       };
 
       // Append filename to the download URL
-      const downloadUrl = `http://localhost:8081/api/v1/patient/fetch/${fileName}`;
+      const downloadUrl = `${config.apiUrl}/api/v1/patient/fetch/${fileName}`;
 
       // Make GET request to download the file
       const response = await axios.get(downloadUrl, {
