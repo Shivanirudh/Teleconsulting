@@ -52,7 +52,7 @@ function App() {
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
             <Route exact path = "/ddashboard"  element ={<Dashboard/>}/>
-            <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
+     
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
