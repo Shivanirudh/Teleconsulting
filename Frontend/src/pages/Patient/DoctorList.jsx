@@ -166,11 +166,10 @@ function DoctorList() {
             console.log('Appointment canceled successfully');
             setSelectedSlot(null);
             setIsBookingMode(false);
+            handleViewSchedule({ doctor_id: selectedDoctor }, selectedHospital);
           } else {
             console.error('Failed to cancel appointment');
           }
-        } else {
-          console.error('Appointment not found in doctorAppointments');
         }
       } catch (error) {
         console.error('Error canceling appointment:', error);
@@ -180,7 +179,7 @@ function DoctorList() {
 
 
   const handleBookAppointment = async () => {
-    if (selectedSlot && selectedDoctor) { 
+    if (selectedSlot && selectedDoctor) {
       try {
         const slotDate = new Date(selectedSlot.date);
         const year = slotDate.getFullYear();
@@ -188,14 +187,14 @@ function DoctorList() {
         const day = String(slotDate.getDate()).padStart(2, '0');
         const hour = String(selectedSlot.hour).padStart(2, '0');
         const minute = String(selectedSlot.minute).padStart(2, '0');
-        
+  
         const formattedSlot = {
-            slot: `${year}-${month}-${day}T${hour}:${minute}:00`,
-            doctor_id: {
-              doctor_id: selectedDoctor
-            }
+          slot: `${year}-${month}-${day}T${hour}:${minute}:00`,
+          doctor_id: {
+            doctor_id: selectedDoctor
+          }
         };
-        console.log(formattedSlot);
+        
         const response = await axios.post(
           `${config.apiUrl}/api/v1/patient/appointment`,
           formattedSlot,
@@ -210,6 +209,10 @@ function DoctorList() {
         if (response.status === 200) {
           // Handle success, maybe show a success message
           console.log('Appointment booked successfully');
+          
+          // Call handleViewSchedule function again to refresh the schedule
+          handleViewSchedule({ doctor_id: selectedDoctor }, selectedHospital);
+          
           // Reset state to original state
           setSelectedSlot(null);
           setIsBookingMode(false);
@@ -226,6 +229,7 @@ function DoctorList() {
   };
   
   
+  
 
   const filteredHospitals = hospitals.filter((hospital) =>
     hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -233,48 +237,84 @@ function DoctorList() {
 
   const renderAvailability = (slotsData) => {
     if (!slotsData) {
-      return null;
+        return null;
     }
 
+    // Organize slots by date
     const slotsByDate = {};
     slotsData.forEach(slot => {
-      const [year, month, day, hour, minute] = slot;
-      const dateKey = `${year}-${month}-${day}`;
-      if (!slotsByDate[dateKey]) {
-        slotsByDate[dateKey] = [];
-      }
-      slotsByDate[dateKey].push([hour, minute]);
+        const [year, month, day, hour, minute] = slot;
+        const dateKey = `${year}-${month}-${day}`;
+        if (!slotsByDate[dateKey]) {
+            slotsByDate[dateKey] = [];
+        }
+        slotsByDate[dateKey].push({ hour, minute });
+    });
+
+    // Organize appointments by date
+    const appointmentsByDate = {};
+    doctorAppointments.forEach(appointment => {
+        const [year, month, day, hour, minute] = appointment.slot;
+        const dateKey = `${year}-${month}-${day}`;
+        if (!appointmentsByDate[dateKey]) {
+            appointmentsByDate[dateKey] = [];
+        }
+        appointmentsByDate[dateKey].push({ hour, minute, appointmentId: appointment.appointment_id });
     });
 
     // Sort dates
     const sortedDates = Object.keys(slotsByDate).sort((a, b) => new Date(a) - new Date(b));
 
-    return sortedDates.map((date) => {
-      const slotsForDate = slotsByDate[date];
-      return (
-        <tr key={date}>
-          <td>{date}</td>
-          {Array.from({ length: 10 }, (_, i) => i).map((index) => {
-            const hour = Math.floor(index * 0.75) + 9;
-            const minute = (index * 45) % 60;
-            const isAvailable = slotsForDate.some(slot => {
-              return slot[0] === hour && slot[1] === minute;
-            });
-            return (
-              <td
-                key={index}
-                className={isAvailable ? 'available-new clickable' : 'busy-new'}
-                onClick={() =>
-                  handleCellClick(date, hour, minute)}
-              >
-                {isAvailable ? 'Available' : 'Busy'}
-              </td>
-            );
-          })}
-        </tr>
-      );
+    // Render availability table
+    return sortedDates.map((dateKey) => {
+        const slotsForDate = slotsByDate[dateKey];
+        const appointmentsForDate = appointmentsByDate[dateKey] || [];
+
+        return (
+            <tr key={dateKey}>
+                <td>{dateKey}</td>
+                {Array.from({ length: 10 }, (_, index) => {
+                    const hour = Math.floor(index * 0.75) + 9;
+                    const minute = (index * 45) % 60;
+
+                    // Check if the slot is available
+                    const isAvailable = slotsForDate.some(slot => slot.hour === hour && slot.minute === minute);
+
+                    // Check if the slot is booked
+                    const appointment = appointmentsForDate.find(app => app.hour === hour && app.minute === minute);
+
+                    // Determine the cell class and text
+                    let cellClass;
+                    let cellText;
+
+                    if (appointment) {
+                        // If the slot is booked
+                        cellClass = 'booked';
+                        cellText = 'Booked';
+                    } else if (isAvailable) {
+                        // If the slot is available
+                        cellClass = 'available-new clickable';
+                        cellText = 'Available';
+                    } else {
+                        // If the slot is busy
+                        cellClass = 'busy-new';
+                        cellText = 'Busy';
+                    }
+
+                    return (
+                        <td
+                            key={index}
+                            className={cellClass}
+                            onClick={() => handleCellClick(dateKey, hour, minute)}
+                        >
+                            {cellText}
+                        </td>
+                    );
+                })}
+            </tr>
+        );
     });
-  };
+};
 
   return (
     <div className="doctor-list-container-new">

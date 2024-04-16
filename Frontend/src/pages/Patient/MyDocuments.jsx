@@ -92,6 +92,7 @@ function MyDocuments() {
       });
   
       alert(response.data);
+      fetchDocuments();
   
     } catch (error) {
       console.error('Error deleting file:', error);

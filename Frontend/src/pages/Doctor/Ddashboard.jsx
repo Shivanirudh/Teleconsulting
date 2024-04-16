@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
-import config from './../../Config'
+import { Link } from 'react-router-dom';
+
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -31,7 +32,7 @@ export default function DoctorDashboard() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`${config.apiUrl}/api/v1/doctor/list-appointments`, {
+    fetch('http://localhost:8081/api/v1/doctor/list-appointments', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -62,8 +63,9 @@ export default function DoctorDashboard() {
           const slotYear = slot.getFullYear();
           const slotMonth = slot.getMonth();
           const slotDate = slot.getDate();
+          console.log(currentDateTime.getFullYear(), slotYear, currentDateTime.getMonth(), slotMonth, currentDateTime.getDate(), slotDate, slotTime, currentTime +  7 * 24 * 60 * 60 * 1000);
           // If slot is on the same date as current date or it is within the next 7 days, move appointment to appointments
-          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate === slotDate) || (slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
+          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate === slotDate) || (slotTime > currentTime && slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
             newAppointments.push(appointment);
           } 
         });
@@ -146,83 +148,81 @@ export default function DoctorDashboard() {
   });
 
   return (
-    <div className="dashboard-container">
-      <Navbar />
-      <div className='dashboard-content'>
-        <SideNavbar />
-        <div className='main-content'>
-          <div className="appointments-list-header">
-            <h2>This week's appointments</h2>
-            <input
-              type="text"
-              placeholder="Search by patient name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+   
+    <div >
+      <div className="appointments-list-header">
+        <h2>This week's appointments</h2>
+        <input
+          type="text"
+          placeholder="Search by patient name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <div className="appointments-list col">
+        <table className="table " style={{border: 'none'}}>
+          <thead>
+            <tr style={{border: 'none'}}>
+              <th style={{border: 'none'}}>Date</th>
+              <th style={{border: 'none'}}>Time</th>
+              <th style={{border: 'none'}}>Name of Patient</th>
+              <th style={{border: 'none'}}>Actions</th>
+            </tr>
+          </thead>
+          <tbody  >
+            {filteredAppointments.map((appointment, index) => (
+              <tr key={index} style={{border: 'none'}}>
+                <td style={{border: 'none'}}>{appointment.date}</td>
+                <td style={{border: 'none'}}>{appointment.time}</td>
+                <td style={{border: 'none'}}>{appointment.patientName}</td>
+                <td style={{border: 'none'}}>
+                  <button className="btn btn-primary btn-sm custom-button" onClick={() => handleOpenModal(appointment)}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    
+
+
+  {selectedAppointment && (
+    <div
+      className={`modal ${modalVisible ? 'show' : ''}`}
+      tabIndex="-1"
+      role="dialog"
+      style={{ display: modalVisible ? 'block' : 'none' }}
+    >
+      <div className="modal-dialog modal-sm custom-box"> {/* Add modal-sm for smaller size */}
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Appointment Details - {selectedAppointment.date}</h5>
+            <button type="button" className="close" onClick={handleCloseModal}>
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div className="appointments-list col">
-            <table className="table " style={{border: 'none'}}>
-              <thead>
-                <tr style={{border: 'none'}}>
-                  <th style={{border: 'none'}}>Date</th>
-                  <th style={{border: 'none'}}>Time</th>
-                  <th style={{border: 'none'}}>Name of Patient</th>
-                  <th style={{border: 'none'}}>Actions</th>
-                </tr>
-              </thead>
-              <tbody  >
-                {filteredAppointments.map((appointment, index) => (
-                  <tr key={index} style={{border: 'none'}}>
-                    <td style={{border: 'none'}}>{appointment.date}</td>
-                    <td style={{border: 'none'}}>{appointment.time}</td>
-                    <td style={{border: 'none'}}>{appointment.patientName}</td>
-                    <td style={{border: 'none'}}>
-                      <button className="btn btn-primary btn-sm custom-button" onClick={() => handleOpenModal(appointment)}>
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="modal-body">
+            <p>Date: {selectedAppointment.date}</p>
+            <p>Time: {selectedAppointment.time}</p>
+            <p>Patient: {selectedAppointment.patientName}</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
+              Join Meeting
+            </button>
+            <Link to= {`/details?id=${selectedAppointment.appointment_id}`} > <button className="btn btn-info custom-button2" >
+              View Patient
+            </button> </Link>
+            <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
+              Cancel Appointment
+            </button>
           </div>
         </div>
       </div>
-      {selectedAppointment && (
-        <div
-          className={`modal ${modalVisible ? 'show' : ''}`}
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: modalVisible ? 'block' : 'none' }}
-        >
-          <div className="modal-dialog modal-sm custom-box"> {/* Add modal-sm for smaller size */}
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Appointment Details - {selectedAppointment.date}</h5>
-                <button type="button" className="close" onClick={handleCloseModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <p>Date: {selectedAppointment.date}</p>
-                <p>Time: {selectedAppointment.time}</p>
-                <p>Patient: {selectedAppointment.patientName}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
-                  Join Meeting
-                </button>
-                <button type="button" className="btn btn-info custom-button2" onClick={handleViewPatientDetails}>
-                  View Patient
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
-                  Cancel Appointment
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-  );
+  )}
+</div>
+);
 }

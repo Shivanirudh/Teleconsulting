@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Patient/Dashboard.css'
-import config from './../../Config'
+import { Link } from 'react-router-dom';
+
 
 export default function PreviousAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -23,7 +24,7 @@ export default function PreviousAppointments() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`${config.apiUrl}/api/v1/doctor/list-appointments`, {
+    fetch('http://localhost:8081/api/v1/doctor/list-appointments', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,6 +47,10 @@ export default function PreviousAppointments() {
             appointment.slot[3],
             appointment.slot[4]
           );
+          appointment.date = `${appointment.slot[0]}-${appointment.slot[1]}-${appointment.slot[2]}`;
+          appointment.slot[4] = appointment.slot[4] === 0? '00': appointment.slot[4];
+          appointment.time = `${appointment.slot[3]}:${appointment.slot[4]}`;
+          appointment.patientName = appointment.patient_id.first_name + ' ' + appointment.patient_id.last_name;
           const slotTime = slot.getTime(); // Convert slot time to milliseconds
           // If current time is greater than or equal to slot time + 45 minutes, move appointment to appointments
           if (currentTime >= slotTime + 45 * 60 * 1000) {
@@ -74,11 +79,8 @@ export default function PreviousAppointments() {
   };
 
   return (
-    <div className="dashboard-container">
-      <Navbar/>
-    <div className="dashboard-content">
-      <SideNavbar/>
-    <div className="main-content">
+    <div>
+     
     
       <h2>Previous Appointments</h2>
 
@@ -112,15 +114,14 @@ export default function PreviousAppointments() {
                 <p>Time: {appointment.time}</p>
                 <p>Patient: {appointment.patientName}</p>
               </div>
-              <button className="btn btn-primary custom-button" onClick={() => handleViewDetails(appointment.id)}>
+             <Link to={`/details?id=${appointment.appointment_id}`}> <button className="btn btn-primary custom-button" >
                 View Details
-              </button>
+              </button></Link>
             </div>
           </li>
         ))}
       </ul>
     </div>
-    </div>
-    </div>
+   
   );
 }

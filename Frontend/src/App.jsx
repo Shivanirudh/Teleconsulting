@@ -23,6 +23,9 @@ import AdminHospital from './pages/Admin/AdminHospital';
 import PConsent from './pages/Patient/Consent';
 import Patientchat from './pages/Patient/Pchats.jsx'
 import Doctorchat from './pages/Doctor/Dchats.jsx'
+import DocumentsPage from './pages/Doctor/doc';
+import PatientDetails from './pages/Doctor/patientdetails';
+import Dashboard from './pages/Doctor/dasnew.jsx';
 
 function App() {
   return (
@@ -58,11 +61,13 @@ function App() {
           </Route>
           <Route element={<PrivateRoutes tokenType="doctor" />} >
             {/* Doctor Routes */}
-            <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
+            <Route exact path = "/ddashboard"  element ={<Dashboard/>}/>
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path="/dchats" element={<Doctorchat />} />
+            <Route exact path="/doc" element = {<DocumentsPage/>}/>
+            <Route exact path= "/details"           element = {<PatientDetails/>}/>
           </Route>
         </Routes>
       </Router>
