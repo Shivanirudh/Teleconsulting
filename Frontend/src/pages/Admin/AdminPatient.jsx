@@ -41,7 +41,7 @@ const AdminPatient = () => {
 
             // Make request to block patient
             await axios.put(`${config.apiUrl}/api/v1/admin/block-patient`, patientId, { headers });
-
+            alert(`Patient with ${patientId} ID is blocked successfully`);
             // Optionally, you can refresh the patients data after blocking
             fetchPatients(token);
         } catch (error) {
@@ -58,7 +58,7 @@ const AdminPatient = () => {
 
             // Make request to unblock patient
             await axios.put(`${config.apiUrl}/api/v1/admin/unblock-patient`, patientId, { headers });
-
+            alert(`Patient with ${patientId} ID is blocked successfully`);
             // Optionally, you can refresh the patients data after unblocking
             fetchPatients(token);
         } catch (error) {

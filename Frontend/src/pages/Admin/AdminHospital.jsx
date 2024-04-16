@@ -54,10 +54,9 @@ const AdminHospital = () => {
         const newHospitalData = {
             name: formData.get('name'),
             address: formData.get('address'),
-            phone_number: formData.get('phone_number'), // No need to convert to string
+            phone_number: formData.get('phone_number'),
             email: formData.get('email')
         };
-        console.log(newHospitalData);
 
         try {
             const headers = {
@@ -71,7 +70,34 @@ const AdminHospital = () => {
             console.error('Error adding hospital:', error);
         }
     };
-    
+
+    const blockHospital = async (hospitalId) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                
+            };
+            await axios.put(`${config.apiUrl}/api/v1/admin/block-hospital`, hospitalId, { headers });
+            alert(`Hospital with ${hospitalId} ID is blocked successfully`);
+            fetchHospitals(token);
+        } catch (error) {
+            console.error('Error blocking hospital:', error);
+        }
+    };
+
+    const unblockHospital = async (hospitalId) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+
+            await axios.put(`${config.apiUrl}/api/v1/admin/unblock-hospital`, hospitalId, { headers });
+            alert(`Hospital with ${hospitalId} ID is unblocked successfully`);
+            fetchHospitals(token);
+        } catch (error) {
+            console.error('Error unblocking hospital:', error);
+        }
+    };
 
     return (
         <div className='dashboard-container'>
@@ -105,6 +131,8 @@ const AdminHospital = () => {
                                     <th>Address</th>
                                     <th>Phone Number</th>
                                     <th>Email</th>
+                                    <th>Block</th>
+                                    <th>Unblock</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,6 +143,12 @@ const AdminHospital = () => {
                                         <td>{hospital.address}</td>
                                         <td>{hospital.phone_number}</td>
                                         <td>{hospital.email}</td>
+                                        <td>
+                                            <button className="btn btn-danger" onClick={() => blockHospital(hospital.hospital_id)}>Block</button>
+                                        </td>
+                                        <td>
+                                            <button className="btn btn-success" onClick={() => unblockHospital(hospital.hospital_id)}>Unblock</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

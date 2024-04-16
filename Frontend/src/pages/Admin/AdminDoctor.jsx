@@ -163,6 +163,7 @@ const AdminDoctor = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            alert(`Doctor with ${doctorId} ID is blocked successfully`);
             fetchDoctors();
         } catch (error) {
             console.error('Error blocking doctor:', error);
@@ -176,6 +177,7 @@ const AdminDoctor = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
+            alert(`Doctor with ${doctorId} ID is blocked successfully`);
             fetchDoctors();
         } catch (error) {
             console.error('Error unblocking doctor:', error);
