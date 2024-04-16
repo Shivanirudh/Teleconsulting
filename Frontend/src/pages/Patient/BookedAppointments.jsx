@@ -3,6 +3,7 @@ import "./../../css/Patient/BookedAppointments.css";
 import "./../../css/Patient/PreviousAppointments.css"; // Import CSS for PreviousAppointments
 import { useNavigate } from 'react-router-dom';
 import config from './../../Config'
+import axios from "axios";
 
 // Import PreviousAppointments component
 import PreviousAppointments from "./PreviousAppointments";
@@ -12,6 +13,7 @@ function BookedAppointments() {
   const [previousAppointments, setPreviousAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("booked"); // 'booked' by default
   const [selectedAppointment, setSelectedAppointment] = useState(null); // Store the selected appointment
+  const [isCancelingAppointment, setIsCancelingAppointment] = useState(false); // State for loading indicator
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,28 +71,49 @@ function BookedAppointments() {
     setActiveTab(tab);
   };
 
+  const handleCancelAppointment = async (appointment) => {
+    setIsCancelingAppointment(true); // Show loading indicator
+    try {
+      const appointmentID = appointment.appointment_id;
+      const token = localStorage.getItem("token");
+      if (appointmentID) {
+        const response = await axios.post(
+          `${config.apiUrl}/api/v1/patient/cancel-appointment`,
+          { appointment_id: appointmentID },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Display success message
+          alert("Meeting has been canceled successfully.");
+          // Reload the page to reflect changes
+          fetchBookedAppointments();
+        } else {
+          console.error("Failed to cancel appointment");
+        }
+      }
+    } catch (error) {
+      console.error("Error canceling appointment:", error);
+    } finally {
+      setIsCancelingAppointment(false); // Hide loading indicator
+    }
+  };
+
   // Function to handle going to a meeting
   const handleGoToMeeting = (appointment) => {
     const currentDateTime = new Date();
     const currentTime = currentDateTime.getTime(); // Current time in milliseconds
 
     console.log(appointment);
-      // Store the selected appointment for use in another page
+    // Store the selected appointment for use in another page
     setSelectedAppointment(appointment);
 
-    // // Convert appointment slot time to milliseconds
-    // const appointmentTime = new Date(
-    //   appointment.slot[0],
-    //   appointment.slot[1] - 1,
-    //   appointment.slot[2],
-    //   appointment.slot[3],
-    //   appointment.slot[4]
-    // ).getTime();
-
-    // // Calculate the end time (appointment time + 45 minutes)
-    // const endTime = appointmentTime + 45 * 60 * 1000;
-
-    // // Check if current time is within the meeting time range
+    // Logic for checking appointment time (you can adjust this as needed)
     // if (currentTime >= appointmentTime && currentTime < endTime) {
     //   navigate('/patient/pdchats', { state: { selectedAppointment: appointment } });
     // } else {
@@ -119,6 +142,9 @@ function BookedAppointments() {
       {activeTab === "booked" ? (
         <div>
           <h2>Booked Appointments</h2>
+          {isCancelingAppointment && (
+            <p>Loading...</p> // Display loading indicator
+          )}
           <table className="booked-appointments-table">
             <thead>
               <tr>
@@ -126,6 +152,7 @@ function BookedAppointments() {
                 <th>Doctor Name</th>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Actions</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -150,6 +177,14 @@ function BookedAppointments() {
                       onClick={() => handleGoToMeeting(appointment)}
                     >
                       Join Meeting
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="bas-aps-but"
+                      onClick={() => handleCancelAppointment(appointment)}
+                    >
+                      Cancel Meeting?
                     </button>
                   </td>
                 </tr>

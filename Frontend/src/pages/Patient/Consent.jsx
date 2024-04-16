@@ -51,7 +51,7 @@ function Consent() {
         },
       });
       if (response.status === 200) {
-        console.log('Permission granted successfully.');
+        alert('Permission granted successfully.');
         // Additional logic if needed upon successful permission grant
       } else {
         console.error('Failed to grant permission:', response.statusText);
