@@ -177,7 +177,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public ResponseEntity<?> uploadPrescription(PrescriptionRequest prescriptionRequest, Principal principal) throws IOException {
+    public ResponseEntity<?> uploadPrescription(PrescriptionRequest prescriptionRequest, Principal principal) throws Exception {
         Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
         Appointment appointment = appointmentRepo.findByAppointmentId(prescriptionRequest.getAppointmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", prescriptionRequest.getAppointmentId()));
@@ -194,10 +194,20 @@ public class AppointmentService {
         Prescription prescription = Prescription.builder()
                 .prescriptionId(prescriptionIdGenerator.generateNextId())
                 .appointment(appointment)
-                .documentLink(appointment.getAppointmentId())
+                .advice(EncryptionService.encrypt(prescriptionRequest.getAdvice()))
+                .medicinesAndDosage(EncryptionService.encrypt(prescriptionRequest.getMedicinesAndDosage()))
+                .symptoms(EncryptionService.encrypt(prescriptionRequest.getSymptoms()))
+                .documentLink(EncryptionService.encrypt(appointment.getAppointmentId()))
                 .build();
 
         prescriptionRepo.save(prescription);
+
+        mailService.sendEmail(
+                patient.getEmail(),
+                "Doctor Uploaded Prescription for the Appointment",
+                "Doctor just uploaded an prescription for the appointment. Date and time of appointment is " +
+                        appointment.getSlot().toString()
+        );
 
         return ResponseEntity.ok("Prescription uploaded successfully");
     }

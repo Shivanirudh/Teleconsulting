@@ -21,4 +21,6 @@ public interface ConsentRepo extends JpaRepository<Consent, Integer> {
     List<Consent> findConsentsByPatientAndExpiryDate(@Param("patient") Patient patient, @Param("currentTime") LocalDateTime currentTime);
 
     List<Consent> findByHospitalAndExpiryDateAfter(Hospital hospital, LocalDateTime localDateTime);
+
+    List<Consent> findAllByPatientAndDocumentName(Patient patient, String documentName);
 }

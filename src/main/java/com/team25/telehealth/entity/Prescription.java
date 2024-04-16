@@ -21,6 +21,15 @@ public class Prescription extends BaseEntity {
     @Column(name="document_link", nullable = false)
     private String documentLink;
 
+    @Column(name = "symptoms")
+    private String symptoms;
+
+    @Column(name="medicines_and_dosage")
+    private String medicinesAndDosage;
+
+    @Column(name = "advice")
+    private String advice;
+
     @OneToOne
     @JoinColumn(name = "appointment_id")
     @JsonBackReference

@@ -20,8 +20,8 @@ public class WebConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://9b66-106-51-160-97.ngrok-free.app");
+        config.addAllowedOrigin("https://b5a9-106-51-160-97.ngrok-free.app");
+        config.addAllowedOrigin("https://c0ed-106-51-160-97.ngrok-free.app");
         config.setAllowCredentials(true);
 //        config.setAllowedHeaders(Arrays.asList(
 //                HttpHeaders.AUTHORIZATION,

@@ -91,7 +91,7 @@ public class DoctorController {
 
     @PostMapping("/upload-prescription")
     public ResponseEntity<?> uploadPrescription(@RequestBody PrescriptionRequest prescriptionRequest, Principal principal)
-            throws IOException {
+            throws Exception {
         return appointmentService.uploadPrescription(prescriptionRequest, principal);
     }
 
