@@ -85,7 +85,7 @@ public class AppointmentService {
                 appointmentDTO.getSlot(),
                 true);
 
-        if(appointments != null && appointments.size() >= 12) {
+        if(appointments != null && appointments.size() >= 3) {
             return ResponseEntity.badRequest().body("Time slot is not available");
         }
 
