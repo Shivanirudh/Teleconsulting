@@ -12,7 +12,7 @@ import PatientEditDetails from './pages/Patient/EditDetails';
 import Aboutus from './pages/Aboutus';
 import Contactus from './pages/Contactus';
 
-import PreviousAppointments from './pages/Doctor/Appointment';
+
 import UploadSchedule from './pages/Doctor/uploadschedule';
 import EditDetails from './pages/Doctor/EditDetails';
 import PrivateRoutes from './components/PrivateRoutes';
@@ -25,6 +25,7 @@ import DocumentsPage from './pages/Doctor/doc';
 import PatientDetails from './pages/Doctor/patientdetails';
 
 import Dashboard from './pages/Doctor/dasnew.jsx';
+import ConsentedDocumentsPage from './pages/Doctor/condoc.jsx';
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
             <Route exact path= "/details"           element = {<PatientDetails/>}/>
+            <Route exact path= "/condoc"            element = {<ConsentedDocumentsPage/>}/>
            
         </Routes>
       </Router>
