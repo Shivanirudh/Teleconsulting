@@ -60,21 +60,41 @@ public class ScheduleService {
             scheduleRepo.save(newSchedule);
         }
 
+//        for (Schedule s: inactiveSchedules) {
+//            Appointment appointment = appointmentRepo.findByDoctorAndSlotAndActive(doctor, s.getSlot(), true).orElse(null);
+//            if(appointment != null && appointment.getSlot().isAfter(LocalDateTime.now())) {
+//                appointment.setActive(false);
+//                appointmentRepo.save(appointment);
+//                mailService.sendEmail(appointment.getPatient().getEmail(),
+//                    "Doctor cancelled your appointment",
+//                    "Doctor Cancelled your upcoming appointment " + appointment.getSlot().toString()
+//                );
+//                mailService.sendEmail(appointment.getDoctor().getEmail(),
+//                    "Appointment Cancellation due to Schedule update",
+//                    "Your upcoming schedule with patient " + appointment.getPatient().getFirstName() +
+//                            " having email id " + appointment.getPatient().getEmail() + " got cancelled due to update in the schedule"
+//                        + ". Timing of the appointment was " + appointment.getSlot().toString()
+//                );
+//            }
+//        }
+
         for (Schedule s: inactiveSchedules) {
-            Appointment appointment = appointmentRepo.findByDoctorAndSlotAndActive(doctor, s.getSlot(), true).orElse(null);
-            if(appointment != null && appointment.getSlot().isAfter(LocalDateTime.now())) {
-                appointment.setActive(false);
-                appointmentRepo.save(appointment);
-                mailService.sendEmail(appointment.getPatient().getEmail(),
-                    "Doctor cancelled your appointment",
-                    "Doctor Cancelled your upcoming appointment " + appointment.getSlot().toString()
-                );
-                mailService.sendEmail(appointment.getDoctor().getEmail(),
-                    "Appointment Cancellation due to Schedule update",
-                    "Your upcoming schedule with patient " + appointment.getPatient().getFirstName() +
-                            " having email id " + appointment.getPatient().getEmail() + " got cancelled due to update in the schedule"
-                        + ". Timing of the appointment was " + appointment.getSlot().toString()
-                );
+            List<Appointment> appointments = appointmentRepo.findAllByDoctorAndSlotAndActive(doctor, s.getSlot(), true);
+            for(Appointment appointment : appointments) {
+                if(appointment != null && appointment.getSlot().isAfter(LocalDateTime.now())) {
+                    appointment.setActive(false);
+                    appointmentRepo.save(appointment);
+                    mailService.sendEmail(appointment.getPatient().getEmail(),
+                            "Doctor cancelled your appointment",
+                            "Doctor Cancelled your upcoming appointment " + appointment.getSlot().toString()
+                    );
+                    mailService.sendEmail(appointment.getDoctor().getEmail(),
+                            "Appointment Cancellation due to Schedule update",
+                            "Your upcoming schedule with patient " + appointment.getPatient().getFirstName() +
+                                    " having email id " + appointment.getPatient().getEmail() + " got cancelled due to update in the schedule"
+                                    + ". Timing of the appointment was " + appointment.getSlot().toString()
+                    );
+                }
             }
         }
 

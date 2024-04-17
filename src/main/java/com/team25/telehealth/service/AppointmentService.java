@@ -72,12 +72,20 @@ public class AppointmentService {
         if(appointmentDTO.getSlot().isAfter(LocalDateTime.now().plusDays(6)))
             return ResponseEntity.badRequest().body("Appointments cannot be scheduled more than 6 days in advance");
 
-        Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
-                appointmentDTO.getSlot(),
-                true
-                ).orElseGet(() -> null);
+//        Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
+//                appointmentDTO.getSlot(),
+//                true
+//                ).orElseGet(() -> null);
+//
+//        if(exists != null) {
+//            return ResponseEntity.badRequest().body("Time slot is not available");
+//        }
 
-        if(exists != null) {
+        List<Appointment> appointments = appointmentRepo.findAllByDoctorAndSlotAndActive(doctor,
+                appointmentDTO.getSlot(),
+                true);
+
+        if(appointments != null && appointments.size() >= 12) {
             return ResponseEntity.badRequest().body("Time slot is not available");
         }
 
@@ -112,10 +120,13 @@ public class AppointmentService {
                 .active(true)
                 .meetingLink("Some link")
                 .doctor(doctor)
-                .meetingLink(UUID.randomUUID().toString())
                 .slot(appointmentDTO.getSlot())
                 .patient(patient)
                 .build();
+
+        if(appointments.size() == 0) {
+            appointment.setMeetingLink(UUID.randomUUID().toString());
+        } else appointment.setMeetingLink(appointments.get(0).getMeetingLink());
 
         appointmentRepo.save(appointment);
         mailService.sendEmail(
