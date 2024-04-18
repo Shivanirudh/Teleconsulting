@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+const navigate = useNavigate();
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -107,7 +108,32 @@ export default function DoctorDashboard() {
   // Function to handle joining the meeting
   const handleJoinMeeting = () => {
     // Implement your logic for joining the meeting
-    alert('Join Meeting');
+    // alert('Join Meeting');
+    const currentDateTime = new Date();
+
+    // Convert current date and time into an array format similar to appointment.slot
+    const currentTimeArray = [
+        currentDateTime.getFullYear(),
+        currentDateTime.getMonth() + 1, // Months are zero-based, so add 1
+        currentDateTime.getDate(),
+        currentDateTime.getHours(),
+        currentDateTime.getMinutes(),
+    ];
+    console.log(selectedAppointment.slot);
+    console.log(currentTimeArray);
+    
+    setSelectedAppointment(selectedAppointment);
+
+    // Compare current time array with appointment.slot
+    // const isTimeForMeeting = currentTimeArray.every((value, index) => value === appointment.slot[index]);
+    const isTimeForMeeting = currentTimeArray.every((value, index) => value === currentTimeArray[index]);
+    if (isTimeForMeeting) {
+        // Navigate to meeting page
+        navigate('/dchats', { state: { selectedAppointment: selectedAppointment } });
+    } else {
+        // Alert the user that it is not time for the meeting yet
+        alert("It is not time for the meeting yet.");
+    }
   };
 
   // Function to handle canceling the appointment

@@ -1,16 +1,79 @@
 // DocChat.jsx
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import SockJS from "sockjs-client";
 import "../../css/Doctor/Dchats.css";
 import useScript from "../../components/useScript";
 import config from './../../Config'
+import axios from "axios";
+
 
 const DocChat = () => {
+  const { state } = useLocation();
+  let globalSelectedAppointment = null;
+
+  if (state && state.selectedAppointment) {
+    globalSelectedAppointment = state.selectedAppointment;
+  }
   useScript(
     "https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
   );
+
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [consents, setConsents] = useState([]);
+
+  const fetchDocuments = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from local storage
+      fetch(`http://localhost:8081/api/v1/doctor/fetch-files/${globalSelectedAppointment.patient_id.patient_id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        
+        setDocuments(data);
+      })
+      .catch((error) => console.error('Error fetching documents:', error));
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchConsents = () => {
+    // Retrieve token from local storage
+    const token = localStorage.getItem('token');
+
+    // Make API request to fetch appointments
+    fetch(`http://localhost:8081/api/v1/doctor/consent`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        
+        setConsents(data);
+      })
+      .catch((error) => console.error('Error fetching consents:', error));
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+    fetchConsents();
+  }, []);
+
   useEffect(() => {
     // Initialize variables and elements
     const localVideo = document.getElementById("localVideo");
@@ -304,6 +367,88 @@ const DocChat = () => {
     alert(`Consent requested for document: ${documentName}`);
   };
 
+  const handleView= (documentName) => {
+    // event.preventDefault();
+    // Simulate download for demonstration (replace with actual download logic)
+    // setSelectedDocument(documentName);
+
+    var reqID = null;
+    consents.forEach((consent) => {
+      if(consent.patient_id.patient_id === globalSelectedAppointment.patient_id.patient_id && documentName === consent.document_name){
+        reqID = consent.consent_id;
+      }
+    });
+    if(!reqID){
+      alert("You do not have access to this document. Please request consent");
+    }
+    else{
+      
+      const token = localStorage.getItem('token');
+      fetch(`http://localhost:8081/api/v1/doctor/consent/${reqID}/patient/${globalSelectedAppointment.patient_id.patient_id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          const fileURL = window.URL.createObjectURL(blob);
+          console.log(fileURL);
+          // Triggering download directly
+          // const link = document.createElement('a');
+          // link.href = fileURL;
+          // link.setAttribute('download', documentName);
+          // document.body.appendChild(link);
+          // link.click();
+
+          // Open file in new tab
+          window.open(fileURL, '_blank');
+          // Cleanup
+          URL.revokeObjectURL(fileURL);
+        })
+        .catch((error) => console.error('Error fetching document:', error));
+    }
+  };
+
+  const handleAskConsent = (event, choice, documentName) => {
+    var reqBody = {
+      "document_name": documentName,
+      "patient_id": {
+          "patient_id": `${globalSelectedAppointment.patient_id.patient_id}`
+      },
+      "doctor_id": {
+          "doctor_id":`${globalSelectedAppointment.doctor_id.doctor_id}`
+      }
+    }
+    
+      // Simulate sending consent request based on choice (replace with actual logic)
+      console.log(`Sending consent request for "${documentName}"`);
+
+      const token = localStorage.getItem('token');
+      fetch('http://localhost:8081/api/v1/doctor/consent', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify(reqBody)
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        alert(`Consent requested for ${documentName}`);
+      })
+      .catch((error) => console.error('Error requesting consent:', error));
+    }
+  // };
+
+
   return (
     <div className="dashboard-container">
       <Navbar />
@@ -323,9 +468,9 @@ const DocChat = () => {
             <div className="info-container-ghi321">
               <div className="patient-details-jkl654">
                 <h3>Patient Details</h3>
-                <p>Name: John Smith</p>
-                <p>Age: 35</p>
-                <p>Gender: Male</p>
+                <p>Name: {globalSelectedAppointment.patient_id.first_name + ' ' + globalSelectedAppointment.patient_id.last_name}</p>
+                <p>Age: {globalSelectedAppointment.patient_id.age}</p>
+                <p>Gender: {globalSelectedAppointment.patient_id.gender}</p>
               </div>
               <div className="document-table-mno987">
                 <h3>Document List</h3>
@@ -333,25 +478,21 @@ const DocChat = () => {
                   <thead>
                     <tr>
                       <th>Document Name</th>
-                      <th>Consent</th>
-                      <th>Download</th>
+                      <th>View</th>
+                      <th>Request Consent</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Document 1</td>
-                      <td>
-                        <button
-                          className="consent-btn-vwx357"
-                          onClick={() => handleConsent("document1")}
-                        >
-                          Consent
-                        </button>
-                      </td>
-                      <td>
-                        <button className="upload-btn-stu753">Download</button>
-                      </td>
-                    </tr>
+                  {documents.map((document) => (
+                  <tr key={document.id}>
+                    <td>{document}</td>
+                    {/* <td>{document.size}</td> */}
+                    <td>
+                      <button onClick={() => handleView(document)}>View</button>
+                      <button onClick={(event) => handleAskConsent(event, document)}>Request Consent</button>
+                    </td>
+                  </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>
