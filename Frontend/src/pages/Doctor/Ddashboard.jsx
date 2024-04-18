@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
+import { Link } from 'react-router-dom';
+
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -53,16 +55,21 @@ export default function DoctorDashboard() {
             appointment.slot[3],
             appointment.slot[4]
           );
+          appointment.date = `${appointment.slot[0]}-${appointment.slot[1]}-${appointment.slot[2]}`;
+          appointment.slot[4] = appointment.slot[4] === 0? '00': appointment.slot[4];
+          appointment.time = `${appointment.slot[3]}:${appointment.slot[4]}`;
+          appointment.patientName = appointment.patient_id.first_name + ' ' + appointment.patient_id.last_name;
           const slotTime = slot.getTime(); // Convert slot time to milliseconds
           const slotYear = slot.getFullYear();
           const slotMonth = slot.getMonth();
           const slotDate = slot.getDate();
+          console.log(currentDateTime.getFullYear(), slotYear, currentDateTime.getMonth(), slotMonth, currentDateTime.getDate(), slotDate, slotTime, currentTime +  7 * 24 * 60 * 60 * 1000);
           // If slot is on the same date as current date or it is within the next 7 days, move appointment to appointments
-          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate === slotDate) || (slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
+          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate === slotDate) || (slotTime > currentTime && slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
             newAppointments.push(appointment);
           } 
         });
-
+        console.log(newAppointments[0].patient_id.first_name);
         // Update state with new appointments
         setAppointments(newAppointments);
       })
@@ -113,6 +120,20 @@ export default function DoctorDashboard() {
   const handleViewPatientDetails = () => {
     // Implement your logic for viewing patient details
     alert('View Patient Details');
+    // <div className="modal-content">
+    //   <div className="modal-header">
+    //     <h5 className="modal-title">Patient Details</h5>
+    //     <button type="button" className="close" onClick={handleCloseModal}>
+    //       <span aria-hidden="true">&times;</span>
+    //     </button>
+    //   </div>
+    //   <div className="modal-body">
+    //     <p>Name: {appointment.patient_id.patientName}</p>
+    //     <p>Time: {selectedAppointment.time}</p>
+    //     <p>Patient: {selectedAppointment.patientName}</p>
+    //   </div>
+    // </div>
+
   };
 
 
@@ -122,88 +143,86 @@ export default function DoctorDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filter appointments based on search term
-  const filteredAppointments = appointments.filter(appointment =>
-    appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAppointments = appointments.filter(appointment => {
+    return appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
-    <div className="dashboard-container">
-      <Navbar />
-      <div className='dashboard-content'>
-        <SideNavbar />
-        <div className='main-content'>
-          <div className="appointments-list-header">
-            <h2>This week's appointments</h2>
-            <input
-              type="text"
-              placeholder="Search by patient name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+   
+    <div >
+      <div className="appointments-list-header">
+        <h2>This week's appointments</h2>
+        <input
+          type="text"
+          placeholder="Search by patient name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <div className="appointments-list col">
+        <table className="table " style={{border: 'none'}}>
+          <thead>
+            <tr style={{border: 'none'}}>
+              <th style={{border: 'none'}}>Date</th>
+              <th style={{border: 'none'}}>Time</th>
+              <th style={{border: 'none'}}>Name of Patient</th>
+              <th style={{border: 'none'}}>Actions</th>
+            </tr>
+          </thead>
+          <tbody  >
+            {filteredAppointments.map((appointment, index) => (
+              <tr key={index} style={{border: 'none'}}>
+                <td style={{border: 'none'}}>{appointment.date}</td>
+                <td style={{border: 'none'}}>{appointment.time}</td>
+                <td style={{border: 'none'}}>{appointment.patientName}</td>
+                <td style={{border: 'none'}}>
+                  <button className="btn btn-primary btn-sm custom-button" onClick={() => handleOpenModal(appointment)}>
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    
+
+
+  {selectedAppointment && (
+    <div
+      className={`modal ${modalVisible ? 'show' : ''}`}
+      tabIndex="-1"
+      role="dialog"
+      style={{ display: modalVisible ? 'block' : 'none' }}
+    >
+      <div className="modal-dialog modal-sm custom-box"> {/* Add modal-sm for smaller size */}
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Appointment Details - {selectedAppointment.date}</h5>
+            <button type="button" className="close" onClick={handleCloseModal}>
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div className="appointments-list col">
-            <table className="table " style={{border: 'none'}}>
-              <thead>
-                <tr style={{border: 'none'}}>
-                  <th style={{border: 'none'}}>Date</th>
-                  <th style={{border: 'none'}}>Time</th>
-                  <th style={{border: 'none'}}>Name of Patient</th>
-                  <th style={{border: 'none'}}>Actions</th>
-                </tr>
-              </thead>
-              <tbody  >
-                {filteredAppointments.map((appointment, index) => (
-                  <tr key={index} style={{border: 'none'}}>
-                    <td style={{border: 'none'}}>{appointment.date}</td>
-                    <td style={{border: 'none'}}>{appointment.time}</td>
-                    <td style={{border: 'none'}}>{appointment.patientName}</td>
-                    <td style={{border: 'none'}}>
-                      <button className="btn btn-primary btn-sm custom-button" onClick={() => handleOpenModal(appointment)}>
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="modal-body">
+            <p>Date: {selectedAppointment.date}</p>
+            <p>Time: {selectedAppointment.time}</p>
+            <p>Patient: {selectedAppointment.patientName}</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
+              Join Meeting
+            </button>
+            <Link to= {`/details?id=${selectedAppointment.appointment_id}`} > <button className="btn btn-info custom-button2" >
+              View Patient
+            </button> </Link>
+            <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
+              Cancel Appointment
+            </button>
           </div>
         </div>
       </div>
-      {selectedAppointment && (
-        <div
-          className={`modal ${modalVisible ? 'show' : ''}`}
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: modalVisible ? 'block' : 'none' }}
-        >
-          <div className="modal-dialog modal-sm custom-box"> {/* Add modal-sm for smaller size */}
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Appointment Details - {selectedAppointment.date}</h5>
-                <button type="button" className="close" onClick={handleCloseModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <p>Date: {selectedAppointment.date}</p>
-                <p>Time: {selectedAppointment.time}</p>
-                <p>Patient: {selectedAppointment.patientName}</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-success custom-button2" onClick={handleJoinMeeting}>
-                  Join Meeting
-                </button>
-                <button type="button" className="btn btn-info custom-button2" onClick={handleViewPatientDetails}>
-                  View Patient
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
-                  Cancel Appointment
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-  );
+  )}
+</div>
+);
 }

@@ -20,6 +20,11 @@ import PForgotPassword from './pages/Patient/PForgotPassword';
 import DForgotPassword from './pages/Doctor/DForgotPassword';
 import AForgotPassword from './pages/Admin/AForgotPassword';
 import AdminHospital from './pages/Admin/AdminHospital';
+import DocumentsPage from './pages/Doctor/doc';
+import PatientDetails from './pages/Doctor/patientdetails';
+
+import Dashboard from './pages/Doctor/dasnew.jsx';
+import ConsentedDocumentsPage from './pages/Doctor/condoc.jsx';
 
 function App() {
   return (
@@ -37,16 +42,19 @@ function App() {
           <Route exact path="/aforgotpassword" element={<AForgotPassword />} />
           <Route exact path="/dforgotpassword" element={<DForgotPassword />} />
           <Route element = {<PrivateRoutes/>}>
+            <Route exact path="/doc" element = {<DocumentsPage/>}/>
             <Route exact path="/admindashboard" element={<AdminDashboard />} />
             <Route exact path="/admindoctor" element={<AdminDoctor />} />
             <Route exact path="/adminpatient" element={<AdminPatient />} />
             <Route exact path="/patientdashboard" element={<PatientDashboard />} />
             <Route exact path="/patienteditdetails" element={<PatientEditDetails />} />
-            <Route exact path = "/ddashboard"  element ={<Ddashboard/>}/>
+            <Route exact path = "/ddashboard"  element ={<Dashboard/>}/>
             <Route exact path = "/ddashboard/appointment" element = {<PreviousAppointments/>}/>
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path = "/adminhospital"     element = {<AdminHospital/>}/>
+            <Route exact path= "/details"           element = {<PatientDetails/>}/>
+            <Route exact path= "/condoc"            element = {<ConsentedDocumentsPage/>}/>
           </Route>
         </Routes>
       </Router>
