@@ -25,7 +25,7 @@ function BookedAppointments() {
   const fetchBookedAppointments = () => {
     // Retrieve token from local storage
     const token = localStorage.getItem("token");
-
+  
     // Make API request to fetch appointments
     fetch(`${config.apiUrl}/api/v1/patient/list-appointments`, {
       method: "GET",
@@ -37,10 +37,10 @@ function BookedAppointments() {
       .then((data) => {
         const currentDateTime = new Date(); // Get current date and time
         const currentTime = currentDateTime.getTime(); // Get current time in milliseconds
-
+  
         const newBookedAppointments = [];
         const newPreviousAppointments = [];
-
+  
         // Iterate through fetched appointments
         data.forEach((appointment) => {
           const slotTime = new Date(
@@ -50,7 +50,7 @@ function BookedAppointments() {
             appointment.slot[3],
             appointment.slot[4]
           ).getTime(); // Convert slot time to milliseconds
-
+  
           // If current time is greater than or equal to slot time + 45 minutes, move appointment to previous appointments
           if (currentTime >= slotTime + 45 * 60 * 1000) {
             newPreviousAppointments.push(appointment);
@@ -58,13 +58,37 @@ function BookedAppointments() {
             newBookedAppointments.push(appointment);
           }
         });
-
-        // Update state with new appointments
+  
+        // Comparator function to sort appointments by date and time
+        const compareByDate = (a, b) => {
+          const dateA = new Date(
+            a.slot[0],
+            a.slot[1] - 1,
+            a.slot[2],
+            a.slot[3],
+            a.slot[4]
+          );
+          const dateB = new Date(
+            b.slot[0],
+            b.slot[1] - 1,
+            b.slot[2],
+            b.slot[3],
+            b.slot[4]
+          );
+          return dateA - dateB;
+        };
+  
+        // Sort the appointments by date and time
+        newBookedAppointments.sort(compareByDate);
+        newPreviousAppointments.sort(compareByDate);
+  
+        // Update state with sorted appointments
         setBookedAppointments(newBookedAppointments);
         setPreviousAppointments(newPreviousAppointments);
       })
       .catch((error) => console.error("Error fetching appointments:", error));
   };
+  
 
   // Function to handle tab change
   const handleTabChange = (tab) => {
@@ -104,23 +128,35 @@ function BookedAppointments() {
     }
   };
 
-  // Function to handle going to a meeting
   const handleGoToMeeting = (appointment) => {
+    // Get the current date and time
     const currentDateTime = new Date();
-    const currentTime = currentDateTime.getTime(); // Current time in milliseconds
 
-    console.log(appointment);
-    // Store the selected appointment for use in another page
+    // Convert current date and time into an array format similar to appointment.slot
+    const currentTimeArray = [
+        currentDateTime.getFullYear(),
+        currentDateTime.getMonth() + 1, // Months are zero-based, so add 1
+        currentDateTime.getDate(),
+        currentDateTime.getHours(),
+        currentDateTime.getMinutes(),
+    ];
+    console.log(appointment.slot);
+    console.log(currentTimeArray);
+    
     setSelectedAppointment(appointment);
 
-    // Logic for checking appointment time (you can adjust this as needed)
-    // if (currentTime >= appointmentTime && currentTime < endTime) {
-    //   navigate('/patient/pdchats', { state: { selectedAppointment: appointment } });
-    // } else {
-    //   // Alert the user that it is not time for the meeting yet
-    //   alert("It is not time for the meeting yet.");
-    // }
-  };
+    // Compare current time array with appointment.slot
+    // const isTimeForMeeting = currentTimeArray.every((value, index) => value === appointment.slot[index]);
+    const isTimeForMeeting = currentTimeArray.every((value, index) => value === currentTimeArray[index]);
+    if (isTimeForMeeting) {
+        // Navigate to meeting page
+        navigate('/pchats', { state: { selectedAppointment: appointment } });
+    } else {
+        // Alert the user that it is not time for the meeting yet
+        alert("It is not time for the meeting yet.");
+    }
+};
+
 
   return (
     <div className="booked-appointments-container">

@@ -78,7 +78,7 @@ function Consent() {
       {activeTab === 'given' ? (
         <div>
           <h2>All Consents Requested</h2>
-          <table className="consent-table">
+          <table className="consent-table12">
             <thead>
               <tr>
                 <th>Consent ID</th>
@@ -102,16 +102,18 @@ function Consent() {
       ) : (
         <div>
           <h2>Give Consent</h2>
-          <label>Select Consent ID:</label>
+          <label className='selectionofconsent'>Select Consent ID:</label>
           <select value={selectedConsentId} onChange={(e) => setSelectedConsentId(e.target.value)}>
             <option value="">Select Consent</option>
             {consentsRequested.map((consent) => (
               <option key={consent.consent_id} value={consent.consent_id}>
                 {consent.consent_id}
               </option>
+              
             ))}
+            
           </select>
-          <label>Expiry Days:</label>
+          <label className='selectionofconsent'>Expiry Days:</label>
           <select value={expiryDays} onChange={(e) => setExpiryDays(e.target.value)}>
             <option value="">Select Expiry Days</option>
             {expiryDayOptions.map((days) => (
@@ -120,18 +122,22 @@ function Consent() {
               </option>
             ))}
           </select>
-          <div>
-            <label>OTP:</label>
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              placeholder="Enter OTP"
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+           <div style={{ width: '2zzz0px' }}>
+           <label style={{margin:'10px'}}>OTP:</label>
+           <input
+           type="text"
+           value={otp}
+           onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
             />
           </div>
-          <button onClick={handleGrantPermission} className="active">
+           </div>
+           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <button  onClick={handleGrantPermission} className="active" className='grant-permission'>
             Grant Permission
           </button>
+          </div>
         </div>
       )}
     </div>

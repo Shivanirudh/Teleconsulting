@@ -1,49 +1,64 @@
 /* Container styles */
 .consent-container {
-    margin: 20px;
-    text-align: center;
-  }
-  
-  /* Table styles */
-  .consent-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  /* Table header styles */
-  .consent-table th {
-    background-color: #f2f2f2;
-    padding: 12px 8px;
-    text-align: center;
-  }
-  
-  /* Table row styles */
-  .consent-table td, .consent-table th {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 8px;
-  }
-  
-  /* Button styles */
-  .consent-table button {
-    padding: 6px 12px;
-    background-color: #53a8b6;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-right: 5px;
-  }
-  
-  /* Active tab button styles */
-  .tab-buttons button.active {
-    background-color: #79c2d0;
-  }
-  
-  /* Tab button hover styles */
-  .tab-buttons button:hover {
-    background-color: #79c2d0;
-  }
-  
+  margin: 20px;
+  text-align: center;
+}
+
+/* Table styles */
+.consent-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table header styles */
+.consent-table th {
+  background-color: #f2f2f2;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+/* Table row styles */
+.consent-table td,
+.consent-table th {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 8px;
+}
+
+/* Button styles */
+.consent-table12 button {
+  padding: 10px 20px; /* adjusted padding for the button */
+  background-color: #53a8b6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+/* Active tab button styles */
+.tab-buttons button.active {
+  background-color: #79c2d0;
+}
+
+/* Tab button hover styles */
+.tab-buttons button:hover {
+  background-color: #79c2d0;
+}
+
+.selectionofconsent {
+  margin: 20px;
+}
+
+/* OTP container styles */
+.otp-container {
+  margin-top: 20px;
+}
+
+/* Grant Permission button styles */
+.grant-permission {
+  background-color: #79c2d0; 
+  width: 300px;/* changed button color to match the 'Allow' button */
+}

@@ -1,15 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../css/Patient/Pchats.css";
 import SockJS from "sockjs-client";
 import useScript from "../../components/useScript";
-import config from './../../Config'
+import config from "./../../Config";
+import axios from "axios";
 
 const VideoChannel = () => {
+  const { state } = useLocation();
+  let globalSelectedAppointment = null;
+
+  // Initialize the global variable with the selected appointment from the state
+  if (state && state.selectedAppointment) {
+    globalSelectedAppointment = state.selectedAppointment;
+  }
+
+  useScript(
+    "https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+  );
+
+  // State variables
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch the documents from the API
+  const fetchDocuments = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from local storage
+      const response = await axios.get(
+        "http://localhost:8081/api/v1/patient/files",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDocuments(response.data); // Update the state with the documents data
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
   useScript(
     "https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
   );
   useEffect(() => {
     // Initialize variables and elements
+    console.log(globalSelectedAppointment);
     const localVideo = document.getElementById("localVideo");
     const remoteVideo = document.getElementById("remoteVideo");
     const localIdInp = document.getElementById("localId");
@@ -320,32 +364,29 @@ const VideoChannel = () => {
       </div>
       <div className="info-container">
         <div className="doctor-details">
-          {/* Small window of doctor details */}
+          {/* Display doctor's name */}
           <h3>Doctor Details</h3>
-          <p>Name: Dr. John Doe</p>
-          <p>Specialization: Cardiologist</p>
-          <p>Location: City, Country</p>
+          <p>
+            Name: {globalSelectedAppointment.doctor_id.first_name}{" "}
+            {globalSelectedAppointment.doctor_id.last_name}
+          </p>
+
+          {/* Display doctor's specialization */}
+          <p>
+            Specialization: {globalSelectedAppointment.doctor_id.specialization}
+          </p>
+
+          {/* Display hospital name */}
+          <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
         </div>
+
         <div className="document-table">
-          <h3>Document List</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Document Name</th>
-                <th>Download</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Document 1</td>
-                <td>
-                  {/* Download button */}
-                  <button className="rambo-but">Download</button>
-                </td>
-              </tr>
-              {/* Add more rows as needed */}
-            </tbody>
-          </table>
+          <h3>Documents</h3>
+          <ul>
+            {documents.map((document, index) => (
+              <li key={index}>{document}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="chat-window">
