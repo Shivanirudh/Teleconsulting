@@ -21,7 +21,7 @@ public class WebConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://6f51-106-51-160-97.ngrok-free.app");
+        config.addAllowedOrigin("https://42ec-106-51-160-97.ngrok-free.app");
         config.setAllowCredentials(true);
 //        config.setAllowedHeaders(Arrays.asList(
 //                HttpHeaders.AUTHORIZATION,
