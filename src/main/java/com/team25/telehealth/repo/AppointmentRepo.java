@@ -26,6 +26,8 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Integer> {
 
     Optional<Appointment> findByDoctorAndSlotAndActive(Doctor doctor, LocalDateTime slot, Boolean active);
 
+    List<Appointment> findAllByDoctorAndSlotAndActive(Doctor doctor, LocalDateTime slot, Boolean active);
+
     @Query("SELECT a FROM Appointment a WHERE a.doctor = :doctor AND a.patient = :patient AND a.active = :active AND DATE(a.slot) = :date")
     List<Appointment> getAllByDoctorAndPatientAndSlotDateAndActive(
             @Param("doctor") Doctor doctor,

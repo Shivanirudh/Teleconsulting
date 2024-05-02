@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.crypto.IllegalBlockSizeException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex) {
         String message = ex.getMessage();
         return new ResponseEntity<String>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoSuchAlgorithmException.class)
+    public ResponseEntity<?> noSuchAlgorithmException(NoSuchAlgorithmException ex) {
+        return new ResponseEntity<String>("Encryption Algorithm Not Found",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalBlockSizeException.class)
+    public ResponseEntity<?> illegalBlockSizeException(IllegalBlockSizeException ex) {
+        return new ResponseEntity<String>("Encryption Algorithm Failed due to block size",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

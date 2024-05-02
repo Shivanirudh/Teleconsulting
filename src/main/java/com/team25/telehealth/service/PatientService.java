@@ -3,6 +3,7 @@ package com.team25.telehealth.service;
 import com.team25.telehealth.dto.DoctorDTO;
 import com.team25.telehealth.dto.PatientDTO;
 import com.team25.telehealth.dto.request.AuthenticationRequest;
+import com.team25.telehealth.entity.Consent;
 import com.team25.telehealth.entity.Doctor;
 import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
@@ -14,6 +15,7 @@ import com.team25.telehealth.helpers.generators.PatientIdGenerator;
 import com.team25.telehealth.mappers.DoctorMapper;
 import com.team25.telehealth.mappers.PatientMapper;
 import com.team25.telehealth.model.Specialization;
+import com.team25.telehealth.repo.ConsentRepo;
 import com.team25.telehealth.repo.DoctorRepo;
 import com.team25.telehealth.repo.HospitalRepo;
 import com.team25.telehealth.repo.PatientRepo;
@@ -60,6 +62,7 @@ public class PatientService {
     private final EntityManager entityManager;
     private final HospitalService hospitalService;
     private final DoctorRepo doctorRepo;
+    private final ConsentRepo consentRepo;
 
     @Value("${PATIENT_DATA_PATH}")
     private String STORAGE_PATH;
@@ -295,6 +298,8 @@ public class PatientService {
             if (file.exists()) {
                 // Delete the file
                 if (file.delete()) {
+                    List<Consent> consents = consentRepo.findAllByPatientAndDocumentName(patient, fileName);
+                    consentRepo.deleteAll(consents);
                     return ResponseEntity.ok().body("File deleted successfully");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -72,12 +72,20 @@ public class AppointmentService {
         if(appointmentDTO.getSlot().isAfter(LocalDateTime.now().plusDays(6)))
             return ResponseEntity.badRequest().body("Appointments cannot be scheduled more than 6 days in advance");
 
-        Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
-                appointmentDTO.getSlot(),
-                true
-                ).orElseGet(() -> null);
+//        Appointment exists = appointmentRepo.findByDoctorAndSlotAndActive(doctor,
+//                appointmentDTO.getSlot(),
+//                true
+//                ).orElseGet(() -> null);
+//
+//        if(exists != null) {
+//            return ResponseEntity.badRequest().body("Time slot is not available");
+//        }
 
-        if(exists != null) {
+        List<Appointment> appointments = appointmentRepo.findAllByDoctorAndSlotAndActive(doctor,
+                appointmentDTO.getSlot(),
+                true);
+
+        if(appointments != null && appointments.size() >= 3) {
             return ResponseEntity.badRequest().body("Time slot is not available");
         }
 
@@ -112,10 +120,13 @@ public class AppointmentService {
                 .active(true)
                 .meetingLink("Some link")
                 .doctor(doctor)
-                .meetingLink(UUID.randomUUID().toString())
                 .slot(appointmentDTO.getSlot())
                 .patient(patient)
                 .build();
+
+        if(appointments.size() == 0) {
+            appointment.setMeetingLink(UUID.randomUUID().toString());
+        } else appointment.setMeetingLink(appointments.get(0).getMeetingLink());
 
         appointmentRepo.save(appointment);
         mailService.sendEmail(
@@ -177,7 +188,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public ResponseEntity<?> uploadPrescription(PrescriptionRequest prescriptionRequest, Principal principal) throws IOException {
+    public ResponseEntity<?> uploadPrescription(PrescriptionRequest prescriptionRequest, Principal principal) throws Exception {
         Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
         Appointment appointment = appointmentRepo.findByAppointmentId(prescriptionRequest.getAppointmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment", "Id", prescriptionRequest.getAppointmentId()));
@@ -194,10 +205,20 @@ public class AppointmentService {
         Prescription prescription = Prescription.builder()
                 .prescriptionId(prescriptionIdGenerator.generateNextId())
                 .appointment(appointment)
-                .documentLink(appointment.getAppointmentId())
+                .advice(EncryptionService.encrypt(prescriptionRequest.getAdvice()))
+                .medicinesAndDosage(EncryptionService.encrypt(prescriptionRequest.getMedicinesAndDosage()))
+                .symptoms(EncryptionService.encrypt(prescriptionRequest.getSymptoms()))
+                .documentLink(EncryptionService.encrypt(appointment.getAppointmentId()))
                 .build();
 
         prescriptionRepo.save(prescription);
+
+        mailService.sendEmail(
+                patient.getEmail(),
+                "Doctor Uploaded Prescription for the Appointment",
+                "Doctor just uploaded an prescription for the appointment. Date and time of appointment is " +
+                        appointment.getSlot().toString()
+        );
 
         return ResponseEntity.ok("Prescription uploaded successfully");
     }

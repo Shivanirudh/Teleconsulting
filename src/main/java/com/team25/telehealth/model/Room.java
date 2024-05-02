@@ -4,26 +4,38 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
 public class Room {
     private final String roomId;
-    private final int maxParticipants;
-    private HashSet<String> participants;
+//    private final int maxParticipants;
+    private List<String> participants;
+    private List<String> completedParticipants;
+
+    private String currentPatient;
+    private String currentDoctor;
+    private String seniorDoctor;
     public Room(String id) {
-        this.maxParticipants = 3;
+//        this.maxParticipants = 11;
         this.roomId = id;
-        participants = new HashSet<>();
+        participants = new ArrayList<>();
+        this.currentDoctor = null;
+        this.currentPatient = null;
+        this.seniorDoctor = null;
+        completedParticipants = new ArrayList<>();
     }
 
     // Getters and setters
 
     public void addParticipant(String userId) {
         participants.add(userId);
+    }
+
+    public void addCompletedParticipant(String userId) {
+        completedParticipants.add(userId);
     }
 
     public void removeParticipant(String userId) {
@@ -34,11 +46,15 @@ public class Room {
         return participants.contains(userId);
     }
 
-    public int numberOfParticipants() {
-        return participants.size();
+    public boolean containsCompletedParticipant(String userId) {
+        return completedParticipants.contains(userId);
     }
 
-    public boolean exceedingMaxLimitOfParticipants() {
-        return numberOfParticipants() >= maxParticipants;
-    }
+//    public int numberOfParticipants() {
+//        return participants.size();
+//    }
+
+//    public boolean exceedingMaxLimitOfParticipants() {
+//        return numberOfParticipants() >= maxParticipants;
+//    }
 }
