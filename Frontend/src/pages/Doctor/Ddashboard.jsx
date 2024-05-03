@@ -4,11 +4,11 @@ import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-const navigate = useNavigate();
+
 
 export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
-
+  const navigate = useNavigate();
   // Function to generate dates for the next 7 days
   // const getNextDates = () => {
   //   const today = new Date();
