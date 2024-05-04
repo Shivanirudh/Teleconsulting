@@ -9,8 +9,8 @@ export default function UploadSchedule() {
 
   const generateTimeSlots = () => {
     const startTime = 9 * 60; // 9:00 AM in minutes
-    const endTime = 17 * 60 + 15; // 5:15 PM in minutes
-    const interval = 45; // 45 minutes interval
+    const endTime = 20 * 60 ; // 5:15 PM in minutes
+    const interval = 60; // 45 minutes interval
     const timeSlots = [];
 
     for (let i = startTime; i <= endTime; i += interval) {
@@ -123,7 +123,7 @@ export default function UploadSchedule() {
 
     const schedule = next7Days.reduce((acc, date) => {
       acc[date] = timeSlots.reduce((acc2, time) => {
-        acc2[time] = false; // All slots initially unavailable
+        acc2[time] = [false, 0]; // All slots initially unavailable
         return acc2;
       }, {});
       return acc;
@@ -139,7 +139,7 @@ export default function UploadSchedule() {
         const formattedDate = date.toLocaleDateString('en-US');
         const formattedTime = `${hour < 10 ? '0' : ''}${hour}:${minute === 0 ? '00' : minute}`;
         if (schedule[formattedDate] && schedule[formattedDate][formattedTime] !== undefined) {
-          schedule[formattedDate][formattedTime] = true; // Set slot to available
+          schedule[formattedDate][formattedTime] = [true, 0]; // Set slot to available
         }
         let d = new Date(year, month-1, day, hour, minute);
         let sdate = d.toISOString();
@@ -164,7 +164,8 @@ export default function UploadSchedule() {
         const formattedDate = date.toLocaleDateString('en-US');
         const formattedTime = `${hour < 10 ? '0' : ''}${hour}:${minute === 0 ? '00' : minute}`;
         if (schedule[formattedDate] && schedule[formattedDate][formattedTime] !== undefined) {
-          schedule[formattedDate][formattedTime] = 'appointment'; // Set appointment slot
+          schedule[formattedDate][formattedTime][0] = 'appointment'; // Set appointment slot
+          schedule[formattedDate][formattedTime][1] += 1; 
         }
         let d = new Date(year, month-1, day, hour, minute);
         let sdate = d.toISOString();
@@ -216,12 +217,12 @@ export default function UploadSchedule() {
   const handleCellClick = (date, time) => {
     console.log(requestBody);
     if (isEditing) {
-      if (schedule[date][time] === true) {
+      if (schedule[date][time][0] === true) {
         setSchedule((prevSchedule) => ({
           ...prevSchedule,
           [date]: {
             ...prevSchedule[date],
-            [time]: false,
+            [time]: [false, 0],
           },
         }));
         // dup = [...request_body];
@@ -233,12 +234,12 @@ export default function UploadSchedule() {
         console.log(sdate);
         setRequestBody(requestBody.filter(item => item !== sdate));
         // removeItem(sdate);
-      } else if(schedule[date][time] === false){
+      } else if(schedule[date][time][0] === false){
         setSchedule((prevSchedule) => ({
           ...prevSchedule,
           [date]: {
             ...prevSchedule[date],
-            [time]: true,
+            [time]: [true, 0],
           },
         }));
         // dup = [...request_body];
@@ -257,7 +258,7 @@ export default function UploadSchedule() {
             ...prevSchedule,
             [date]: {
               ...prevSchedule[date],
-              [time]: false,
+              [time]: [false, 0],
             },
           }));
           // var dup = [...request_body];
@@ -367,14 +368,14 @@ export default function UploadSchedule() {
                     <td
                       key={`${date}-${time}`}
                       className={
-                        availability === true ? 'table-success bg-success text-white' :
-                        availability === 'appointment' ? 'table-danger bg-danger text-white' :
+                        availability[0] === true ? 'table-success bg-success text-white' :
+                        availability[0] === 'appointment' ? 'table-danger bg-danger text-white' :
                         'table-secondary bg-secondary'
                       }
                       onClick={() => (isEditing ? handleCellClick(date, time) : null)}
                     >
-                      
-                      {isEditing ? '' : time}
+                      {isEditing ? '' : time} <br></br>
+                      Cnt: { availability[1] }
                     </td>
                   ))}
                 </tr>

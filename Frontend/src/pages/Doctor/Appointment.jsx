@@ -53,7 +53,7 @@ export default function PreviousAppointments() {
           appointment.patientName = appointment.patient_id.first_name + ' ' + appointment.patient_id.last_name;
           const slotTime = slot.getTime(); // Convert slot time to milliseconds
           // If current time is greater than or equal to slot time + 45 minutes, move appointment to appointments
-          if (currentTime >= slotTime + 45 * 60 * 1000) {
+          if (currentTime >= slotTime + 60 * 60 * 1000) {
             newAppointments.push(appointment);
           } 
         });

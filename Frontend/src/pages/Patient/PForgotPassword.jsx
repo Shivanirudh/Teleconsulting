@@ -33,6 +33,7 @@ const ForgotPassword = () => {
 
   const handleResetPassword = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
+    console.log(password);
     axiosInstance.post('/auth/patient/forgotpassword', JSON.stringify({
       email: email,
       otp: otp,

@@ -104,32 +104,36 @@ function DoctorList() {
           },
         }
       );
-
+  
       if (response.status === 200) {
         const { slots, appointments } = response.data;
-
+  
         // Get the current date
         const currentDate = new Date();
-
-        // Calculate the end date (7 days from the current date)
-        const endDate = new Date();
-        endDate.setDate(currentDate.getDate() + 7);
-
-        // Filter slots and appointments to only include those within the current day + next 7 days
+        
+        // Include today's date in the filtered dates
+        const dates = [];
+        for (let i = 0; i < 8; i++) {
+          const date = new Date(currentDate);
+          date.setDate(date.getDate() + i);
+          dates.push(date);
+        }
+  
+        // Filter slots and appointments to only include those within the next 7 days
         const filteredSlots = slots.filter((slot) => {
           const slotDate = new Date(slot[0], slot[1] - 1, slot[2]); // Convert slot date parts to a Date object
-          return slotDate >= currentDate && slotDate <= endDate;
+          return dates.some(date => date.toDateString() === slotDate.toDateString());
         });
-
+  
         const filteredAppointments = appointments.filter((appointment) => {
           const appointmentDate = new Date(
             appointment.slot[0],
             appointment.slot[1] - 1,
             appointment.slot[2]
           );
-          return appointmentDate >= currentDate && appointmentDate <= endDate;
+          return dates.some(date => date.toDateString() === appointmentDate.toDateString());
         });
-
+  
         // Update state with filtered data
         setDoctorSlots(filteredSlots);
         setDoctorAppointments(filteredAppointments);
@@ -140,6 +144,7 @@ function DoctorList() {
       console.error("Error fetching doctor schedule:", error);
     }
   };
+  
 
   const handleCellClick = (date, hour, minute = 0) => {
     if (isBookingMode) {
@@ -211,6 +216,7 @@ function DoctorList() {
           );
         });
         
+        console.log(appointmentsForSlot);
         // Count the number of patients booked in the selected slot
         const bookedPatientCount = appointmentsForSlot.length;
   
@@ -281,21 +287,6 @@ function DoctorList() {
     }
   };
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const filteredHospitals = hospitals.filter((hospital) =>
     hospital.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
