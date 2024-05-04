@@ -110,11 +110,11 @@ const VideoChannel = () => {
         },
       });
       stompClient = window.Stomp.over(socket);
-
-      localID = localIdInp.value || "P203";
-      appointmentId = appointmentInput.value || "AP1";
-      meetingId = meetingInput.value || "21db0f8f-36f0-4a92-84a0-a099660137aa";
-      userType = userTypeInput.value || "PATIENT";
+      console.log(globalSelectedAppointment['patient_id']['patient_id'] );
+      localID = globalSelectedAppointment['patient_id']['patient_id'] ;
+      appointmentId = globalSelectedAppointment['appointment_id'];
+      meetingId = globalSelectedAppointment['meeting_link'];
+      userType = "PATIENT";
 
       stompClient.connect({}, (frame) => {
         // Subscribe to testing URL not very important

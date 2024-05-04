@@ -64,13 +64,13 @@ export default function DoctorDashboard() {
           const slotYear = slot.getFullYear();
           const slotMonth = slot.getMonth();
           const slotDate = slot.getDate();
-          console.log(currentDateTime.getFullYear(), slotYear, currentDateTime.getMonth(), slotMonth, currentDateTime.getDate(), slotDate, slotTime, currentTime +  7 * 24 * 60 * 60 * 1000);
+          console.log(currentDateTime.getFullYear(), slotYear, currentDateTime.getMonth(), slotMonth, currentDateTime.getDate(), slotDate, slotTime, currentTime, currentTime +  7 * 24 * 60 * 60 * 1000);
           // If slot is on the same date as current date or it is within the next 7 days, move appointment to appointments
-          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate === slotDate) || (slotTime > currentTime && slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
+          if ((currentDateTime.getFullYear() === slotYear && currentDateTime.getMonth() === slotMonth && currentDateTime.getDate() === slotDate) || (slotTime > currentTime && slotTime <= currentTime +  7 * 24 * 60 * 60 * 1000)){
             newAppointments.push(appointment);
           } 
         });
-        console.log(newAppointments[0].patient_id.first_name);
+        // console.log(newAppointments[0].patient_id.first_name);
         // Update state with new appointments
         setAppointments(newAppointments);
       })
