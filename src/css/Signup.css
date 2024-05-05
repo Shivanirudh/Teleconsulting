@@ -1,0 +1,110 @@
+.signup-body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgba(61, 63, 70, 0.7);
+  }
+  
+  .signup-outer-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('../Animation/back.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .line-gap {
+    margin-bottom: 20px; /* Adjust as needed */
+  }
+  
+  .signup-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    max-width: 300px;
+    width: 90%;
+    height: 80%; /* Adjust height as needed */
+    background-color: rgba(61, 63, 70, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow-y: auto; /* Add scrolling */
+  }
+  
+  .signup-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  .sign-kardunga {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="tel"]:focus,
+  input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .sign-kardunga {
+    display: block;
+    width: 100%;
+    padding: 12px 0;
+    background-color: #53a8b6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.6s;
+  }
+  
+  .sign-kardunga:hover {
+    background-color: #79c2d0;
+  }
+
+  .terms-label{
+    color: white;
+  }
+
+  .terms-link {
+    color: rgb(217, 242, 243);
+    cursor: pointer;
+    display: inline-block;
+    padding: 12px 0;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .terms-link:hover {
+    color: rgb(173, 236, 238);
+  }
+  
+  @media (max-width: 600px) {
+    .signup-container {
+      width: 80%;
+    }
+  }
+  
