@@ -483,7 +483,7 @@ public class WebSocketController {
                 .convertAndSendToUser(user,"/topic/error", message);
     }
 
-    @GetMapping("/currentPatientAppointment/{meetingId}")
+    @GetMapping("/api/v1/doctor/currentPatientAppointment/{meetingId}")
     public ResponseEntity<?> currentPatientAppointment(@PathVariable String meetingId) {
         if(!rooms.containsKey(meetingId)) return ResponseEntity.badRequest().body("Meeting Id is incorrect");
         Room room = rooms.get(meetingId);
