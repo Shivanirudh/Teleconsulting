@@ -10,10 +10,13 @@ import com.team25.telehealth.service.AppointmentService;
 import com.team25.telehealth.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -73,6 +76,7 @@ public class WebSocketController {
                             && !room.containsCompletedParticipant(userId)
                     ) room.setCurrentPatient(userId);
                     else if(!room.containsCompletedParticipant(userId)) room.addParticipant(userId);
+                    room.getParticipantAppointment().put(userId, appointment.getAppointmentId());
                 }
 
 //                if (!rooms.get(meetingId).containsParticipant(userId)
@@ -477,5 +481,13 @@ public class WebSocketController {
         }
         simpMessagingTemplate
                 .convertAndSendToUser(user,"/topic/error", message);
+    }
+
+    @GetMapping("/currentPatientAppointment/{meetingId}")
+    public ResponseEntity<?> currentPatientAppointment(@PathVariable String meetingId) {
+        if(!rooms.containsKey(meetingId)) return ResponseEntity.badRequest().body("Meeting Id is incorrect");
+        Room room = rooms.get(meetingId);
+        if(room.getCurrentPatient().isEmpty()) return ResponseEntity.badRequest().body("No Patient is present");
+        return ResponseEntity.ok(room.getParticipantAppointment().get(room.getCurrentPatient()));
     }
 }

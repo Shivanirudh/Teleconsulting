@@ -14,6 +14,7 @@ public class Room {
 //    private final int maxParticipants;
     private List<String> participants;
     private List<String> completedParticipants;
+    private Map<String, String> participantAppointment;
 
     private String currentPatient;
     private String currentDoctor;
@@ -26,6 +27,7 @@ public class Room {
         this.currentPatient = null;
         this.seniorDoctor = null;
         completedParticipants = new ArrayList<>();
+        participantAppointment = new HashMap<>();
     }
 
     // Getters and setters
