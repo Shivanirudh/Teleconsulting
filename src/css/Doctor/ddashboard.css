@@ -1,0 +1,104 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+
+.dashboard-content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  max-width: 70%; /* Adjust the maximum width as needed */
+  margin: 0 auto; /* Center the content horizontally */
+}
+
+/* Styling for main content area */
+.main-content {
+  background-color: #c4c9ca;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  align-self: center;
+}
+.col td{
+  background-color: #c4c9ca;
+}
+
+.custom-table {
+  opacity: 0.8;
+  table-layout: fixed;
+}
+
+.custom-table th {
+  color: #144958;
+}
+
+.custom-table td {
+  color: #144958;
+  padding: 10px;
+}
+
+.custom-green {
+  background-color: greenyellow;
+}
+
+.custom-yellow {
+  background-color: yellow;
+}
+
+.custom-button {
+  background-color: #5db2c7;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.custom-button:hover {
+  background-color: #75bdd3;
+}
+
+.custom-button:active {
+  background-color: #99cedb;
+}
+
+.custom-button2 {
+  background-color: #4f96a8;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.custom-box {
+  opacity: 0.8;
+}
+.khus td:hover{
+opacity: 0.5;
+}
+.khus td{
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .dashboard-content {
+    flex-direction: column;
+    width: 70%;
+    background-color: #144958;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .main-content {
+    margin-top: 20px;
+    max-width: 100%; /* Adjust the maximum width for smaller screens */
+  }
+}

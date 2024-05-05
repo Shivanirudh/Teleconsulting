@@ -1,0 +1,16 @@
+.signout-link {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease; /* Adding smooth transition */
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .signout-link:hover {
+    color: lightblue; /* Text color changes to light sky blue on hover */
+    transform: scale(1.1); /* Scale up slightly on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Enhance box shadow on hover */
+  }
+  

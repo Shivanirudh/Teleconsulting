@@ -1,0 +1,113 @@
+.video-chat-page {
+  display: flex;
+  justify-content: space-between; /* Adjust if needed for horizontal alignment */
+  align-items: center; /* Optional: Center content vertically */
+  height: 100vh;
+}
+
+.video-and-form-container {
+  display: flex; /* Make this container a flex container */
+  flex-direction: column; /* Stack video and form container vertically */
+  width: 60%; /* Adjust width as needed */
+  margin: 20px;
+}
+
+.video-container {
+  width: 100%; /* Occupy full width */
+  background-color: #dddddd7c;
+
+}
+
+.video-container video {
+  width: 100%;
+  height: auto; /* Transparent background for better visibility */
+  margin: 0; /* Remove margins */
+}
+
+
+
+.info-container {
+  width: 30%; /* Adjust width as needed */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex; /* Make info container a flex container */
+  flex-direction: column; /* Stack elements vertically within info container */
+}
+
+.doctor-details,
+.document-table {
+  margin-bottom: 20px;
+  flex: 1; /* Distribute available space equally within info container */
+  background-color: #ddd; /* Set grey background for doctor details and documents */
+}
+
+.chat-window {
+  margin-bottom: 20px;
+  flex: 1; /* Distribute available space equally within info container */
+  background-color: #f0f0f0; /* Placeholder color */ /* You can adjust the chat window background color here */
+  padding: 10px;
+}
+
+.form-container {
+  width: 100%; /* Occupy full width of the video-and-form-container */
+}
+
+.big-video {
+  position: relative;
+  display: flex; /* Enable flexbox for side-by-side layout */
+  /* Adjust background color if needed */
+}
+
+.local-video,
+.remote-video {
+  flex: 1; /* Distribute available space equally */
+  position: relative; /* Needed for remote videos on top */
+  margin: 5px;
+}
+
+.local-video {
+  z-index: 1; /* Ensure local video is behind remote videos */
+}
+
+.remote-video {
+  z-index: 2; /* Ensure remote videos are on top */
+}
+
+.small-video {
+  width: 25%; /* Adjust size as needed */
+  background-color: #dddddd00; /* Placeholder color */
+}
+
+.chat-window input[type="text"],
+.chat-window button {
+  margin-top: 10px;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 768px) {
+  .video-chat-page {
+    flex-direction: column; /* Already set */
+  }
+
+  .video-container {
+    width: 100%; /* Already set */
+  }
+
+  .small-video {
+    width: 100%;
+    padding-top: 56.25%;
+    margin-bottom: 10px;
+  }
+}
+
+#go-back-button {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.custom-button{
+  margin: 5px;
+}

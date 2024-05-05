@@ -1,0 +1,87 @@
+/* Updated DoctorList.css */
+.doctor-list-container-new {
+  overflow-x: auto;
+  width: 80vw; /* Set width to 80% of the viewport width */
+  height: 80vh; /* Set height to 80% of the viewport height */
+}
+
+.availability-table-new {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.availability-table-new th,
+.availability-table-new td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.availability-table-new th {
+  background-color: #f2f2f2;
+}
+
+.availability-table-new td.available-new {
+  background-color: #4caf4f6c; /* Green for available slots */
+}
+
+.availability-table-new td.busy-new {
+  background-color: rgba(94, 94, 85, 0.836); /* Yellow for busy slots */
+}
+
+.availability-table-new td.booked-new {
+  background-color: #EEA47FFF; /* Red for booked slots */
+}
+
+.availability-table-new td:hover {
+  cursor: pointer;
+  background-color: #b9b5a2; /* Blue on hover */
+}
+
+.booking-button-new {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.booking-button-new button {
+  padding: 6px 12px; /* Reduced padding */
+  background-color: #4d6e92;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  width: 30px; /* Adjusted width to fit content */
+}
+
+.booking-button-new button:hover {
+  background-color: #74c75f;
+}
+
+/* Updated DoctorList.css */
+.doc-list-wala-button-new {
+  display: flex;
+  width: auto;
+  padding: 12px 16px; /* Increased padding to increase height */
+  background-color: #53a8b6; /* Blue button */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.6s;
+  align-items: center;
+}
+
+
+.doc-list-wala-button-new:hover {
+  background-color: #79c2d0; /* Darker blue on hover */
+}
+.availability-table-new th {
+  background-color: rgba(61, 63, 70, 0.556);/* Translucent black background */
+  color: #ffffff; /* Set text color to white */
+}
+.availability-table-new td {
+  background-color: rgba(61, 63, 70, 0.556); /* Translucent black background */
+  color: #ffffff;
+}
