@@ -1,0 +1,35 @@
+/* PreviousAppointments.css */
+
+/* Container styles */
+.previous-appointments-container {
+  margin: 20px;
+  text-align: center;
+}
+
+/* Table styles */
+.previous-appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Table header styles */
+.previous-appointments-table th {
+  background-color: #f2f2f2;
+  padding: 12px 8px;
+  text-align: left;
+  text-align: center;
+}
+
+/* Table row styles */
+.previous-appointments-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 8px;
+}
+
+
+/* Hover effect */
+.previous-appointments-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
