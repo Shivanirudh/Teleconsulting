@@ -133,10 +133,10 @@ const DocChat = () => {
       });
       stompClient = window.Stomp.over(socket);
 
-      // localID = localIdInp.value || "P203";
+      // localID = localIdInp.value || "D1";
       // appointmentId = appointmentInput.value || "AP1";
-      // meetingId = meetingInput.value || "21db0f8f-36f0-4a92-84a0-a099660137aa";
-      // userType = userTypeInput.value || "PATIENT";
+      // meetingId = meetingInput.value || "b62d0623-18b7-422d-bf53-b3473d88699f";
+      // userType = userTypeInput.value || "DOCTOR";
 
       console.log(globalSelectedAppointment['doctor_id']['doctor_id'] );
       localID = globalSelectedAppointment['doctor_id']['doctor_id']  ;
@@ -460,113 +460,80 @@ const DocChat = () => {
       <Navbar />
       <div className="dashboard-content">
         <SideNavbar />
-        <div className="main-content">
-          <div className="do-chat-page-abc123">
-            <div className="video-container-xyz789">
-              <div className="big-video-123abc">
-                <video id="remoteVideo" autoPlay></video>
-              </div>
-              <div className="small-video-456def">
-                <video id="localVideo" autoPlay muted></video>
+        <div className="video-chat-page">
+          <div className="video-and-form-container">
+            <div className="video-container">
+              <div className="big-video">
+                {/* Local video container */}
+                <div className="local-video">
+                  <video id="localVideo" autoPlay muted></video>
+                </div>
+  
+                {/* Remote video 1 container (on top of local video) */}
+                <div className="remote-video">
+                  <video id="remoteVideo" autoPlay></video>
+                </div>
               </div>
             </div>
+            <div className="form-container">
+              <button id="connectBtn" className="custom-button">
+                Connect
+              </button>
+              <button id="callBtn" className="custom-button">
+                Call
+              </button>
+              <button id="testConnection" className="custom-button">
+                Test Connection
+              </button>
+              <button id="go-back-button" className="custom-button">
+               Next Patient
+              </button>
+            </div>
+          </div>
+  
+          <div className="info-container">
+            <div className="doctor-details">
+              {/* Display doctor's name */}
 
-            <div className="info-container-ghi321">
-              <div className="patient-details-jkl654">
-                <h3>Patient Details</h3>
+              <h3>Patient Details</h3>
                 <p>Name: {globalSelectedAppointment.patient_id.first_name + ' ' + globalSelectedAppointment.patient_id.last_name}</p>
                 <p>Age: {globalSelectedAppointment.patient_id.age}</p>
                 <p>Gender: {globalSelectedAppointment.patient_id.gender}</p>
-              </div>
-              <div className="document-table-mno987">
-                <h3>Document List</h3>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Document Name</th>
-                      <th>View</th>
-                      <th>Request Consent</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {documents.map((document) => (
-                  <tr key={document.id}>
-                    <td>{document}</td>
-                    {/* <td>{document.size}</td> */}
-                    <td>
-                      <button onClick={() => handleView(document)}>View</button>
-                      <button onClick={(event) => handleAskConsent(event, document)}>Request Consent</button>
-                    </td>
-                  </tr>
-                  ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="chat-window">
-                {/* Chat window */}
-                <h3>Chat</h3>
-                <div id="messageBox">Chat messages Placeholder</div>
-                <input
-                  type="text"
-                  id="messageInput"
-                  placeholder="Type your message here..."
-                />
-                <button id="sendBtn">Send</button>
-              </div>
-              <div className="upload-prescription-pqr159">
-                <button
-                  className="upload-btn-stu753"
-                  onClick={() =>
-                    handleUploadPrescription({
-                      appointment_id: "AP255",
-                      symptoms:
-                        "Patient complains of persistent cough, fatigue, and fever for the past week.",
-                      medicines_and_dosage:
-                        "Antibiotic -> Take 1 tablet every 12 hours for 7 days. \n Cough syrup -> Take 10ml three times a day as needed for cough.",
-                      advice:
-                        "Get plenty of rest, drink fluids, and avoid exposure to cold weather. If symptoms worsen or persist after completion of antibiotics, schedule a follow-up appointment.",
-                    })
-                  }
-                >
-                  Upload Prescription
-                </button>
-              </div>
+            </div>
+  
+            <div className="document-table">
+              <h3>Documents</h3>
+              <ul>
+                {documents.map((document, index) => (
+                  <li key={index}>
+                    {document}
+                    <div>
+                      <button className="custom-button" onClick={() => handleView(document)}>View</button>
+                      <button className="custom-button" onClick={() => handleAskConsent(document)}>Request Consent</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+  
+            <div className="chat-window">
+              {/* Chat window */}
+              <h3>Chat</h3>
+              <div id="messageBox"></div>
+              <input
+                type="text"
+                id="messageInput"
+                placeholder="Type your message here..."
+              />
+              <button className="custom-button" id="sendBtn">
+                Send
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <input
-          type="text"
-          name="localId"
-          id="localId"
-          placeholder="Enter Your ID"
-        />
-        <input
-          type="text"
-          name="appointment"
-          id="appointment"
-          placeholder="Enter Appointment ID"
-        />
-        <input
-          type="text"
-          name="meeting"
-          id="meeting"
-          placeholder="Enter meeting Link"
-        />
-        <input
-          type="text"
-          name="userType"
-          id="userType"
-          placeholder="Enter userType ID"
-        />
-        <button id="connectBtn">Connect</button>
-        <button id="callBtn">call</button>
-        <button id="testConnection">Test Connection</button>
-      </div>
     </div>
   );
-};
+  };
 
 export default DocChat;

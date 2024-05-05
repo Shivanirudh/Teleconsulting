@@ -6,6 +6,8 @@ import useScript from "../../components/useScript";
 import config from "./../../Config";
 import axios from "axios";
 
+
+
 const VideoChannel = () => {
   const { state } = useLocation();
   let globalSelectedAppointment = null;
@@ -23,6 +25,8 @@ const VideoChannel = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
 
   // Fetch the documents from the API
   const fetchDocuments = async () => {
@@ -65,6 +69,7 @@ const VideoChannel = () => {
     const userTypeInput = document.getElementById("userType");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
+    const gobackbutton = document.getElementById("go-back-button");
 
     let localStream;
     let remoteStream;
@@ -100,6 +105,13 @@ const VideoChannel = () => {
         console.log(error);
       });
 
+      document.addEventListener("DOMContentLoaded", function() {
+        var goBackButton = document.getElementById("go-back-button");
+        goBackButton.addEventListener("click", function() {
+            window.location.href = "http://localhost/patientdashboard";
+        });
+    });
+
     // Function to handle connecting to the WebSocket server
     const connectToWebSocket = () => {
       // Connect to Websocket Server
@@ -115,6 +127,11 @@ const VideoChannel = () => {
       appointmentId = globalSelectedAppointment['appointment_id'];
       meetingId = globalSelectedAppointment['meeting_link'];
       userType = "PATIENT";
+
+      // localID = localIdInp.value || "P1";
+      // appointmentId = appointmentInput.value || "AP1";
+      // meetingId = meetingInput.value || "b62d0623-18b7-422d-bf53-b3473d88699f";
+      // userType = userTypeInput.value || "PATIENT";
 
       stompClient.connect({}, (frame) => {
         // Subscribe to testing URL not very important
@@ -322,87 +339,74 @@ const VideoChannel = () => {
 
   return (
     <div className="video-chat-page">
+    <div className="video-and-form-container">
       <div className="video-container">
-        {/* Big video container for other side */}
         <div className="big-video">
-          <video id="remoteVideo" autoPlay></video>
-        </div>
+          {/* Local video container */}
+          <div className="local-video">
+            <video id="localVideo" autoPlay muted></video>
+          </div>
+  
+          {/* Remote video 1 container (on top of local video) */}
+          <div className="remote-video">
+            <video id="remoteVideo" autoPlay></video>
+          </div>
+  
+          {/* Remote video 2 container (on top of local video) */}
 
-        {/* Small video container for own video */}
-        <div className="small-video">
-          <video id="localVideo" autoPlay muted></video>
         </div>
       </div>
-      <div>
-        <input
-          type="text"
-          name="localId"
-          id="localId"
-          placeholder="Enter Your ID"
-        />
-        <input
-          type="text"
-          name="appointment"
-          id="appointment"
-          placeholder="Enter Appointment ID"
-        />
-        <input
-          type="text"
-          name="meeting"
-          id="meeting"
-          placeholder="Enter meeting Link"
-        />
-        <input
-          type="text"
-          name="userType"
-          id="userType"
-          placeholder="Enter userType ID"
-        />
-        <button id="connectBtn">Connect</button>
-        <button id="callBtn">call</button>
-        <button id="testConnection">Test Connection</button>
-      </div>
-      <div className="info-container">
-        <div className="doctor-details">
-          {/* Display doctor's name */}
-          <h3>Doctor Details</h3>
-          <p>
-            Name: {globalSelectedAppointment.doctor_id.first_name}{" "}
-            {globalSelectedAppointment.doctor_id.last_name}
-          </p>
+      <div className="form-container">
+<button id="connectBtn" class="custom-button">Connect</button>
+<button id="callBtn" class="custom-button">Call</button>
+<button id="testConnection" class="custom-button">Test Connection</button>
+<button id="go-back-button" class="custom-button">Go Back</button>
 
-          {/* Display doctor's specialization */}
-          <p>
-            Specialization: {globalSelectedAppointment.doctor_id.specialization}
-          </p>
-
-          {/* Display hospital name */}
-          <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
-        </div>
-
-        <div className="document-table">
-          <h3>Documents</h3>
-          <ul>
-            {documents.map((document, index) => (
-              <li key={index}>{document}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="chat-window">
-          {/* Chat window */}
-          <h3>Chat</h3>
-          <div id="messageBox">Chat messages Placeholder</div>
-          <input
-            type="text"
-            id="messageInput"
-            placeholder="Type your message here..."
-          />
-          <button id="sendBtn">Send</button>
-        </div>
       </div>
     </div>
-  );
+  
+    <div className="info-container">
+      <div className="doctor-details">
+        {/* Display doctor's name */}
+        <h3>Doctor Details</h3>
+        <p>
+          Name: {globalSelectedAppointment.doctor_id.first_name}{" "}
+          {globalSelectedAppointment.doctor_id.last_name}
+        </p>
+  
+        {/* Display doctor's specialization */}
+        <p>
+          Specialization: {globalSelectedAppointment.doctor_id.specialization}
+        </p>
+  
+        {/* Display hospital name */}
+        <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
+      </div>
+  
+      <div className="document-table">
+        <h3>Documents</h3>
+        <ul>
+          {documents.map((document, index) => (
+            <li key={index}>{document}</li>
+          ))}
+        </ul>
+      </div>
+  
+      <div className="chat-window">
+        {/* Chat window */}
+        <h3>Chat</h3>
+        <div id="messageBox"></div>
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type your message here..."
+        />
+        <button className="custom-button" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+    );
+  
 };
 
 export default VideoChannel;

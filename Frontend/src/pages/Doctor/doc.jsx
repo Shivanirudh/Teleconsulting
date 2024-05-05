@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, json, useLocation } from 'react-router-dom';
 import '../../css/Doctor/dicum.css'
 
 import SideNavbar from '../../components/Doctor/sidenavbar';
@@ -9,7 +9,9 @@ const Documents = () => {
   const [consentModalOpen, setConsentModalOpen] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [selectedHospital, setSelectedHospital] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [hospitalListModalOpen, setHospitalListModalOpen] = useState(false);
+  const [doctorListModalOpen, setDoctorListModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   
   const location = useLocation();
@@ -20,6 +22,7 @@ const Documents = () => {
   const [documents, setDocuments] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [consents, setConsents] = useState([]);
+  const [doctors, setDoctors] = useState([]);
 
   // const documents = [
   //   { id: 1, name: 'Patient Information.pdf', size: '2 MB' },
@@ -111,6 +114,26 @@ const Documents = () => {
       .catch((error) => console.error('Error fetching consents:', error));
   };
 
+  const fetchDoctors = (email) => {
+    // Retrieve token from local storage
+    const token = localStorage.getItem('token');
+
+    // Make API request to fetch appointments
+    fetch(`http://localhost:8081/api/v1/doctor/list-doctors-hospital/${email}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        
+        setDoctors(data);
+      })
+      .catch((error) => console.error('Error fetching doctors:', error));
+  };
+
   
   const handleview= (documentName, event) => {
     event.preventDefault();
@@ -174,6 +197,11 @@ const Documents = () => {
   const filteredHospitals = hospitals.filter(hospital =>
     hospital.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const filteredDoctors = doctors.filter(doctor => 
+    // doctor.name = doctor.first_name + ' ' + doctor.last_name
+    (doctor.first_name + ' ' + doctor.last_name).toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
   
   
@@ -192,12 +220,12 @@ const Documents = () => {
     }
     if (choice === 'otherHospitals') {
       setHospitalListModalOpen(true);
-      reqBody.doctor_id.doctor_id = selectedHospital.hospital_id;
+      // reqBody.doctor_id.doctor_id = selectedHospital.hospital_id;
     } else {
       setConsentModalOpen(false);
       setSelectedDocument(null);
       reqBody.doctor_id.doctor_id = docId;
-    }
+    // }
 
       // Simulate sending consent request based on choice (replace with actual logic)
       console.log(`Sending consent request for "${documentName}" for ${choice}`);
@@ -207,6 +235,7 @@ const Documents = () => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body:JSON.stringify(reqBody)
     })
@@ -217,15 +246,55 @@ const Documents = () => {
       alert(`Consent requested for ${documentName}`);
     })
     .catch((error) => console.error('Error requesting consent:', error));
+  }
   };
 
   const handleHospitalSelection = (hospital) => {
     setHospitalListModalOpen(false);
     setSelectedHospital(hospital);
     setConsentModalOpen(false);
-    setSelectedDocument(null);
+    // setSelectedDocument(null);
+    setDoctorListModalOpen(true);
+    fetchDoctors(hospital.email);
     // Simulate sending consent request for other hospital
     console.log(`Sending consent request for "${selectedDocument}" to ${hospital.name}`);
+  };
+
+  const handleDoctorSelection = (doctor, documentName) => {
+    setDoctorListModalOpen(false);
+    setSelectedDoctor(doctor);
+    setSelectedDocument(null);
+    console.log(doctor);
+    // Simulate sending consent request for other hospital
+    console.log(`Sending consent request for "${documentName}" to ${doctor.first_name + ' ' + doctor.last_name}`);
+    var reqBody = {
+      "document_name": documentName,
+      "patient_id": {
+          "patient_id": id
+      },
+      "doctor_id": {
+          "doctor_id":"D1"
+      }
+    }
+
+    reqBody.doctor_id.doctor_id  = doctor.doctor_id;
+
+    const token = localStorage.getItem('token');
+      fetch('http://localhost:8081/api/v1/doctor/consent', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify(reqBody)
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      alert(`Consent requested for ${documentName}`);
+    })
+    .catch((error) => console.error('Error requesting consent:', error));
   };
 
   return (
@@ -283,7 +352,28 @@ const Documents = () => {
       ))}
     </ul>
   </div>
+  
 )}
+
+    {doctorListModalOpen && (
+      <div className="hospital-list-modal" style={{ top: modalPosition.top, left: modalPosition.left }}>
+        <h3>Select Doctor</h3>
+        <input
+          type="text"
+          placeholder="Search doctors..."
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+        />
+        <ul>
+          {filteredDoctors.map((doctor) => (
+            <li key={doctor.id}>
+              <button onClick={() => handleDoctorSelection(doctor, selectedDocument)}>{doctor.first_name + ' ' + doctor.last_name}</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+    )}
     </div>
     </div>
     </div>

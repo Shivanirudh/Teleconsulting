@@ -19,8 +19,7 @@ export default function SideNavbar() {
     <div className="left-navbar">
       <ul>
         <li onClick={() => handleNavigation('/ddashboard')}>Home</li>
-        <li onClick={() => handleNavigation('/ddashboard/upload')}>Upload Schedule</li>                               
-        <li onClick={() => handleNavigation('/ddashboard/docchat')}>Chats</li>
+        <li onClick={() => handleNavigation('/ddashboard/upload')}>Upload Schedule</li>   
         {/* <li onClick={() => handleNavigation('/ddashboard/appointment')}>PreviousAppointments</li> */}
       </ul>
     </div>

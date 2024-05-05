@@ -10,9 +10,6 @@ function LeftNavigationBar({ navigateTo }) {
 
         <li onClick={() => navigateTo('booked-appointments')}>Booked Appointments</li>
         <li onClick={() => navigateTo('my-documents')}>My Documents</li>
-
-
-        <li onClick={() => navigateTo('/pchats')}>Audio Video Channel</li>
         <li onClick={() => navigateTo('consent')}>Consent</li>
       </ul>
     </div>
