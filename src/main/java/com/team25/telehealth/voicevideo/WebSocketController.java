@@ -422,6 +422,8 @@ public class WebSocketController {
                     Error(8, room.getCurrentDoctor());
             } else if(room.getCurrentDoctor()!= null && room.getCurrentDoctor().equals(userId)) {
                 room.setCurrentDoctor(null);
+                if(room.getCurrentPatient() != null)
+                    Error(7, room.getCurrentPatient());
                 for(String u : room.getParticipants()) {
                     Error(7, u);
                 }
