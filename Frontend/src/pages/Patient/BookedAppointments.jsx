@@ -52,7 +52,7 @@ function BookedAppointments() {
           ).getTime(); // Convert slot time to milliseconds
   
           // If current time is greater than or equal to slot time + 45 minutes, move appointment to previous appointments
-          if (currentTime >= slotTime + 45 * 60 * 1000) {
+          if (currentTime >= slotTime + 60 * 60 * 1000) {
             newPreviousAppointments.push(appointment);
           } else {
             newBookedAppointments.push(appointment);
@@ -169,7 +169,7 @@ function BookedAppointments() {
           onClick={() => handleTabChange("booked")}
           className={activeTab === "booked" ? "active" : ""}
         >
-          Booked Appointments
+          Upcoming Appointments
         </button>
         <button
           onClick={() => handleTabChange("previous")}
@@ -181,7 +181,7 @@ function BookedAppointments() {
 
       {activeTab === "booked" ? (
         <div>
-          <h2>Booked Appointments</h2>
+          <h2>Upcoming Appointments</h2>
           {isCancelingAppointment && (
             <p>Loading...</p> // Display loading indicator
           )}
@@ -209,7 +209,7 @@ function BookedAppointments() {
                     {appointment.slot[0]}
                   </td>
                   <td>
-                    {appointment.slot[3]}:{appointment.slot[4]}
+                    {appointment.slot[3]}:{appointment.slot[4] === 0? "00": appointment.slot[4]}
                   </td>
                   <td>
                     <button

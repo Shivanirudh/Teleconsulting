@@ -25,8 +25,9 @@ const VideoChannel = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [queueMessage, setQueueMessage] = useState(null);
 
-
+  const navigate = useNavigate();
 
   // Fetch the documents from the API
   const fetchDocuments = async () => {
@@ -69,7 +70,7 @@ const VideoChannel = () => {
     const userTypeInput = document.getElementById("userType");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
-    const gobackbutton = document.getElementById("go-back-button");
+    const disconnectbutton = document.getElementById("disconnect-button");
 
     let localStream;
     let remoteStream;
@@ -262,6 +263,31 @@ const VideoChannel = () => {
             document.getElementById("messageBox").appendChild(messageElement);
           }
         );
+        
+        // Subscribe to the '/user/{localID}/topic/disconnect' topic
+		stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
+			console.log('Received disconnection notification from server');
+			// Close the WebSocket connection on patient's side
+			stompClient.disconnect(() => {
+				console.log('WebSocket connection closed due to disconnection of doctor');
+			});
+			navigate("/patientdashboard");
+		});
+		
+		// Subscribe to the '/user/{localID}/topic/queueNumber' topic
+        stompClient.subscribe(
+          "/user/" + localID + "/topic/queueNumber",
+          (message) => {
+          	console.log(message.body);
+  			setQueueMessage(message.body);
+            const msg = JSON.parse(message.body).message;
+            const messageElement = document.createElement("div");
+            console.log(msg);
+            //messageElement.classList.add("message", "other-side");
+            messageElement.textContent = msg;
+            document.getElementById("queue-number").appendChild(messageElement);
+          }
+        );
 
         // Send a message to add the user
         stompClient.send(
@@ -274,8 +300,11 @@ const VideoChannel = () => {
             userType: userType,
           })
         );
+       
       });
     };
+    
+    
 
     // Handle the call button click event
     const handleCall = () => {
@@ -318,12 +347,38 @@ const VideoChannel = () => {
         messageInput.value = "";
       }
     };
+    
+    // Handle disconnect button click event
+    const handleDisconnect = () => {
+    	stompClient.send(
+		"/app/disconnect",
+		{},
+		JSON.stringify({
+		  userId: localID,
+		  meetingId: meetingId,
+		})
+	  );
+	  stompClient.disconnect(() => {
+		console.log('WebSocket connection closed');
+	  });
+	  
+	  // Stop the local video stream
+	  localStream.getTracks().forEach(track => {
+		track.stop();
+	  });
+
+	  // Set the remote video source to null to stop streaming
+	  remoteVideo.srcObject = null;
+	  //Add navigate code
+	  navigate("/patientdashboard");
+    }
 
     // Event listeners
     connectBtn.addEventListener("click", connectToWebSocket);
     callBtn.addEventListener("click", handleCall);
     testConnection.addEventListener("click", handleTestConnection);
     sendBtn.addEventListener("click", handleSend);
+    disconnectbutton.addEventListener("click", handleDisconnect);
 
     // Clean up function
     return () => {
@@ -332,6 +387,7 @@ const VideoChannel = () => {
       callBtn.removeEventListener("click", handleCall);
       testConnection.removeEventListener("click", handleTestConnection);
       sendBtn.removeEventListener("click", handleSend);
+      disconnectbutton.removeEventListener("click", handleDisconnect);
 
       // Clean up other resources if necessary
     };
@@ -360,7 +416,7 @@ const VideoChannel = () => {
 <button id="connectBtn" class="custom-button">Connect</button>
 <button id="callBtn" class="custom-button">Call</button>
 <button id="testConnection" class="custom-button">Test Connection</button>
-<button id="go-back-button" class="custom-button">Go Back</button>
+<button id="disconnect-button" class="custom-button">Disconnect</button>
 
       </div>
     </div>
@@ -382,7 +438,7 @@ const VideoChannel = () => {
         {/* Display hospital name */}
         <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
       </div>
-  
+  	  <div id="queue-number">Queue Number: {queueMessage}</div>
       <div className="document-table">
         <h3>Documents</h3>
         <ul>

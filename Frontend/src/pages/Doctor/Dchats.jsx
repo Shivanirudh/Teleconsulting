@@ -26,6 +26,7 @@ const DocChat = () => {
   const [error, setError] = useState(null);
   const [consents, setConsents] = useState([]);
 
+  const navigate = useNavigate();
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem("token"); // Retrieve the token from local storage
@@ -87,6 +88,8 @@ const DocChat = () => {
     const userTypeInput = document.getElementById("userType");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
+    const disconnectbutton = document.getElementById("disconnect-button");
+    const nextbutton = document.getElementById("next-button");
 
     let localStream;
     let remoteStream;
@@ -198,6 +201,7 @@ const DocChat = () => {
         // Subscribe to the 'offer' topic
         stompClient.subscribe("/user/" + localID + "/topic/offer", (offer) => {
           const o = JSON.parse(offer.body).offer;
+          console.log(o);
           localPeer.ontrack = (event) => {
             remoteVideo.srcObject = event.streams[0];
           };
@@ -273,7 +277,19 @@ const DocChat = () => {
             document.getElementById("messageBox").appendChild(messageElement);
           }
         );
-
+		
+		// Subscribe to the '/user/{localID}/topic/disconnect' topic
+		stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
+			console.log('Received disconnection notification from server');
+			// Close the WebSocket connection on doctor's side
+			stompClient.disconnect(() => {
+				console.log('WebSocket connection closed due to disconnection of doctor');
+			});
+			//window.location.reload();
+			//console.log('WebSocket connection closed due to disconnection of doctor');
+			navigate("/ddashboard");
+		});
+		
         // Send a message to add the user
         stompClient.send(
           "/app/addUser",
@@ -285,6 +301,26 @@ const DocChat = () => {
             userType: userType,
           })
         );
+        
+		// Subscribe to the '/user/{localID}/topic/queueNumber' topic
+        stompClient.subscribe(
+          "/user/" + localID + "/topic/queueNumber",
+          (message) => {
+            const msg = JSON.parse(message.body).message;
+            const messageElement = document.createElement("div");
+            //messageElement.classList.add("message", "other-side");
+            messageElement.textContent = msg;
+            document.getElementById("queue-number").appendChild(messageElement);
+          }
+        );
+        
+        // Subscribe to the '/user/{localID}/topic/next' topic
+		stompClient.subscribe("/user/" + localID + "/topic/next", (message) => {
+		  // Handle the message received from the server (notification about next patient)
+		  const msg = JSON.parse(message.body).message;
+		  console.log("Notification about next patient:", msg);
+		  
+		});
       });
     };
 
@@ -329,13 +365,51 @@ const DocChat = () => {
         messageInput.value = "";
       }
     };
+    
+    // Handle disconnect button click event
+    const handleDisconnect = () => {
+    	stompClient.send(
+		"/app/disconnect",
+		{},
+		JSON.stringify({
+		  userId: localID,
+		  meetingId: meetingId,
+		})
+	  );
+	  stompClient.disconnect(() => {
+		console.log('WebSocket connection closed');
+	  });
+	  // Stop the local video stream
+	  localStream.getTracks().forEach(track => {
+		track.stop();
+	  });
+
+	  // Set the remote video source to null to stop streaming
+	  remoteVideo.srcObject = null;
+	  
+	  navigate("/ddashboard");
+    }
+    
+    // Handle next button click event
+    const handleNextPatient = () => {
+	  stompClient.send(
+		"/app/next",
+		{},
+		JSON.stringify({
+		  userId: localID,
+		  meetingId: meetingId,
+		})
+	  );
+	};
 
     // Event listeners
     connectBtn.addEventListener("click", connectToWebSocket);
     callBtn.addEventListener("click", handleCall);
     testConnection.addEventListener("click", handleTestConnection);
     sendBtn.addEventListener("click", handleSend);
-
+    disconnectbutton.addEventListener("click", handleDisconnect);
+	nextbutton.addEventListener("click", handleNextPatient);
+	
     // Clean up function
     return () => {
       // Remove event listeners
@@ -343,7 +417,8 @@ const DocChat = () => {
       callBtn.removeEventListener("click", handleCall);
       testConnection.removeEventListener("click", handleTestConnection);
       sendBtn.removeEventListener("click", handleSend);
-
+      disconnectbutton.removeEventListener("click", handleDisconnect);
+	  nextbutton.removeEventListener("click", handleNextPatient);
       // Clean up other resources if necessary
     };
   }, []);
@@ -485,8 +560,11 @@ const DocChat = () => {
               <button id="testConnection" className="custom-button">
                 Test Connection
               </button>
-              <button id="go-back-button" className="custom-button">
+              <button id="next-button" className="custom-button">
                Next Patient
+              </button>
+              <button id="disconnect-button" className="custom-button">
+               Disconnect
               </button>
             </div>
           </div>
@@ -500,7 +578,7 @@ const DocChat = () => {
                 <p>Age: {globalSelectedAppointment.patient_id.age}</p>
                 <p>Gender: {globalSelectedAppointment.patient_id.gender}</p>
             </div>
-  
+  			<div id="queue-number"></div>
             <div className="document-table">
               <h3>Documents</h3>
               <ul>
