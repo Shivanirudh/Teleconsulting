@@ -333,7 +333,7 @@ public class WebSocketController {
 
         if (rooms.containsKey(meetingId)) {
             Room room = rooms.get(meetingId);
-            if(room.getCurrentPatient().equals(userId)) {
+            if(room.getCurrentPatient() != null && room.getCurrentPatient().equals(userId)) {
                 if(room.getCurrentDoctor() == null) {
                     Error(3, userId);
                 } else {
@@ -344,7 +344,7 @@ public class WebSocketController {
                                 .convertAndSendToUser(room.getSeniorDoctor(),"/topic/message", message);
                     }
                 }
-            } else if(room.getCurrentDoctor().equals(userId)) {
+            } else if(room.getCurrentDoctor() != null && room.getCurrentDoctor().equals(userId)) {
                 if(room.getCurrentPatient() == null) {
                     Error(4, userId);
                 } else {
@@ -355,7 +355,7 @@ public class WebSocketController {
                                 .convertAndSendToUser(room.getSeniorDoctor(),"/topic/message", message);
                     }
                 }
-            } else if(room.getSeniorDoctor().equals(userId)) {
+            } else if(room.getSeniorDoctor() != null && room.getSeniorDoctor().equals(userId)) {
                 if(room.getCurrentPatient() == null) {
                     Error(4, userId);
                 } else {
@@ -387,7 +387,7 @@ public class WebSocketController {
 
         if(rooms.containsKey(meetingId)) {
             Room room = rooms.get(meetingId);
-            if(room.getCurrentDoctor().equals(userId)) {
+            if(room.getCurrentDoctor() != null && room.getCurrentDoctor().equals(userId)) {
                 room.addCompletedParticipant(room.getCurrentPatient());
                 room.setCurrentPatient(null);
                 if(!room.getParticipants().isEmpty()) {
@@ -398,7 +398,7 @@ public class WebSocketController {
                 } else {
                     Error(0, userId);
                 }
-            } else if(room.getSeniorDoctor().equals(userId)) {
+            } else if(room.getSeniorDoctor() != null && room.getSeniorDoctor().equals(userId)) {
                 Error(1, userId);
             } else {
                 Error(2, userId);
@@ -413,20 +413,20 @@ public class WebSocketController {
         String userId = jsonObject.get("userId").toString();
         if(rooms.containsKey(meetingId)) {
             Room room = rooms.get(meetingId);
-            if(room.getCurrentPatient().equals(userId)) {
+            if(room.getCurrentPatient() != null && room.getCurrentPatient().equals(userId)) {
                 room.addCompletedParticipant(userId);
                 room.setCurrentPatient(null);
                 if(room.getSeniorDoctor() != null)
                     Error(8, room.getSeniorDoctor());
                 if(room.getCurrentDoctor() != null)
                     Error(8, room.getCurrentDoctor());
-            } else if(room.getCurrentDoctor().equals(userId)) {
+            } else if(room.getCurrentDoctor()!= null && room.getCurrentDoctor().equals(userId)) {
                 room.setCurrentDoctor(null);
                 for(String u : room.getParticipants()) {
                     Error(7, u);
                 }
                 rooms.remove(meetingId);
-            } else if(room.getSeniorDoctor().equals(userId)) {
+            } else if(room.getSeniorDoctor() != null && room.getSeniorDoctor().equals(userId)) {
                 room.setSeniorDoctor(null);
                 if(room.getCurrentPatient() != null)
                     Error(6, room.getCurrentPatient());;
