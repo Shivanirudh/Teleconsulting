@@ -2,6 +2,7 @@ package com.team25.telehealth.repo;
 
 import com.team25.telehealth.entity.Appointment;
 import com.team25.telehealth.entity.Doctor;
+import com.team25.telehealth.entity.Hospital;
 import com.team25.telehealth.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -70,4 +71,10 @@ public interface AppointmentRepo extends JpaRepository<Appointment, Integer> {
             @Param("active") Boolean active,
             @Param("start_date") LocalDate startDate,
             @Param("end_date") LocalDate endDate);
+
+    @Query("SELECT a FROM Appointment a WHERE a.doctor.hospital = :hospital AND a.active = :active AND Date(a.slot) = :date")
+    List<Appointment> getAllByHospitalAndActiveAndSlotDateBetween(
+            @Param("hospital") Hospital hospital,
+            @Param("active") Boolean active,
+            @Param("date") LocalDate date);
 }

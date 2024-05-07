@@ -119,4 +119,9 @@ public class DoctorController {
     public List<DoctorDTO> listDoctorsByHospital(Principal principal, @PathVariable String email){
         return patientService.getDoctorsByHospital(principal, email);
     }
+
+    @GetMapping("/all-appointments")
+    public ResponseEntity<?> allAppointments(Principal principal) {
+        return appointmentService.fetchAllAppointments(principal);
+    }
 }
