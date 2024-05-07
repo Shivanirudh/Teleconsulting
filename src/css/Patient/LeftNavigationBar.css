@@ -1,0 +1,47 @@
+.left-navbar {
+  width: 220px; /* Initial width */
+  background-color: rgba(61, 63, 70, 0.7); /* Translucent black background */
+  padding: 20px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.left-navbar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-navbar li {
+  cursor: pointer;
+  padding: 10px 0;
+  border-bottom: 1px solid #555;
+  transition: all 0.3s ease;
+}
+
+.left-navbar li:last-child {
+  border-bottom: none;
+}
+
+.left-navbar li:hover {
+  background-color: #555;
+}
+
+.left-navbar li::before {
+  content: "\2022"; /* Bullet point */
+  color: #007bff; /* Change bullet color */
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.left-navbar li:hover::before {
+  color: #7700ff; /* Change bullet color on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .left-navbar {
+    width: 100%; /* Sidebar spans the whole width */
+  }
+}

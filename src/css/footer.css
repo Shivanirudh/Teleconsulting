@@ -1,0 +1,29 @@
+.main-footer-container {
+  background-color: rgba(61, 63, 70, 0.7); /* Increased opacity for better visibility */
+  color: #fff;
+  padding: 10px; /* Padding for inner content */
+  text-align: center;
+  width: 100%;
+  position: fixed; /* Fixed position instead of absolute */
+  bottom: 0;
+  left: 0;
+  z-index: 2; /* Ensure the footer is above other content */
+  display: flex;
+  justify-content: space-between; /* Align children to the sides */
+  align-items: center; /* Vertically center align content */
+}
+
+.footer-left {
+  flex: 1; /* Take up available space */
+  text-align: left; /* Align text to the left */
+}
+
+.footer-right {
+  margin-left: auto; /* Push links to the right */
+}
+
+.footer-right a {
+  color: #fff; /* Set link color to white */
+  text-decoration: none; /* Remove underline */
+  margin-left: 10px; /* Add spacing between links */
+}
