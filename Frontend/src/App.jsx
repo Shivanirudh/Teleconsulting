@@ -26,6 +26,7 @@ import Doctorchat from './pages/Doctor/Dchats.jsx'
 import DocumentsPage from './pages/Doctor/doc';
 import PatientDetails from './pages/Doctor/patientdetails';
 import Dashboard from './pages/Doctor/dasnew.jsx';
+import AllAppointments from './pages/Doctor/AllAppointments.jsx';
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
             <Route exact path = "/ddashboard/upload"  element = {<UploadSchedule/>}/>
             <Route exact path = "/deditdetails"     element = {<EditDetails/>}/>
             <Route exact path="/dchats" element={<Doctorchat />} />
+            <Route exact path="/ddashboard/AllAppointments" element={<AllAppointments />} />
             <Route exact path="/doc" element = {<DocumentsPage/>}/>
             <Route exact path= "/details"           element = {<PatientDetails/>}/>
           </Route>

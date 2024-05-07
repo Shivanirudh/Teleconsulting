@@ -25,6 +25,7 @@ const DocChat = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [consents, setConsents] = useState([]);
+  const [doctor, setDoctor] = useState("");
 
   const navigate = useNavigate();
   const fetchDocuments = async () => {
@@ -69,10 +70,32 @@ const DocChat = () => {
       })
       .catch((error) => console.error('Error fetching consents:', error));
   };
+  
+  const fetchDoctor= () => {
+    // Retrieve token from local storage
+    const token = localStorage.getItem('token');
+
+    // Make API request to fetch appointments
+    fetch(`http://localhost:8081/api/v1/doctor/`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        console.log(data.doctor_id);
+        setDoctor(data.doctor_id);
+        console.log(doctor);
+      })
+      .catch((error) => console.error('Error fetching details:', error));
+  };
 
   useEffect(() => {
     fetchDocuments();
     fetchConsents();
+    //fetchDoctor();
   }, []);
 
   useEffect(() => {
@@ -124,7 +147,8 @@ const DocChat = () => {
         // Access denied or error occurred
         console.log(error);
       });
-
+	
+	
     // Function to handle connecting to the WebSocket server
     const connectToWebSocket = () => {
       // Connect to Websocket Server
@@ -143,6 +167,7 @@ const DocChat = () => {
 
       console.log(globalSelectedAppointment['doctor_id']['doctor_id'] );
       localID = globalSelectedAppointment['doctor_id']['doctor_id']  ;
+      //localID = doctor;
       appointmentId = globalSelectedAppointment['appointment_id'];
       meetingId = globalSelectedAppointment['meeting_link'];
       userType = "DOCTOR";
@@ -155,11 +180,12 @@ const DocChat = () => {
 
         // Subscribe to '/user/{localID}/topic/call' topic
         stompClient.subscribe("/user/" + localID + "/topic/call", (call) => {
+          console.log("Call attempt reached");
           localPeer.ontrack = (event) => {
             // Setting Remote stream in remote video element
             remoteVideo.srcObject = event.streams[0];
           };
-
+		  console.log("Local ");
           localPeer.onicecandidate = (event) => {
             if (event.candidate) {
               const candidate = {
@@ -279,16 +305,16 @@ const DocChat = () => {
         );
 		
 		// Subscribe to the '/user/{localID}/topic/disconnect' topic
-		stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
-			console.log('Received disconnection notification from server');
+		//stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
+			//console.log('Received disconnection notification from server');
 			// Close the WebSocket connection on doctor's side
-			stompClient.disconnect(() => {
-				console.log('WebSocket connection closed due to disconnection of doctor');
-			});
+			//stompClient.disconnect(() => {
+			//	console.log('WebSocket connection closed due to disconnection of doctor');
+			//});
 			//window.location.reload();
 			//console.log('WebSocket connection closed due to disconnection of doctor');
-			navigate("/ddashboard");
-		});
+			//navigate("/ddashboard");
+		//});
 		
         // Send a message to add the user
         stompClient.send(
@@ -301,6 +327,54 @@ const DocChat = () => {
             userType: userType,
           })
         );
+        
+        // Subscribe to the '/user/{localID}/topic/error' topic
+		stompClient.subscribe("/user/" + localID + "/topic/error", (message) => {
+			//console.log('Received disconnection notification from server');
+			// Close the WebSocket connection on doctor's side
+			console.log(message);
+			switch(message.body) {
+		        case "NO_MORE_PATIENTS":
+		        	// Stop the local video stream
+				    localStream.getTracks().forEach(track => {
+					  track.stop();
+				    });
+
+				    // Set the remote video source to null to stop streaming
+				    remoteVideo.srcObject = null;
+				    if (stompClient.connected)
+		        		stompClient.disconnect();
+		        	if(localPeer)
+					  localPeer.close();
+					console.log("Peer to peer connection closed");
+					console.log('WebSocket connection closed due to disconnection of doctor');
+					navigate("/ddashboard");
+		        	alert(message.body);
+		            break;
+		        case "ILLEGAL_ACTION_SENIOR_DOCTOR":
+		        	alert(message);
+		        	break;
+		        case "PATIENT_NOT_PRESENT":
+					alert(message);
+		            break;
+		        case "MEETING_ID_OR_APPOINTMENT_WRONG":
+		        	alert(message);
+		            break;
+		        case "SENIOR_DOCTOR_DISCONNECTED":
+		            break;
+		        case "PATIENT_DISCONNECTED":
+				    // Set the remote video source to null to stop streaming
+				    remoteVideo.srcObject = null;
+				    //localStream.getTracks().forEach(track => {
+					//  track.stop();
+				    //});
+		        	//alert(message);
+		            break;
+		        default: 
+		        	alert("SOMETHING_WENT_WRONG");
+		            break;
+        	}
+		});
         
 		// Subscribe to the '/user/{localID}/topic/queueNumber' topic
         stompClient.subscribe(
@@ -323,6 +397,24 @@ const DocChat = () => {
 		});
       });
     };
+    
+    //connectToWebSocket();
+    
+    //if (window.Stomp) {
+	  // Stomp library is already loaded, proceed with WebSocket connection
+	//  connectToWebSocket();
+	//} else {
+	  // Stomp library is not yet loaded, wait for it to load
+	  // You can use a setTimeout or other mechanism to check again after a delay
+	 // setTimeout(() => {
+	//	if (window.Stomp) {
+	//	  connectToWebSocket();
+	//	} else {
+	//	  console.error('Stomp library failed to load.');
+		  // Handle error or retry mechanism here
+	//	}
+	//  }, 1000); // Adjust the delay as needed
+	//}
 
     // Handle the call button click event
     const handleCall = () => {
@@ -376,18 +468,22 @@ const DocChat = () => {
 		  meetingId: meetingId,
 		})
 	  );
-	  stompClient.disconnect(() => {
-		console.log('WebSocket connection closed');
-	  });
+	  stompClient.disconnect();
+	  console.log('WebSocket connection closed');
+	  if(localPeer){
+		localPeer.close();
+	  	console.log("Peer to peer connection closed");
+	  }
 	  // Stop the local video stream
 	  localStream.getTracks().forEach(track => {
 		track.stop();
 	  });
-
+	  console.log(localStream);
 	  // Set the remote video source to null to stop streaming
 	  remoteVideo.srcObject = null;
 	  
 	  navigate("/ddashboard");
+	  window.location.reload();
     }
     
     // Handle next button click event
@@ -400,6 +496,13 @@ const DocChat = () => {
 		  meetingId: meetingId,
 		})
 	  );
+
+	  remoteVideo.srcObject = null;
+	  //localStream.getTracks().forEach(track => {
+	  //  track.stop();
+	  //});
+	  localPeer = new RTCPeerConnection(iceServers);
+	  
 	};
 
     // Event listeners

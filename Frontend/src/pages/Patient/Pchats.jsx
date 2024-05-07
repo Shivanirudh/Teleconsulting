@@ -71,6 +71,7 @@ const VideoChannel = () => {
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
     const disconnectbutton = document.getElementById("disconnect-button");
+    const queuebutton = document.getElementById("queue-button");
 
     let localStream;
     let remoteStream;
@@ -265,13 +266,67 @@ const VideoChannel = () => {
         );
         
         // Subscribe to the '/user/{localID}/topic/disconnect' topic
-		stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
-			console.log('Received disconnection notification from server');
+		//stompClient.subscribe("/user/" + localID + "/topic/disconnect", () => {
+		//	console.log('Received disconnection notification from server');
 			// Close the WebSocket connection on patient's side
-			stompClient.disconnect(() => {
-				console.log('WebSocket connection closed due to disconnection of doctor');
-			});
-			navigate("/patientdashboard");
+		//	stompClient.disconnect(() => {
+		//		console.log('WebSocket connection closed due to disconnection of doctor');
+		//	});
+		//	navigate("/patientdashboard");
+		//});
+		
+		// Subscribe to the '/user/{localID}/topic/error' topic
+		stompClient.subscribe("/user/" + localID + "/topic/error", (message) => {
+			//console.log('Received disconnection notification from server');
+			// Close the WebSocket connection on patient's side
+			console.log(message);
+			switch(message.body) {
+		        case "ILLEGAL_ACTION_PATIENT":
+		        	alert(message);
+		            break;
+		        case "DOCTOR_NOT_PRESENT":
+		        	// Stop the local video stream
+				    localStream.getTracks().forEach(track => {
+					  track.stop();
+				    });
+
+				    // Set the remote video source to null to stop streaming
+				    remoteVideo.srcObject = null;
+				    if (stompClient.connected)
+		        		stompClient.disconnect();
+					console.log('WebSocket connection closed due to disconnection of doctor');
+					if(localPeer)
+					  localPeer.close();
+					console.log("Peer to peer connection closed");
+					navigate("/patientdashboard");
+		            break;
+		        case "MEETING_ID_OR_APPOINTMENT_WRONG":
+		        	alert(message);
+		            break;
+		        case "SENIOR_DOCTOR_DISCONNECTED":
+		            break;
+		        case "DOCTOR_DISCONNECTED":
+		        	// Stop the local video stream
+				    localStream.getTracks().forEach(track => {
+					  track.stop();
+				    });
+
+				    // Set the remote video source to null to stop streaming
+				    remoteVideo.srcObject = null;
+				    if (stompClient.connected)
+		        		stompClient.disconnect();
+		        	console.log('WebSocket connection closed due to disconnection of doctor');
+		        	if(localPeer){
+					  localPeer.close();
+						console.log("Peer to peer connection closed");
+					}
+					navigate("/patientdashboard");
+					window.location.reload();
+		            break;
+		        default: 
+		        	alert("SOMETHING_WENT_WRONG");
+		            break;
+        	}
 		});
 		
 		// Subscribe to the '/user/{localID}/topic/queueNumber' topic
@@ -288,6 +343,16 @@ const VideoChannel = () => {
             document.getElementById("queue-number").appendChild(messageElement);
           }
         );
+        
+        // Subscribe to the '/user/{localID}/topic/next' topic
+		stompClient.subscribe("/user/" + localID + "/topic/next", (message) => {
+		  // Handle the message received from the server (notification about next patient)
+		  const msg = JSON.parse(message.body).message;
+		  console.log(message);
+		  console.log(message.body.messageId);
+		  console.log("Notification about next patient:", msg);
+		  
+		});
 
         // Send a message to add the user
         stompClient.send(
@@ -300,14 +365,41 @@ const VideoChannel = () => {
             userType: userType,
           })
         );
+        
+        // Send a message to get queue number
+        //stompClient.send(
+        //  "/app/queueNumber",
+        //  {},
+        //  JSON.stringify({
+        //    userId: localID,
+        //    meetingId: meetingId,
+        //  })
+        //);
        
       });
     };
     
+    //connectToWebSocket();
     
+    //if (window.Stomp) {
+	  // Stomp library is already loaded, proceed with WebSocket connection
+	//  connectToWebSocket();
+	//} else {
+	  // Stomp library is not yet loaded, wait for it to load
+	  // You can use a setTimeout or other mechanism to check again after a delay
+	//  setTimeout(() => {
+	//	if (window.Stomp) {
+	//	  connectToWebSocket();
+	//	} else {
+	//	  console.error('Stomp library failed to load.');
+		  // Handle error or retry mechanism here
+	//	}
+	//  }, 1000); // Adjust the delay as needed
+	//}
 
     // Handle the call button click event
     const handleCall = () => {
+      localPeer = new RTCPeerConnection(iceServers);
       stompClient.send(
         "/app/call",
         { Authorization: "Bearer " + authToken },
@@ -358,10 +450,15 @@ const VideoChannel = () => {
 		  meetingId: meetingId,
 		})
 	  );
-	  stompClient.disconnect(() => {
-		console.log('WebSocket connection closed');
-	  });
+	  stompClient.disconnect();
 	  
+	  console.log('WebSocket connection closed');
+	  
+	  if(localPeer){
+	  	localPeer.close();
+	  	console.log("Peer to peer connection closed");
+	  }
+	  console.log(localStream);
 	  // Stop the local video stream
 	  localStream.getTracks().forEach(track => {
 		track.stop();
@@ -371,7 +468,21 @@ const VideoChannel = () => {
 	  remoteVideo.srcObject = null;
 	  //Add navigate code
 	  navigate("/patientdashboard");
+	  window.location.reload();
     }
+    
+    const handleQueue = () =>{
+    	stompClient.send(
+          "/app/queueNumber",
+          {},
+          JSON.stringify({
+            userId: localID,
+            meetingId: meetingId,
+          })
+        );
+    	//window.location.reload();
+    }
+    
 
     // Event listeners
     connectBtn.addEventListener("click", connectToWebSocket);
@@ -379,6 +490,7 @@ const VideoChannel = () => {
     testConnection.addEventListener("click", handleTestConnection);
     sendBtn.addEventListener("click", handleSend);
     disconnectbutton.addEventListener("click", handleDisconnect);
+    queuebutton.addEventListener("click", handleQueue);
 
     // Clean up function
     return () => {
@@ -388,6 +500,7 @@ const VideoChannel = () => {
       testConnection.removeEventListener("click", handleTestConnection);
       sendBtn.removeEventListener("click", handleSend);
       disconnectbutton.removeEventListener("click", handleDisconnect);
+      queuebutton.addEventListener("click", handleQueue);
 
       // Clean up other resources if necessary
     };
@@ -438,7 +551,10 @@ const VideoChannel = () => {
         {/* Display hospital name */}
         <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
       </div>
-  	  <div id="queue-number">Queue Number: {queueMessage}</div>
+  	  <div id="queue-number">
+  	  	Queue Number: {queueMessage}<br></br>
+  	  	<button id="queue-button" class="custom-button">Get queue number</button>
+  	  </div>
       <div className="document-table">
         <h3>Documents</h3>
         <ul>

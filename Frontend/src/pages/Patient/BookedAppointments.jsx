@@ -146,12 +146,12 @@ function BookedAppointments() {
     setSelectedAppointment(appointment);
 
     // Compare current time array with appointment.slot
-    const isTimeForMeeting = currentTimeArray.every((value, index) => {
-      const slotValue = appointment.slot[index];
-      return value >= slotValue && value <= slotValue + 60;
-  });
+    //const isTimeForMeeting = currentTimeArray.every((value, index) => {
+    //  const slotValue = appointment.slot[index];
+    //  return value >= slotValue && value <= slotValue + 60;
+  //});
   
-    // const isTimeForMeeting = currentTimeArray.every((value, index) => value === currentTimeArray[index]);
+    const isTimeForMeeting = currentTimeArray.every((value, index) => value === currentTimeArray[index]);
     if (isTimeForMeeting) {
         // Navigate to meeting page
         navigate('/pchats', { state: { selectedAppointment: appointment } });
