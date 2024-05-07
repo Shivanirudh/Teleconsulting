@@ -388,8 +388,19 @@ public class WebSocketController {
         if(rooms.containsKey(meetingId)) {
             Room room = rooms.get(meetingId);
             if(room.getCurrentDoctor() != null && room.getCurrentDoctor().equals(userId)) {
-                room.addCompletedParticipant(room.getCurrentPatient());
-                room.setCurrentPatient(null);
+                if(room.getCurrentPatient() != null) {
+                    room.addCompletedParticipant(room.getCurrentPatient());
+                    Error(7, room.getCurrentPatient());
+                    room.setCurrentPatient(null);
+                    if(room.getSeniorDoctor() != null) {
+                        System.out.println("Patient disconnect for next - senior doctor");
+                        Error(8, room.getSeniorDoctor());
+                    }
+                    if(room.getCurrentDoctor() != null) {
+                        System.out.println("Patient disconnect for next - doctor");
+                        Error(8, room.getCurrentDoctor());
+                    }
+                }
                 if(!room.getParticipants().isEmpty()) {
                     room.setCurrentPatient(room.getParticipants().get(0));
                     room.getParticipants().remove(0);

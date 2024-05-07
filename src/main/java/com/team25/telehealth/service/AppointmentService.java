@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -290,5 +291,17 @@ public class AppointmentService {
 
         AppointmentDTO appointmentDTO = appointmentMapper.toDTO(appointment);
         return ResponseEntity.status(HttpStatus.OK).body(appointmentDTO);
+    }
+
+    public ResponseEntity<?> fetchAllAppointments(Principal principal) {
+        Doctor doctor = doctorService.getDoctorByEmail(principal.getName());
+        if(!doctor.getRole().equals(Role.SENIORDOCTOR)) return ResponseEntity.badRequest().body("Not allowed to do this");
+        return ResponseEntity.ok(
+                appointmentMapper.toDTOList(
+                        appointmentRepo.getAllByHospitalAndActiveAndSlotDateBetween(
+                                doctor.getHospital(),
+                                true,
+                                LocalDate.now()
+                )));
     }
 }
