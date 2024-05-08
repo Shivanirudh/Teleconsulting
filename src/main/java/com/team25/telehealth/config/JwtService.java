@@ -1,10 +1,13 @@
 package com.team25.telehealth.config;
 
+import com.team25.telehealth.helpers.SecretKeys;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "C2154BF222A336473C81B11EA2DB5C2154BF222A336473C81B11EA2DB5C2154BF222A336473C81B11EA2DB5";
+    private static final String SECRET_KEY = SecretKeys.JWT_KEY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

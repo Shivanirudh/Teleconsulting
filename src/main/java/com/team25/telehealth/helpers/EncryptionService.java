@@ -14,7 +14,7 @@ import java.util.Base64;
 
 @Service
 public class EncryptionService {
-    private static final byte[] COMMON_KEY = "yeKterceSrepuSyM".getBytes();
+    private static final byte[] COMMON_KEY = SecretKeys.AES_ENCRYPTION_KEY.getBytes();
 
     public void encryptAndStoreFile(String filePath, InputStream inputStream) throws Exception {
         try (OutputStream outputStream = new CipherOutputStream(
