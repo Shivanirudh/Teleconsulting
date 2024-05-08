@@ -121,10 +121,10 @@ public class WebSocketController {
                     Error(3, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", userId);
                     if(room.getSeniorDoctor()!=null) {
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", userId);
                     }
                 }
             } else if(room.getCurrentDoctor().equals(userId)) {
@@ -132,10 +132,10 @@ public class WebSocketController {
                     Error(4, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", userId);
                     if(room.getSeniorDoctor()!=null) {
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", userId);
                     }
                 }
             } else if(room.getSeniorDoctor().equals(userId)) {
@@ -143,10 +143,10 @@ public class WebSocketController {
                     Error(4, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", userId);
                     if(room.getCurrentDoctor() != null)
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", userId);
 
                 }
             }
