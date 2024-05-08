@@ -86,6 +86,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         AuthenticationResponse res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(patient.getPatientId())
                 .email(patient.getEmail())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
@@ -109,6 +110,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(doctor.getDoctorId())
                 .email(doctor.getEmail())
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
@@ -133,6 +135,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(admin.getAdminId())
                 .email(admin.getEmail())
                 .firstName(admin.getFirstName())
                 .lastName(admin.getLastName())
