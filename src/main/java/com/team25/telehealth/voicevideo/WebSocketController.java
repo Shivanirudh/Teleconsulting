@@ -75,7 +75,13 @@ public class WebSocketController {
                             && room.getParticipants().isEmpty()
                             && !room.containsCompletedParticipant(userId)
                     ) room.setCurrentPatient(userId);
-                    else if(!room.containsCompletedParticipant(userId)) room.addParticipant(userId);
+                    else if(room.getCurrentPatient() != null
+                            && !room.containsCompletedParticipant(userId)
+                            && !room.getCurrentPatient().equals(userId))
+                        room.addParticipant(userId);
+                    else if(room.getCurrentPatient() == null
+                            && !room.containsCompletedParticipant(userId))
+                        room.addParticipant(userId);
                     room.getParticipantAppointment().put(userId, appointment.getAppointmentId());
                 }
 
@@ -438,6 +444,8 @@ public class WebSocketController {
                 for(String u : room.getParticipants()) {
                     Error(7, u);
                 }
+                if(room.getSeniorDoctor() != null)
+                    Error(7, room.getSeniorDoctor());
                 rooms.remove(meetingId);
             } else if(room.getSeniorDoctor() != null && room.getSeniorDoctor().equals(userId)) {
                 room.setSeniorDoctor(null);
