@@ -496,6 +496,113 @@ public class WebSocketController {
                 .convertAndSendToUser(user,"/topic/error", message);
     }
 
+    @MessageMapping("/seniorDoctorCall")
+    public void seniorDoctorCall(String call){
+        JSONObject jsonObject = new JSONObject(call);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorCall", userId);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorCall", userId);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
+    }
+
+    @MessageMapping("/seniorDoctorOffer")
+    public void seniorDoctorOffer(String offer){
+        JSONObject jsonObject = new JSONObject(offer);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getCurrentPatient().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorOffer", offer);
+                }
+            } else if(room.getCurrentDoctor().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorOffer", offer);
+                }
+            } else Error(-1, userId);
+        } else Error(5, userId);
+    }
+
+    @MessageMapping("/seniorDoctorAnswer")
+    public void seniorDoctorAnswer(String answer){
+        JSONObject jsonObject = new JSONObject(answer);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorAnswer", answer);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorAnswer", answer);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
+    }
+    @MessageMapping("/seniorDoctorCandidate")
+    public void seniorDoctorCandidate(String candidate){
+        JSONObject jsonObject = new JSONObject(candidate);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getCurrentPatient().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                }
+            } else if(room.getCurrentDoctor().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                }
+            } else if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorCandidate", candidate);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
+    }
+
     @GetMapping("/api/v1/doctor/currentPatientAppointment/{meetingId}")
     public ResponseEntity<?> currentPatientAppointment(@PathVariable String meetingId) {
         if(!rooms.containsKey(meetingId)) return ResponseEntity.badRequest().body("Meeting Id is incorrect");
