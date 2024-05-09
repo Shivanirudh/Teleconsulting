@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function AllAppointments() {
   const [appointments, setAppointments] = useState([]);
-  const [doctor, setDoctor] = useState(null);
+  //const [doctor, setDoctor] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,29 +72,6 @@ export default function AllAppointments() {
   const handleCloseModal = () => {
     setModalVisible(false);
   };
-
-
-  const fetchDoctor= () => {
-    // Retrieve token from local storage
-    const token = localStorage.getItem('token');
-
-    // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        console.log(data.doctor_id);
-        setDoctor(data);
-        console.log(doctor);
-        selectedAppointment["doctor_id"]["doctor_id"] = data.doctor_id;
-      })
-      .catch((error) => console.error('Error fetching details:', error));
-  };
   
   // Function to handle joining the meeting
   const handleJoinMeeting = () => {
@@ -120,8 +97,7 @@ export default function AllAppointments() {
     const isTimeForMeeting = currentTimeArray.every((value, index) => value === currentTimeArray[index]);
     if (isTimeForMeeting) {
         // Navigate to meeting page
-        fetchDoctor();
-        selectedAppointment["doctor_id"]["doctor_id"] = doctor.doctor_id;
+        //selectedAppointment["doctor_id"]["doctor_id"] = doctor.doctor_id;
         navigate('/dchats', { state: { selectedAppointment: selectedAppointment } });
     } else {
         // Alert the user that it is not time for the meeting yet

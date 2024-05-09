@@ -409,9 +409,9 @@ function DoctorList() {
                           <thead>
                             <tr>
                               <th style={{ width: "150px" }}>Date</th>
-                              {Array.from({ length: 8 }, (_, i) => i).map(
+                              {Array.from({ length: 12 }, (_, i) => i).map(
                                 (index) => {
-                                  const hour = 9 + index; // 1-hour slots from 9 AM to 4 PM
+                                  const hour = 9 + index; // 1-hour slots from 9 AM to 8 PM
                                   return <th key={index}>{hour}:00</th>;
                                 }
                               )}

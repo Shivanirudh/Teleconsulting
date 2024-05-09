@@ -48,6 +48,7 @@ const DoctorLogin = () => {
         localStorage.setItem('token-type', 'doctor'); // Store token type
         localStorage.setItem('firstname', response.data.firstName);
         localStorage.setItem('lastname', response.data.lastName);
+        localStorage.setItem('userId', response.data.userId);
         alert('Login successful!');
         navigate('/ddashboard');
       })

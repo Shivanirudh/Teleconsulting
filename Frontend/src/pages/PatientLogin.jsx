@@ -49,6 +49,7 @@ const PatientLogin = () => {
         localStorage.setItem('firstname', response.data.firstName);
         localStorage.setItem('lastname', response.data.lastName);
         localStorage.setItem('email', response.data.email);
+        localStorage.setItem('userId', response.data.userId);
         alert('Login successful!');
         navigate('/patientdashboard');
       })
