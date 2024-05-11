@@ -1072,6 +1072,7 @@ const DocChat = () => {
       );
 
       remoteVideo.srcObject = null;
+      seniorDoctorVideo.srcObject = null;
       //localStream.getTracks().forEach(track => {
       //  track.stop();
       //});

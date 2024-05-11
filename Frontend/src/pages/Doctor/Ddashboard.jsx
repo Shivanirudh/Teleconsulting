@@ -241,9 +241,9 @@ export default function DoctorDashboard() {
             <Link to= {`/details?id=${selectedAppointment.appointment_id}`} > <button className="btn btn-info custom-button2" >
               View Patient
             </button> </Link>
-            <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
+            {/* <button type="button" className="btn btn-danger" onClick={handleCancelAppointment}>
               Cancel Appointment
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
