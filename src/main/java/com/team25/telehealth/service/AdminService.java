@@ -76,12 +76,13 @@ public class AdminService {
     public String generateOtp(Principal principal) {
         String adminEmail = principal.getName();
         Admin admin = getAdminByEmail(adminEmail);
-        admin.setOtp(otpHelper.generateOtp());
+        String otp = otpHelper.generateOtp();
+        admin.setOtp(passwordEncoder.encode(otp));
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
         mailService.sendEmail(admin.getEmail(),
                 "OTP For TeleHealth Website",
-                admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone.");
+                otp + " This is the OTP generated for your account. Do not Share it with anyone.");
         return "Otp generated Successfully";
     }
 

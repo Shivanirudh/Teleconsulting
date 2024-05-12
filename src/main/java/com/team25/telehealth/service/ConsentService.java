@@ -24,6 +24,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -45,6 +46,7 @@ public class ConsentService {
     private final ConsentIdGenerator consentIdGenerator;
     private final OtpHelper otpHelper;
     private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public ResponseEntity<?> getConsent(Principal principal, ConsentDTO consentDTO) {
@@ -68,6 +70,7 @@ public class ConsentService {
         hospital = hospitalService.findHospitalByDoctor(requestedForDoctor);
         List<Consent> l = isDuplicateConsent(hospital, requestedForDoctor, patient, consentDTO.getDocumentName());
         Consent consent = null;
+        String otp = otpHelper.generateOtp();
         if(l.isEmpty()) {
             consent = Consent.builder()
                     .consentId(consentIdGenerator.generateNextId())
@@ -77,7 +80,7 @@ public class ConsentService {
                     .expiryDate(null)
                     .reqDoctorId(requestingDoctor.getId().toString())
                     .documentName(consentDTO.getDocumentName())
-                    .otp(otpHelper.generateOtp())
+                    .otp(passwordEncoder.encode(otp))
                     .active(true)
                     .otpExpiry(otpHelper.generateExpirationTime())
                     .build();
@@ -85,7 +88,7 @@ public class ConsentService {
             consent = l.get(0);
             consent.setExpiryDate(null);
             consent.setActive(true);
-            consent.setOtp(otpHelper.generateOtp());
+            consent.setOtp(passwordEncoder.encode(otp));
             consent.setOtpExpiry(otpHelper.generateExpirationTime());
         }
 
@@ -95,12 +98,12 @@ public class ConsentService {
         String msg = "";
         if(consent.getReqDoctorId().equals(consent.getDoctor().getId().toString())) {
             msg = requestingDoctor.getFirstName() + " is asking consent to see your document " + consent.getDocumentName()
-                    + ". Please go to the website and use this OTP " + consent.getOtp()
+                    + ". Please go to the website and use this OTP " + otp
                     + " to provide consent. OTP will ony be valid for 10 minutes";
         } else {
             msg = requestingDoctor.getFirstName() + " is asking consent to share your document " + consent.getDocumentName()
                     + " with the doctor " + consent.getDoctor().getFirstName() + " of hospital " + hospital.getName()
-                    + ". Please go to the website and use this OTP " + consent.getOtp()
+                    + ". Please go to the website and use this OTP " + otp
                     + " to provide consent. OTP will ony be valid for 10 minutes";
         }
         consentRepo.save(consent);

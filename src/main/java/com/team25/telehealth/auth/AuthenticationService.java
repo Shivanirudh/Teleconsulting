@@ -75,7 +75,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
         );
         var patient = patientService.getPatientByEmail(req.getEmail());
-        if(!req.getOtp().equals(patient.getOtp()) || otpHelper.isOtpExpired(patient.getOtpExpiry())) {
+        if(!otpHelper.otpEqual(req.getOtp(), patient.getOtp()) || otpHelper.isOtpExpired(patient.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
         if(!patient.getActive())
@@ -86,6 +86,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         AuthenticationResponse res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(patient.getPatientId())
                 .email(patient.getEmail())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
@@ -98,7 +99,7 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
         );
         var doctor = doctorService.getDoctorByEmail(req.getEmail());
-        if(!req.getOtp().equals(doctor.getOtp()) || otpHelper.isOtpExpired(doctor.getOtpExpiry())) {
+        if(!otpHelper.otpEqual(req.getOtp(), doctor.getOtp()) || otpHelper.isOtpExpired(doctor.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
         if(!doctor.getActive())
@@ -109,6 +110,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(doctor.getDoctorId())
                 .email(doctor.getEmail())
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
@@ -122,7 +124,7 @@ public class AuthenticationService {
         );
 
         var admin = adminService.getAdminByEmail(req.getEmail());
-        if(!req.getOtp().equals(admin.getOtp()) || otpHelper.isOtpExpired(admin.getOtpExpiry())) {
+        if(!otpHelper.otpEqual(req.getOtp(), admin.getOtp()) || otpHelper.isOtpExpired(admin.getOtpExpiry())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Otp or Expired");
         }
         if(!admin.getActive())
@@ -133,6 +135,7 @@ public class AuthenticationService {
         saveUserToken(user.getId(), jwtToken);
         var res = AuthenticationResponse.builder()
                 .token(jwtToken)
+                .userId(admin.getAdminId())
                 .email(admin.getEmail())
                 .firstName(admin.getFirstName())
                 .lastName(admin.getLastName())
@@ -163,34 +166,37 @@ public class AuthenticationService {
 
     public ResponseEntity<?> generatePatientOtp(EmailRequest req) {
         var patient = patientService.getPatientByEmail(req.getEmail());
-        patient.setOtp(otpHelper.generateOtp());
+        String otp = otpHelper.generateOtp();
+        patient.setOtp(passwordEncoder.encode(otp));
         patient.setOtpExpiry(otpHelper.generateExpirationTime());
         patientRepo.save(patient);
         mailService.sendEmail(patient.getEmail(),
                 "OTP For TeleHealth Website",
-                patient.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 10 minutes.");
+                otp + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 
     public ResponseEntity<?> generateDoctorOtp(EmailRequest req) {
         var doctor = doctorService.getDoctorByEmail(req.getEmail());
-        doctor.setOtp(otpHelper.generateOtp());
+        String otp = otpHelper.generateOtp();
+        doctor.setOtp(passwordEncoder.encode(otp));
         doctor.setOtpExpiry(otpHelper.generateExpirationTime());
         doctorRepo.save(doctor);
         mailService.sendEmail(doctor.getEmail(),
                 "OTP For TeleHealth Website",
-                doctor.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+                otp + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 
     public ResponseEntity<?> generateAdminOtp(EmailRequest req) {
         var admin = adminService.getAdminByEmail(req.getEmail());
-        admin.setOtp(otpHelper.generateOtp());
+        String otp = otpHelper.generateOtp();
+        admin.setOtp(passwordEncoder.encode(otp));
         admin.setOtpExpiry(otpHelper.generateExpirationTime());
         adminRepo.save(admin);
         mailService.sendEmail(admin.getEmail(),
                 "OTP For TeleHealth Website",
-                admin.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
+                otp + " This is the OTP generated for your account. Do not Share it with anyone It will be valid for only 10 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 
@@ -232,18 +238,20 @@ public class AuthenticationService {
 
     public ResponseEntity<?> registerPatientOTP(EmailRequest req) {
         Validate validate;
+        String otp = null;
         try {
             var patient = patientService.getPatientByEmail(req.getEmail());
             return ResponseEntity.badRequest().body("Patient with given Email id is already present");
         } catch(Exception e) {
              validate = validateRepo.findById(req.getEmail()).orElse(null);
+             otp = otpHelper.generateOtp();
              if(validate != null) {
-                 validate.setOtp(otpHelper.generateOtp());
+                 validate.setOtp(passwordEncoder.encode(otp));
                  validate.setOtpExpiry(otpHelper.generateExpirationTime(15));
              } else {
                  validate = Validate.builder()
                          .email(req.getEmail())
-                         .otp(otpHelper.generateOtp())
+                         .otp(passwordEncoder.encode(otp))
                          .otpExpiry(otpHelper.generateExpirationTime(15))
                          .build();
              }
@@ -251,7 +259,7 @@ public class AuthenticationService {
         }
         mailService.sendEmail(validate.getEmail(),
                 "OTP For TeleHealth Website",
-                validate.getOtp() + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 15 minutes.");
+                otp + " This is the OTP generated for your account. Do not Share it with anyone. It will only be valid for 15 minutes.");
         return ResponseEntity.ok("Otp Generated Successfully");
     }
 }

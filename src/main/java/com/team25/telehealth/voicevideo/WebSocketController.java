@@ -75,7 +75,13 @@ public class WebSocketController {
                             && room.getParticipants().isEmpty()
                             && !room.containsCompletedParticipant(userId)
                     ) room.setCurrentPatient(userId);
-                    else if(!room.containsCompletedParticipant(userId)) room.addParticipant(userId);
+                    else if(room.getCurrentPatient() != null
+                            && !room.containsCompletedParticipant(userId)
+                            && !room.getCurrentPatient().equals(userId))
+                        room.addParticipant(userId);
+                    else if(room.getCurrentPatient() == null
+                            && !room.containsCompletedParticipant(userId))
+                        room.addParticipant(userId);
                     room.getParticipantAppointment().put(userId, appointment.getAppointmentId());
                 }
 
@@ -121,10 +127,10 @@ public class WebSocketController {
                     Error(3, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", userId);
                     if(room.getSeniorDoctor()!=null) {
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", userId);
                     }
                 }
             } else if(room.getCurrentDoctor().equals(userId)) {
@@ -132,10 +138,10 @@ public class WebSocketController {
                     Error(4, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", userId);
                     if(room.getSeniorDoctor()!=null) {
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getSeniorDoctor(),"/topic/call", userId);
                     }
                 }
             } else if(room.getSeniorDoctor().equals(userId)) {
@@ -143,10 +149,10 @@ public class WebSocketController {
                     Error(4, userId);
                 } else {
                     simpMessagingTemplate
-                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", "Called by someone else");
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/call", userId);
                     if(room.getCurrentDoctor() != null)
                         simpMessagingTemplate
-                                .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", "Called by someone else");
+                                .convertAndSendToUser(room.getCurrentDoctor(),"/topic/call", userId);
 
                 }
             }
@@ -438,6 +444,8 @@ public class WebSocketController {
                 for(String u : room.getParticipants()) {
                     Error(7, u);
                 }
+                if(room.getSeniorDoctor() != null)
+                    Error(7, room.getSeniorDoctor());
                 rooms.remove(meetingId);
             } else if(room.getSeniorDoctor() != null && room.getSeniorDoctor().equals(userId)) {
                 room.setSeniorDoctor(null);
@@ -494,6 +502,113 @@ public class WebSocketController {
         }
         simpMessagingTemplate
                 .convertAndSendToUser(user,"/topic/error", message);
+    }
+
+    @MessageMapping("/seniorDoctorCall")
+    public void seniorDoctorCall(String call){
+        JSONObject jsonObject = new JSONObject(call);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorCall", userId);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorCall", userId);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
+    }
+
+    @MessageMapping("/seniorDoctorOffer")
+    public void seniorDoctorOffer(String offer){
+        JSONObject jsonObject = new JSONObject(offer);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getCurrentPatient().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorOffer", offer);
+                }
+            } else if(room.getCurrentDoctor().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorOffer", offer);
+                }
+            } else Error(-1, userId);
+        } else Error(5, userId);
+    }
+
+    @MessageMapping("/seniorDoctorAnswer")
+    public void seniorDoctorAnswer(String answer){
+        JSONObject jsonObject = new JSONObject(answer);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorAnswer", answer);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorAnswer", answer);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
+    }
+    @MessageMapping("/seniorDoctorCandidate")
+    public void seniorDoctorCandidate(String candidate){
+        JSONObject jsonObject = new JSONObject(candidate);
+        String meetingId = jsonObject.get("meetingId").toString();
+        String userId = jsonObject.get("userId").toString();
+        String receiverId = jsonObject.get("receiverId").toString();
+
+        if (rooms.containsKey(meetingId)) {
+            Room room = rooms.get(meetingId);
+            if(room.getCurrentPatient().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                }
+            } else if(room.getCurrentDoctor().equals(userId)) {
+                if(room.getSeniorDoctor()!=null) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getSeniorDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                }
+            } else if(room.getSeniorDoctor().equals(userId)) {
+                if(room.getCurrentPatient() == null) {
+                    Error(4, userId);
+                } else if(receiverId.equals(room.getCurrentPatient())){
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentPatient(),"/topic/seniorDoctorCandidate", candidate);
+                } else if(room.getCurrentDoctor() != null && receiverId.equals(room.getCurrentDoctor())) {
+                    simpMessagingTemplate
+                            .convertAndSendToUser(room.getCurrentDoctor(),"/topic/seniorDoctorCandidate", candidate);
+                } else {
+                    Error(-1, userId);
+                }
+            }
+        } else Error(5, userId);
     }
 
     @GetMapping("/api/v1/doctor/currentPatientAppointment/{meetingId}")
