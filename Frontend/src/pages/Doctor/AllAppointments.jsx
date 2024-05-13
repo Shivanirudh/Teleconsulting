@@ -3,6 +3,7 @@ import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Patient/Dashboard.css'
 import { Link, useNavigate } from 'react-router-dom';
+import config from '../../Config';
 
 export default function AllAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -19,7 +20,7 @@ export default function AllAppointments() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch('http://localhost:8081/api/v1/doctor/all-appointments', {
+    fetch(`${config.apiUrl}/api/v1/doctor/all-appointments`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

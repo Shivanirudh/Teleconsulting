@@ -277,8 +277,12 @@ function DoctorList() {
           }
         }
       } catch (error) {
-        console.error("Error booking appointment:", error);
-        alert('You have already booked appointment with this doctor')
+        if (error.response && error.response.data) {
+          alert(`Error booking appointment: ${error.response.data}`);
+        } else {
+          console.error("Error booking appointment:", error);
+          alert("An unexpected error occurred while booking the appointment.");
+        }
       } finally {
         setIsBooking(false); // Hide loading state
       }
@@ -295,7 +299,7 @@ function DoctorList() {
     if (!slotsData) {
       return null;
     }
-
+  
     // Organize slots by date
     const slotsByDate = {};
     slotsData.forEach((slot) => {
@@ -306,66 +310,60 @@ function DoctorList() {
       }
       slotsByDate[dateKey].push({ hour, minute });
     });
-
-    // Organize appointments by date
-    const appointmentsByDate = {};
+  
+    // Organize appointments by date and hour
+    const appointmentsByDateTime = {};
     doctorAppointments.forEach((appointment) => {
       const [year, month, day, hour, minute] = appointment.slot;
-      const dateKey = `${year}-${month}-${day}`;
-      if (!appointmentsByDate[dateKey]) {
-        appointmentsByDate[dateKey] = [];
+      const dateTimeKey = `${year}-${month}-${day}-${hour}`;
+      if (!appointmentsByDateTime[dateTimeKey]) {
+        appointmentsByDateTime[dateTimeKey] = 0;
       }
-      appointmentsByDate[dateKey].push({
-        hour,
-        minute,
-        appointmentId: appointment.appointment_id,
-      });
+      appointmentsByDateTime[dateTimeKey]++;
     });
-
+  
     // Sort dates
     const sortedDates = Object.keys(slotsByDate).sort(
       (a, b) => new Date(a) - new Date(b)
     );
-
+  
     // Render availability table
     return sortedDates.map((dateKey) => {
       const slotsForDate = slotsByDate[dateKey];
-
+  
       return (
         <tr key={dateKey}>
           <td>{dateKey}</td>
-          {Array.from({ length: 8 }, (_, index) => {
-            const hour = 9 + index; // 1-hour slots from 9 AM to 4 PM
-
+          {Array.from({ length: 12 }, (_, index) => {
+            const hour = 9 + index; // 1-hour slots from 9 AM to 8 PM
+  
             // Check if the slot is available
-            const appointmentsForHour =
-              appointmentsByDate[dateKey]?.filter(
-                (appt) => appt.hour === hour
-              ) || [];
-
-            const numAppointments = appointmentsForHour.length;
-            const isAvailable = numAppointments < 3;
-
-            // Determine the cell class and text
-            const cellClass = isAvailable
-              ? "available-new clickable"
-              : "busy-new";
-            const cellText = isAvailable ? "Available" : "Busy";
-
-            return (
-              <td
-                key={index}
-                className={cellClass}
-                onClick={() => handleCellClick(dateKey, hour)}
-              >
-                {cellText}
-              </td>
-            );
+            const numBooked = appointmentsByDateTime[`${dateKey}-${hour}`] || 0;
+            const isAvailable = numBooked < 3;
+  
+            // Only render cells for available slots
+            if (slotsForDate.some(slot => slot.hour === hour) && isAvailable) {
+              const cellClass = "available-new clickable";
+              const cellText = "Available";
+  
+              return (
+                <td
+                  key={index}
+                  className={cellClass}
+                  onClick={() => handleCellClick(dateKey, hour)}
+                >
+                  {cellText}
+                </td>
+              );
+            } else {
+              // Render an empty cell for unavailable slots
+              return <td key={index}></td>;
+            }
           })}
         </tr>
       );
     });
-  };
+  };  
 
   return (
     <div className="doctor-list-container-new">

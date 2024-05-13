@@ -34,7 +34,7 @@ const VideoChannel = () => {
     try {
       const token = localStorage.getItem("token"); // Retrieve the token from local storage
       const response = await axios.get(
-        "http://localhost:8081/api/v1/patient/files",
+        `${config.apiUrl}/api/v1/patient/files`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import "../../css/Doctor/ddashboard.css";
+import config from '../../Config';
 
 export default function UploadSchedule() {
   // Function to generate time slots with 45-minute intervals
@@ -52,7 +53,7 @@ export default function UploadSchedule() {
       const token = localStorage.getItem('token');
 
       // Make API request to fetch appointments
-      const response = await fetch('http://localhost:8081/api/v1/doctor/schedule', {
+      const response = await fetch(`${config.apiUrl}/api/v1/doctor/schedule`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -84,7 +85,7 @@ export default function UploadSchedule() {
       console.log(JSON.stringify(content));
       // console.log(JSON.stringify(body, null, 2));
       // Make API request to fetch appointments
-      const response = await fetch('http://localhost:8081/api/v1/doctor/schedule', {
+      const response = await fetch(`${config.apiUrl}/api/v1/doctor/schedule`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import TopNavigationBar from '../../components/Doctor/Navbar';
 import SideNavbar from '../../components/Doctor/sidenavbar';
+import axios from 'axios';
+import config from '../../Config';
 
 const PatientDetails = (props) => {
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
@@ -38,7 +40,7 @@ const PatientDetails = (props) => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/appointment/${id}`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/appointment/${id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -61,9 +63,52 @@ const PatientDetails = (props) => {
     setDocumentsModalOpen(true);
   };
 
-  const handleViewAppointments = () => {
-    // Logic to handle viewing appointments
-    setAppointmentsModalOpen(true);
+  const handleDownload = async (appointment_id) => {
+    try {
+      // Retrieve token from localStorage
+      const token = localStorage.getItem("token");
+      // Get the URL search parameters
+        const params = new URLSearchParams(window.location.search);
+
+        // Get the value of the 'id' parameter
+        const idParam = params.get('id');
+        console.log(idParam);
+      const response = await axios.get(
+        `${config.apiUrl}/api/v1/doctor/fetch-prescription/${idParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          responseType: "blob", // Ensure response type is blob to handle binary data
+        }
+      );
+
+      if (response.status === 200) {
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], { type: "application/pdf" });
+
+        // Create a URL for the Blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link element
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "prescription.pdf"); // Set desired file name
+
+        // Programmatically click the link to trigger the download
+        document.body.appendChild(link);
+        link.click();
+
+        // Remove the temporary link element
+        document.body.removeChild(link);
+      } else {
+        console.error("Failed to fetch prescription:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching prescription:", error.message);
+      console.log(error.data);
+    }
   };
 
   return (
@@ -87,7 +132,7 @@ const PatientDetails = (props) => {
       </div>
       <div className="actions">
       <Link to={`/doc?id=${patientDetails.patient_id}&docId=${doctorId}`}><button className='custom-button'>View Documents</button></Link>
-        <button className='custom-button' onClick={handleViewAppointments}>View Previous Appointments</button>
+        <button className='custom-button' onClick={handleDownload}>View Prescription</button>
       </div>
       
       

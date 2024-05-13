@@ -8,10 +8,9 @@ import './../../css/Admin/AdminDashboard.css'
 
 const AdminDashboard = () => {
     // Dummy data for demonstration
-    const totalPatients = 1000;
-    const totalDoctors = 50;
-    const patientIncrease = 20; // Assume 20 new patients
-    const doctorIncrease = 2; // Assume 2 new doctors
+    const totalPatients = 5;
+    const totalDoctors = 8;
+    const doctorIncrease = 9; // Assume 2 new doctors
 
     return (
         <div className='dashboard-container'>
@@ -35,15 +34,6 @@ const AdminDashboard = () => {
                         <Col md={6} lg={3}>
                             <Card>
                                 <Card.Body>
-                                    <i className="bi bi-person-circle" style={{ fontSize: '2.5em', color: '#28a745' }}></i>
-                                    <h5>New Patients (Today)</h5>
-                                    <h2>+{patientIncrease}</h2>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={6} lg={3}>
-                            <Card>
-                                <Card.Body>
                                     <i className="bi bi-person-check-fill" style={{ fontSize: '2.5em', color: '#dc3545' }}></i>
                                     <h5>Total Doctors</h5>
                                     <h2>{totalDoctors}</h2>
@@ -54,8 +44,8 @@ const AdminDashboard = () => {
                             <Card>
                                 <Card.Body>
                                     <i className="bi bi-person-plus-fill" style={{ fontSize: '2.5em', color: '#ffc107' }}></i>
-                                    <h5>New Doctors (Today)</h5>
-                                    <h2>+{doctorIncrease}</h2>
+                                    <h5>Total Hospitals (Today)</h5>
+                                    <h2>{doctorIncrease}</h2>
                                 </Card.Body>
                             </Card>
                         </Col>

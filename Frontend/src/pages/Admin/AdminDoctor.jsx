@@ -114,9 +114,9 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
                     <option value="CARDIOLOGIST">Cardiologist</option>
                     <option value="AUDIOLOGIST">Audiologist</option>
                     <option value="DENTIST">Dentist</option>
-                    <option value="ENT SPECIALIST">ENT Specialist</option>
+                    <option value="ENT_SPECIALIST">ENT Specialist</option>
                     <option value="GYNECOLOGIST">Gynecologist</option>
-                    <option value="ORTHOPEDIC SURGEON">Orthopedic Surgeon</option>
+                    <option value="ORTHOPEDIC_SURGEON">Orthopedic Surgeon</option>
                     <option value="PAEDIATRICIAN">Paediatrician</option>
                     <option value="PSYCHIATRIST">Psychiatrist</option>
                     <option value="VETERINARIAN">Veterinarian</option>
@@ -125,7 +125,7 @@ const AddDoctorForm = ({ onCancel, fetchDoctors }) => {
                     <option value="ENDOCRINOLOGIST">Endocrinologist</option>
                     <option value="ONCOLOGIST">Oncologist</option>
                     <option value="NEUROLOGIST">Neurologist</option>
-                    <option value="CARDIOTHORACIC SURGEON">Cardiothoracic Surgeon</option>
+                    <option value="CARDIOTHORACIC_SURGEON">Cardiothoracic Surgeon</option>
                 </select>
             </div>
             <button type="submit" className='add-admin-button'>Add Doctor</button>
@@ -177,7 +177,7 @@ const AdminDoctor = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            alert(`Doctor with ${doctorId} ID is blocked successfully`);
+            alert(`Doctor with ${doctorId} ID is unblocked successfully`);
             fetchDoctors();
         } catch (error) {
             console.error('Error unblocking doctor:', error);

@@ -7,7 +7,7 @@ import SockJS from "sockjs-client";
 import "../../css/Doctor/Dchats.css";
 import useScript from "../../components/useScript";
 import config from './../../Config'
-import axios from "axios";
+import PrescriptionForm from "../../components/Doctor/Prescriptionform";
 
 
 const DocChat = () => {
@@ -31,7 +31,7 @@ const DocChat = () => {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem("token"); // Retrieve the token from local storage
-      fetch(`http://localhost:8081/api/v1/doctor/fetch-files/${globalSelectedAppointment.patient_id.patient_id}`, {
+      fetch(`${config.apiUrl}/api/v1/doctor/fetch-files/${globalSelectedAppointment.patient_id.patient_id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ const DocChat = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/consent`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/consent`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const DocChat = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -1145,7 +1145,7 @@ const DocChat = () => {
     else {
 
       const token = localStorage.getItem('token');
-      fetch(`http://localhost:8081/api/v1/doctor/consent/${reqID}/patient/${globalSelectedAppointment.patient_id.patient_id}`, {
+      fetch(`${config.apiUrl}/api/v1/doctor/consent/${reqID}/patient/${globalSelectedAppointment.patient_id.patient_id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1191,7 +1191,7 @@ const DocChat = () => {
     console.log(`Sending consent request for "${documentName}"`);
 
     const token = localStorage.getItem('token');
-    fetch('http://localhost:8081/api/v1/doctor/consent', {
+    fetch(`${config.apiUrl}/api/v1/doctor/consent`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -1291,6 +1291,7 @@ const DocChat = () => {
                 Send
               </button>
             </div>
+            <PrescriptionForm appointmentId={globalSelectedAppointment.appointment_id} />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import SideNavbar from "../../components/Doctor/sidenavbar";
 import Navbar from "../../components/Doctor/Navbar";
 import '../../css/Doctor/ddashboard.css';
 import { Link, useNavigate } from 'react-router-dom';
-
+import config from '../../Config';
 
 
 export default function DoctorDashboard() {
@@ -33,7 +33,7 @@ export default function DoctorDashboard() {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch('http://localhost:8081/api/v1/doctor/list-appointments', {
+    fetch(`${config.apiUrl}/api/v1/doctor/list-appointments`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

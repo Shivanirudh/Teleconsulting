@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, json, useLocation } from 'react-router-dom';
 import '../../css/Doctor/dicum.css'
-
+import config from '../../Config';
 import SideNavbar from '../../components/Doctor/sidenavbar';
 import TopNavigationBar from '../../components/Doctor/Navbar';
 
@@ -59,7 +59,7 @@ const Documents = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/fetch-files/${id}`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/fetch-files/${id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const Documents = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/view-hospitals`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/view-hospitals`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const Documents = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/consent`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/consent`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ const Documents = () => {
     const token = localStorage.getItem('token');
 
     // Make API request to fetch appointments
-    fetch(`http://localhost:8081/api/v1/doctor/list-doctors-hospital/${email}`, {
+    fetch(`${config.apiUrl}/api/v1/doctor/list-doctors-hospital/${email}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -152,7 +152,7 @@ const Documents = () => {
     else{
       
       const token = localStorage.getItem('token');
-      fetch(`http://localhost:8081/api/v1/doctor/consent/${reqID}/patient/${id}`, {
+      fetch(`${config.apiUrl}/api/v1/doctor/consent/${reqID}/patient/${id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -231,7 +231,7 @@ const Documents = () => {
       console.log(`Sending consent request for "${documentName}" for ${choice}`);
 
       const token = localStorage.getItem('token');
-      fetch('http://localhost:8081/api/v1/doctor/consent', {
+      fetch(`${config.apiUrl}/api/v1/doctor/consent`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -280,7 +280,7 @@ const Documents = () => {
     reqBody.doctor_id.doctor_id  = doctor.doctor_id;
 
     const token = localStorage.getItem('token');
-      fetch('http://localhost:8081/api/v1/doctor/consent', {
+      fetch(`${config.apiUrl}/api/v1/doctor/consent`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

@@ -77,7 +77,7 @@ function PreviousAppointments({ appointments }) {
             <th>Sl No.</th>
             <th>Date</th>
             <th>Doctor Name</th>
-            <th>Action</th>
+            <th>Prescription</th>
           </tr>
         </thead>
         <tbody>
