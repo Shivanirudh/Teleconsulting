@@ -355,9 +355,6 @@ function DoctorList() {
                   {cellText}
                 </td>
               );
-            } else {
-              // Render an empty cell for unavailable slots
-              return <td key={index}></td>;
             }
           })}
         </tr>
