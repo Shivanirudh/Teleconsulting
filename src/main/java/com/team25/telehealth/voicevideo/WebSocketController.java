@@ -470,7 +470,7 @@ public class WebSocketController {
             } else if(room.getParticipants().contains(userId)) {
                 int number = room.getParticipants().indexOf(userId) + 1;
                 simpMessagingTemplate
-                        .convertAndSendToUser(userId,"/topic/queueNumber","Your number is " + number);
+                        .convertAndSendToUser(userId,"/topic/queueNumber","You have " + number + " patient(s) ahead of you.");
             }
         } else Error(5, userId);
     }
