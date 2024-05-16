@@ -792,6 +792,15 @@ const DocChat = () => {
             const msg = JSON.parse(message.body).message;
             const messageElement = document.createElement("div");
             messageElement.classList.add("message", "other-side");
+            //if(localID === globalSelectedAppointment["patient_id"]["patient_id"]){
+            //	messageElement.textContent = "Patient " + globalSelectedAppointment["patient_id"]["first_name"] + ": " + msg;
+            //}
+            //else if(localID === globalSelectedAppointment["doctor_id"]["doctor_id"]){
+            //	messageElement.textContent = "Doctor " + globalSelectedAppointment["doctor_id"]["first_name"] + ": " + msg;
+            //}
+            //else{
+            //	messageElement.textContent = "Senior Doctor: " + msg;
+            //}
             messageElement.textContent = msg;
             document.getElementById("messageBox").appendChild(messageElement);
           }
@@ -1002,19 +1011,31 @@ const DocChat = () => {
     // Handle send button click event
     const handleSend = () => {
       const myMessage = messageInput.value;
+      let msg = "";
       if (myMessage) {
+      	if(localID === globalSelectedAppointment["doctor_id"]["doctor_id"]){
+        	msg = "Doctor " + globalSelectedAppointment["doctor_id"]["first_name"] + ": " + myMessage;
+        }
+        else{
+        	msg = "Senior Doctor: " + myMessage;
+        }
         stompClient.send(
           "/app/message",
           {},
           JSON.stringify({
             userId: localID,
             meetingId: meetingId,
-            message: myMessage,
+            message: msg,
           })
         );
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", "my-side");
-        messageElement.textContent = myMessage;
+        if(localID === globalSelectedAppointment["doctor_id"]["doctor_id"]){
+        	messageElement.textContent = "Doctor " + globalSelectedAppointment["doctor_id"]["first_name"] + ": " + myMessage;
+        }
+        else{
+        	messageElement.textContent = "Senior Doctor: " + myMessage;
+        }
         document.getElementById("messageBox").appendChild(messageElement);
         messageInput.value = "";
       }

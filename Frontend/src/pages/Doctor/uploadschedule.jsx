@@ -10,7 +10,7 @@ export default function UploadSchedule() {
 
   const generateTimeSlots = () => {
     const startTime = 9 * 60; // 9:00 AM in minutes
-    const endTime = 20 * 60 ; // 5:15 PM in minutes
+    const endTime = 19 * 60 ; // 5:15 PM in minutes
     const interval = 60; // 45 minutes interval
     const timeSlots = [];
 

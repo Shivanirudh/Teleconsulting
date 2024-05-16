@@ -564,6 +564,12 @@ const VideoChannel = () => {
             const msg = JSON.parse(message.body).message;
             const messageElement = document.createElement("div");
             messageElement.classList.add("message", "other-side");
+            //if(localID === globalSelectedAppointment["doctor_id"]["doctor_id"]){
+            //	messageElement.textContent = "Doctor " + globalSelectedAppointment["doctor_id"]["first_name"] + ": " + msg;
+            //}
+            //else{
+            //	messageElement.textContent = "Senior Doctor: " + msg;
+            //}
             messageElement.textContent = msg;
             document.getElementById("messageBox").appendChild(messageElement);
           }
@@ -645,11 +651,11 @@ const VideoChannel = () => {
           (message) => {
             console.log(message.body);
             setQueueMessage(message.body);
-            const msg = JSON.parse(message.body).message;
+            //const msg = JSON.parse(message.body).message;
             const messageElement = document.createElement("div");
-            console.log(msg);
+            //console.log(msg);
             //messageElement.classList.add("message", "other-side");
-            messageElement.textContent = msg;
+            messageElement.textContent = message.body;
             document.getElementById("queue-number").appendChild(messageElement);
           }
         );
@@ -740,12 +746,12 @@ const VideoChannel = () => {
           JSON.stringify({
             userId: localID,
             meetingId: meetingId,
-            message: myMessage,
+            message: "Patient " + globalSelectedAppointment["patient_id"]["first_name"] + ": " + myMessage,
           })
         );
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", "my-side");
-        messageElement.textContent = myMessage;
+        messageElement.textContent = "Patient " + globalSelectedAppointment["patient_id"]["first_name"] + ": " + myMessage;
         document.getElementById("messageBox").appendChild(messageElement);
         messageInput.value = "";
       }
@@ -816,7 +822,7 @@ const VideoChannel = () => {
       testConnection.removeEventListener("click", handleTestConnection);
       sendBtn.removeEventListener("click", handleSend);
       disconnectbutton.removeEventListener("click", handleDisconnect);
-      queuebutton.addEventListener("click", handleQueue);
+      queuebutton.removeEventListener("click", handleQueue);
 
       // Clean up other resources if necessary
     };
@@ -870,7 +876,6 @@ const VideoChannel = () => {
           <p>Hospital: {globalSelectedAppointment.doctor_id.hospital.name}</p>
         </div>
         <div id="queue-number">
-          Queue Number: {queueMessage}<br></br>
           <button id="queue-button" class="custom-button">Get queue number</button>
         </div>
         <div className="document-table">
